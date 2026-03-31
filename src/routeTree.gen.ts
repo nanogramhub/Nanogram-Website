@@ -9,50 +9,199 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestRouteImport } from './routes/test'
+import { Route as DefaultLayoutRouteImport } from './routes/_defaultLayout'
+import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
+import { Route as DefaultLayoutIndexRouteImport } from './routes/_defaultLayout/index'
+import { Route as DefaultLayoutGalleryRouteImport } from './routes/_defaultLayout/gallery'
+import { Route as DefaultLayoutEventsRouteImport } from './routes/_defaultLayout/events'
+import { Route as DefaultLayoutAboutUsRouteImport } from './routes/_defaultLayout/about-us'
+import { Route as AuthLayoutLoginRouteImport } from './routes/_authLayout/login'
 
-const IndexRoute = IndexRouteImport.update({
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DefaultLayoutRoute = DefaultLayoutRouteImport.update({
+  id: '/_defaultLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLayoutRoute = AuthLayoutRouteImport.update({
+  id: '/_authLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DefaultLayoutIndexRoute = DefaultLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => DefaultLayoutRoute,
+} as any)
+const DefaultLayoutGalleryRoute = DefaultLayoutGalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => DefaultLayoutRoute,
+} as any)
+const DefaultLayoutEventsRoute = DefaultLayoutEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => DefaultLayoutRoute,
+} as any)
+const DefaultLayoutAboutUsRoute = DefaultLayoutAboutUsRouteImport.update({
+  id: '/about-us',
+  path: '/about-us',
+  getParentRoute: () => DefaultLayoutRoute,
+} as any)
+const AuthLayoutLoginRoute = AuthLayoutLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof DefaultLayoutIndexRoute
+  '/test': typeof TestRoute
+  '/login': typeof AuthLayoutLoginRoute
+  '/about-us': typeof DefaultLayoutAboutUsRoute
+  '/events': typeof DefaultLayoutEventsRoute
+  '/gallery': typeof DefaultLayoutGalleryRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof DefaultLayoutIndexRoute
+  '/test': typeof TestRoute
+  '/login': typeof AuthLayoutLoginRoute
+  '/about-us': typeof DefaultLayoutAboutUsRoute
+  '/events': typeof DefaultLayoutEventsRoute
+  '/gallery': typeof DefaultLayoutGalleryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authLayout': typeof AuthLayoutRouteWithChildren
+  '/_defaultLayout': typeof DefaultLayoutRouteWithChildren
+  '/test': typeof TestRoute
+  '/_authLayout/login': typeof AuthLayoutLoginRoute
+  '/_defaultLayout/about-us': typeof DefaultLayoutAboutUsRoute
+  '/_defaultLayout/events': typeof DefaultLayoutEventsRoute
+  '/_defaultLayout/gallery': typeof DefaultLayoutGalleryRoute
+  '/_defaultLayout/': typeof DefaultLayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/test' | '/login' | '/about-us' | '/events' | '/gallery'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/test' | '/login' | '/about-us' | '/events' | '/gallery'
+  id:
+    | '__root__'
+    | '/_authLayout'
+    | '/_defaultLayout'
+    | '/test'
+    | '/_authLayout/login'
+    | '/_defaultLayout/about-us'
+    | '/_defaultLayout/events'
+    | '/_defaultLayout/gallery'
+    | '/_defaultLayout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
+  DefaultLayoutRoute: typeof DefaultLayoutRouteWithChildren
+  TestRoute: typeof TestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_defaultLayout': {
+      id: '/_defaultLayout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof DefaultLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authLayout': {
+      id: '/_authLayout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_defaultLayout/': {
+      id: '/_defaultLayout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof DefaultLayoutIndexRouteImport
+      parentRoute: typeof DefaultLayoutRoute
+    }
+    '/_defaultLayout/gallery': {
+      id: '/_defaultLayout/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof DefaultLayoutGalleryRouteImport
+      parentRoute: typeof DefaultLayoutRoute
+    }
+    '/_defaultLayout/events': {
+      id: '/_defaultLayout/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof DefaultLayoutEventsRouteImport
+      parentRoute: typeof DefaultLayoutRoute
+    }
+    '/_defaultLayout/about-us': {
+      id: '/_defaultLayout/about-us'
+      path: '/about-us'
+      fullPath: '/about-us'
+      preLoaderRoute: typeof DefaultLayoutAboutUsRouteImport
+      parentRoute: typeof DefaultLayoutRoute
+    }
+    '/_authLayout/login': {
+      id: '/_authLayout/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLayoutLoginRouteImport
+      parentRoute: typeof AuthLayoutRoute
     }
   }
 }
 
+interface AuthLayoutRouteChildren {
+  AuthLayoutLoginRoute: typeof AuthLayoutLoginRoute
+}
+
+const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLayoutLoginRoute: AuthLayoutLoginRoute,
+}
+
+const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
+  AuthLayoutRouteChildren,
+)
+
+interface DefaultLayoutRouteChildren {
+  DefaultLayoutAboutUsRoute: typeof DefaultLayoutAboutUsRoute
+  DefaultLayoutEventsRoute: typeof DefaultLayoutEventsRoute
+  DefaultLayoutGalleryRoute: typeof DefaultLayoutGalleryRoute
+  DefaultLayoutIndexRoute: typeof DefaultLayoutIndexRoute
+}
+
+const DefaultLayoutRouteChildren: DefaultLayoutRouteChildren = {
+  DefaultLayoutAboutUsRoute: DefaultLayoutAboutUsRoute,
+  DefaultLayoutEventsRoute: DefaultLayoutEventsRoute,
+  DefaultLayoutGalleryRoute: DefaultLayoutGalleryRoute,
+  DefaultLayoutIndexRoute: DefaultLayoutIndexRoute,
+}
+
+const DefaultLayoutRouteWithChildren = DefaultLayoutRoute._addFileChildren(
+  DefaultLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthLayoutRoute: AuthLayoutRouteWithChildren,
+  DefaultLayoutRoute: DefaultLayoutRouteWithChildren,
+  TestRoute: TestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

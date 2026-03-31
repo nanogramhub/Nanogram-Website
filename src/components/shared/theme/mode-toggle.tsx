@@ -3,15 +3,16 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 
 import { Toggle } from "../../ui/toggle";
+import { cn } from "@/lib/utils";
 
-export function ModeToggle() {
+export function ModeToggle({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme();
 
   return (
     <Toggle
       variant="default"
       size="lg"
-      className="cursor-pointer"
+      className={cn("cursor-pointer", className)}
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />

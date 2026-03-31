@@ -5,7 +5,7 @@ import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 
-import { queryClient,router } from "./router";
+import { queryClient, router } from "./router";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
