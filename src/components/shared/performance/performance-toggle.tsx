@@ -1,6 +1,5 @@
-import { Moon, Sun } from "lucide-react";
-
-import { useTheme } from "@/hooks/useTheme";
+import { Gauge, Leaf } from "lucide-react";
+import { usePerformance } from "@/hooks/usePerformance";
 
 import { Toggle } from "../../ui/toggle";
 import { cn } from "@/lib/utils";
@@ -10,43 +9,44 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export function ModeToggle({ className }: { className?: string }) {
-  const { theme, setTheme } = useTheme();
+export function PerformanceToggle({ className }: { className?: string }) {
+  const { performance, setPerformance } = usePerformance();
 
   return (
     <Toggle
       variant="default"
       size="lg"
-      className={cn("cursor-pointer", className)}
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      className={cn("cursor-pointer relative", className)}
+      onClick={() => setPerformance(!performance)}
     >
       <Tooltip>
         <TooltipTrigger
           className={cn(
             "transition-all",
-            theme === "light" ? "rotate-0 scale-100" : "-rotate-90 scale-0",
+            performance ? "rotate-0 scale-100" : "-rotate-90 scale-0",
           )}
         >
-          <Sun />
+          <Leaf />
         </TooltipTrigger>
         <TooltipContent>
-          <p>Light Mode</p>
+          <p>Low Performance</p>
         </TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger
           className={cn(
             "absolute transition-all",
-            theme === "light" ? "rotate-90 scale-0" : "rotate-0 scale-100",
+            performance ? "rotate-90 scale-0" : "rotate-0 scale-100",
           )}
         >
-          <Moon />
+          <Gauge />
         </TooltipTrigger>
         <TooltipContent>
-          <p>Dark Mode</p>
+          <p>High Performance</p>
         </TooltipContent>
       </Tooltip>
-      <span className="sr-only">Toggle theme</span>
+
+      <span className="sr-only">Toggle performance</span>
     </Toggle>
   );
 }

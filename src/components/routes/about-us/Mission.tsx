@@ -52,7 +52,7 @@ const Mission = () => {
         </div>
         <div>
           <div className="text-base leading-7 lg:mx-w-lg">
-            <div className="text-base font-semibold leading-7 text-chart-1">
+            <div className="text-base font-semibold leading-7 text-chart-2">
               Empowering Tech Enthusiasts
             </div>
             <h1 className="mt-2 text-3xl font-bold tracking-tight">
@@ -73,8 +73,8 @@ const Mission = () => {
             </div>
           </div>
           <dl className="mt-10 grid grid-cols-2 gap-8 border-t border-neutral-black pt-10 sm:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.name}>
+            {stats.map((stat, index) => (
+              <div key={index}>
                 <dt className="text-sm font-semibold leading-6 text-neutral-black/80 text-nowrap">
                   <div>{stat.name}</div>
                 </dt>
@@ -88,7 +88,7 @@ const Mission = () => {
             <Button
               nativeButton={false}
               variant="link"
-              className="text-chart-1 group flex items-center gap-1 font-semibold leading-6"
+              className="text-chart-2 group flex items-center gap-1 font-semibold leading-6"
               render={(props) => (
                 <a
                   {...props}

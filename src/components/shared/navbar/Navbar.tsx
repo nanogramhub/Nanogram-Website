@@ -4,6 +4,7 @@ import { navbarItems } from "@/constants";
 import { useIsMobile } from "@/hooks/useMobile";
 import { ModeToggle } from "../theme/mode-toggle";
 import NavSheet from "./nav-sheet";
+import { PerformanceToggle } from "../performance/performance-toggle";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
@@ -34,7 +35,8 @@ const Navbar = () => {
                 </NavTab>
               ))}
             </NavTabs>
-            <div className="w-50 flex items-center justify-end">
+            <div className="w-50 flex items-center justify-end gap-2">
+              <PerformanceToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
               <ModeToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
             </div>
           </>

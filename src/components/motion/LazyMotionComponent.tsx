@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -7,7 +7,11 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-export const LazyMotionComponent = ({ children }) => {
+export const LazyMotionComponent = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   // Use Intersection Observer
   const [ref, inView] = useInView({
     triggerOnce: true, // Ensures animation only triggers once per load

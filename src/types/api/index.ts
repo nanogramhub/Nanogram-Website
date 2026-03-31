@@ -27,4 +27,15 @@ export type Nanogram = AppwriteDocument & {
   priority: number;
 };
 
-export type Event = AppwriteDocument & {};
+export type Event = AppwriteDocument & {
+  date: string;
+  completed: boolean;
+  title: string;
+  content: string;
+  location: string;
+  registration: string | null;
+  imageId: string;
+  imageUrl: string;
+  description: string;
+  subtitle: string;
+};

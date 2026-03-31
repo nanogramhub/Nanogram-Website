@@ -27,7 +27,7 @@ const Activities = () => {
         />
       </div>
       <div className="mx-auto max-w-2xl lg:mr-0 lg:max-w-lg p-5">
-        <h2 className="font-semibold leading-8 text-chart-1">
+        <h2 className="font-semibold leading-8 text-chart-2">
           Activities at Nanogram
         </h2>
         <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
@@ -39,8 +39,11 @@ const Activities = () => {
           Community outreach & Social impact
         </p>
         <dl className="mt-16 grid max-w-xl grid-cols-1 gap-8 sm:mt-20 sm:grid-cols-2 xl:mt-16">
-          {activities.map((activity) => (
-            <div className="flex flex-col gap-y-3 border-l border-neutral pl-6">
+          {activities.map((activity, index) => (
+            <div
+              key={index}
+              className="flex flex-col gap-y-3 border-l border-neutral pl-6"
+            >
               <dt className="text-sm leading-6 text-muted-foreground">
                 <div>{activity.title}</div>
               </dt>

@@ -16,13 +16,15 @@ export const nanogramQueries = {
   getTestimonials: () => {
     return queryOptions({
       queryKey: queryKeys.nanogram.getTestimonials,
-      queryFn: () => api.public.getTestimonials(),
+      queryFn: () => api.public.nanogram.getTestimonials(),
+      staleTime: 1000 * 60 * 30, // 30 minutes
     });
   },
   getTeamMembers: () => {
     return queryOptions({
       queryKey: queryKeys.nanogram.getCoreMembers,
-      queryFn: () => api.public.getCoreMembers({}),
+      queryFn: () => api.public.nanogram.getCoreMembers({}),
+      staleTime: 1000 * 60 * 30, // 30 minutes
     });
   },
   getCoreMembers: ({
@@ -36,11 +38,12 @@ export const nanogramQueries = {
       queryKey: [...queryKeys.nanogram.getCoreMembers, cursorAfter],
       initialPageParam: cursorAfter,
       queryFn: ({ pageParam }) =>
-        api.public.getCoreMembers({ cursorAfter: pageParam, limit }),
+        api.public.nanogram.getCoreMembers({ cursorAfter: pageParam, limit }),
       getNextPageParam: (lastPage) =>
         lastPage.rows.length === 0
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 30, // 30 minutes
     });
   },
   getAluminiMembers: ({
@@ -54,11 +57,15 @@ export const nanogramQueries = {
       queryKey: [...queryKeys.nanogram.getAluminiMembers, cursorAfter],
       initialPageParam: cursorAfter,
       queryFn: ({ pageParam }) =>
-        api.public.getAluminiMembers({ cursorAfter: pageParam, limit }),
+        api.public.nanogram.getAluminiMembers({
+          cursorAfter: pageParam,
+          limit,
+        }),
       getNextPageParam: (lastPage) =>
         lastPage.rows.length === 0
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 30, // 30 minutes
     });
   },
 };
@@ -75,11 +82,29 @@ export const eventsQueries = {
       queryKey: [...queryKeys.events.getEvents, cursorAfter],
       initialPageParam: cursorAfter,
       queryFn: ({ pageParam }) =>
-        api.public.getEvents({ cursorAfter: pageParam, limit }),
+        api.public.events.getEvents({ cursorAfter: pageParam, limit }),
       getNextPageParam: (lastPage) =>
         lastPage.rows.length === 0
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
+    });
+  },
+  getNextEvent: () => {
+    return queryOptions({
+      queryKey: queryKeys.events.getNextEvent,
+      queryFn: () => api.public.events.getNextEvent(),
+    });
+  },
+  getLatestCompletedEvent: () => {
+    return queryOptions({
+      queryKey: queryKeys.events.getLatestCompletedEvent,
+      queryFn: () => api.public.events.getLatestCompletedEvent(),
+    });
+  },
+  getUpcomingEvents: () => {
+    return queryOptions({
+      queryKey: queryKeys.events.getUpcomingEvents,
+      queryFn: () => api.public.events.getUpcomingEvents(),
     });
   },
 };

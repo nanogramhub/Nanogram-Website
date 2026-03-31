@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { nanogramQueries } from "@/lib/query/queryOptions";
 
 export function useGetTeamMembers() {
@@ -30,5 +30,5 @@ export function useGetAluminiMembers({
 }
 
 export function useGetTestimonials() {
-  return useSuspenseQuery(nanogramQueries.getTestimonials());
+  return useQuery(nanogramQueries.getTestimonials());
 }

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/test")({
 
 function RouteComponent() {
   async function run() {
-    const data = await api.public.getCoreMembers({});
+    const data = await api.public.events.getEvents({});
     console.log(data);
   }
   return (

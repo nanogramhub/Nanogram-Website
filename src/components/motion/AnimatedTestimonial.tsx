@@ -8,11 +8,8 @@ import {
   type PanInfo,
 } from "framer-motion";
 import type { Testimonial } from "@/types/components";
-import { useGetTestimonials } from "@/hooks/queries/useNanogram";
 
-export default function AnimatedTestimonial() {
-  const { data } = useGetTestimonials();
-  const testimonials = data.rows;
+export default function AnimatedTestimonial({ testimonials }: { testimonials: Testimonial[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("left");
   const controls = useAnimation();

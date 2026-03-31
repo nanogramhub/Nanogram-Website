@@ -16,86 +16,134 @@ export const api = {
   },
 
   public: {
-    // NANOGRAM
-    async getTestimonials(): Promise<
-      AppwriteResponse<Nanogram & { content: string }>
-    > {
-      const response = await database.listRows<Nanogram & { content: string }>({
-        databaseId: appwriteConfig.databaseId,
-        tableId: appwriteConfig.nanogramsTableId,
-        queries: [
-          Query.isNotNull("content"),
-          Query.orderAsc("$createdAt"),
-          Query.limit(10),
-        ],
-      });
-      return response;
+    nanogram: {
+      async getTestimonials(): Promise<
+        AppwriteResponse<Nanogram & { content: string }>
+      > {
+        const response = await database.listRows<
+          Nanogram & { content: string }
+        >({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.nanogramsTableId,
+          queries: [
+            Query.isNotNull("content"),
+            Query.orderAsc("$createdAt"),
+            Query.limit(10),
+          ],
+        });
+        return response;
+      },
+
+      async getCoreMembers({
+        cursorAfter,
+        limit = 9,
+      }: {
+        cursorAfter?: string;
+        limit?: number;
+      }): Promise<AppwriteResponse<Nanogram>> {
+        const queries = [
+          Query.equal("core", true),
+          Query.orderAsc("priority"),
+          Query.limit(limit),
+        ];
+        if (cursorAfter) {
+          queries.push(Query.cursorAfter(cursorAfter));
+        }
+        const response = await database.listRows<Nanogram>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.nanogramsTableId,
+          queries,
+        });
+        return response;
+      },
+
+      async getAluminiMembers({
+        cursorAfter,
+        limit = 9,
+      }: {
+        cursorAfter?: string;
+        limit?: number;
+      }): Promise<AppwriteResponse<Nanogram>> {
+        const queries = [
+          Query.equal("alumini", true),
+          Query.orderAsc("priority"),
+          Query.limit(limit),
+        ];
+        if (cursorAfter) {
+          queries.push(Query.cursorAfter(cursorAfter));
+        }
+        const response = await database.listRows<Nanogram>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.nanogramsTableId,
+          queries,
+        });
+        return response;
+      },
     },
 
-    async getCoreMembers({
-      cursorAfter,
-      limit = 9,
-    }: {
-      cursorAfter?: string;
-      limit?: number;
-    }): Promise<AppwriteResponse<Nanogram>> {
-      const queries = [
-        Query.equal("core", true),
-        Query.orderAsc("priority"),
-        Query.limit(limit),
-      ];
-      if (cursorAfter) {
-        queries.push(Query.cursorAfter(cursorAfter));
-      }
-      const response = await database.listRows<Nanogram>({
-        databaseId: appwriteConfig.databaseId,
-        tableId: appwriteConfig.nanogramsTableId,
-        queries,
-      });
-      return response;
-    },
+    events: {
+      async getEvents({
+        cursorAfter,
+        limit = 10,
+      }: {
+        cursorAfter?: string;
+        limit?: number;
+      }): Promise<AppwriteResponse<Event>> {
+        const queries = [Query.orderDesc("date"), Query.limit(limit)];
+        if (cursorAfter) {
+          queries.push(Query.cursorAfter(cursorAfter));
+        }
+        const response = await database.listRows<Event>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.eventsTableId,
+          queries,
+        });
+        return response;
+      },
 
-    async getAluminiMembers({
-      cursorAfter,
-      limit = 9,
-    }: {
-      cursorAfter?: string;
-      limit?: number;
-    }): Promise<AppwriteResponse<Nanogram>> {
-      const queries = [
-        Query.equal("alumini", true),
-        Query.orderAsc("priority"),
-        Query.limit(limit),
-      ];
-      if (cursorAfter) {
-        queries.push(Query.cursorAfter(cursorAfter));
-      }
-      const response = await database.listRows<Nanogram>({
-        databaseId: appwriteConfig.databaseId,
-        tableId: appwriteConfig.nanogramsTableId,
-        queries,
-      });
-      return response;
-    },
+      async getNextEvent(): Promise<Event> {
+        const events = await database.listRows<Event>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.eventsTableId,
+          queries: [
+            Query.orderAsc("date"),
+            Query.limit(1),
+            Query.equal("completed", false),
+          ],
+        });
 
-    // EVENTS
-    async getEvents({
-      cursorAfter,
-      limit = 9,
-    }: {
-      cursorAfter?: string;
-      limit?: number;
-    }): Promise<AppwriteResponse<Event>> {
-      const queries = [Query.orderDesc("$createdAt"), Query.limit(limit)];
-      if (cursorAfter) {
-        queries.push(Query.cursorAfter(cursorAfter));
-      }
-      const response = await database.listRows<Event>({
-        databaseId: appwriteConfig.databaseId,
-        tableId: appwriteConfig.eventsTableId,
-        queries,
-      });
-      return response;
+        return events.rows[0] ?? null;
+      },
+
+      async getLatestCompletedEvent(): Promise<Event> {
+        const events = await database.listRows<Event>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.eventsTableId,
+          queries: [
+            Query.orderDesc("date"),
+            Query.limit(1),
+            Query.equal("completed", true),
+          ],
+        });
+
+        return events.rows[0] ?? null;
+      },
+
+      async getUpcomingEvents() {
+        const events = await database.listRows<Event>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.eventsTableId,
+          queries: [
+            Query.orderAsc("date"),
+            Query.limit(10),
+            Query.equal("completed", false),
+          ],
+        });
+
+        if (!events) throw Error;
+
+        return events;
+      },
     },
   },
 };

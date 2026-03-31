@@ -5,13 +5,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useGetEvents } from "@/hooks/queries/useEvents";
+import { usePersistentInfiniteQuery } from "@/hooks/usePersistentInfiniteQuery";
 
-const EventGallery = async () => {
-  // const events = await getEvents();
-  const events = [] as any[];
+const EventGallery = () => {
+  const getEventsResult = useGetEvents({});
+  const { items: events, ref } = usePersistentInfiniteQuery(getEventsResult);
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-10 md:px-8 md:py-10">
+    <section className="max-w-7xl mx-auto py-20">
       <div className="mx-auto w-full max-w-7xl flex flex-col gap-12">
         <div className="w-full flex flex-col gap-6 text-center md:text-left">
           <h1 className="text-4xl font-semibold">Event Gallery</h1>
@@ -25,12 +27,15 @@ const EventGallery = async () => {
             <CarouselPrevious />
             <CarouselNext />
             <CarouselContent>
-              {events?.map((highlight, index) => (
+              {events.map((highlight, index) => (
                 <CarouselItem
                   className="md:basis-1/2 lg:basis-1/3 xl:basis-1/5 "
                   key={index}
                 >
-                  <div className="relative group">
+                  <div
+                    className="relative group"
+                    ref={index === events.length - 1 ? ref : undefined}
+                  >
                     <div className="overflow-hidden aspect-w-3 aspect-h-4 flex justify-center items-center">
                       <div className="object-cover w-full h-full transition-all duration-300 origin-bottom group-hover:scale-110 aspect-3/4">
                         <img

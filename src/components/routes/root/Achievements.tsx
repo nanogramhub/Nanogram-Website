@@ -95,8 +95,8 @@ const Achievements = () => {
   };
 
   return (
-    <div className="w-full pt-14" ref={ref}>
-      <div className="w-full flex flex-col gap-5 text-center">
+    <div className="w-full py-15" ref={ref}>
+      <div className="w-full flex flex-col gap-5 text-center max-w-2xl lg:max-w-7xl mx-auto">
         <h2 className="text-5xl font-medium mb-4">Achievements</h2>
         <p className="text-lg font-normal text-muted-foreground px-4 mb-10">
           Nanogram - The Tech Hub has been at the forefront of technological

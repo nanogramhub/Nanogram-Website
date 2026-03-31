@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { format, parseISO } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,3 +20,23 @@ export const range = (start: number, end?: number, step = 1) => {
 
   return output;
 };
+
+/**
+ * Formats an ISO date string into a custom human-readable format.
+ *
+ * Common format patterns:
+ * - `"PPP"`: Dec 31st, 2026 (Default)
+ * - `"PP"`: Dec 31, 2026
+ * - `"p"`: 10:30 PM
+ * - `"PPPp"`: Dec 31st, 2026 at 10:30 PM
+ * - `"do MMM yyyy"`: 31st Mar 2026
+ * - `"eeee, MMMM do"`: Tuesday, March 31st
+ * - `"yyyy-MM-dd"`: 2026-03-31
+ *
+ * @param isoString - The ISO date string to be formatted.
+ * @param formatStr - The date-fns format specifier (defaults to "PPP").
+ * @returns The formatted date string.
+ */
+export function formatDateTime(isoString: string, formatStr: string = "PPP") {
+  return format(parseISO(isoString), formatStr);
+}

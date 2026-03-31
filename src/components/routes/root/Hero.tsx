@@ -7,9 +7,11 @@ import { useGetTeamMembers } from "@/hooks/queries/useNanogram";
 import { Skeleton } from "@/components/ui/skeleton";
 import { range } from "@/lib/utils";
 import { toast } from "sonner";
+import { usePerformance } from "@/hooks/usePerformance";
 
 const Hero = () => {
   const { data: teamMembers, isPending, isError } = useGetTeamMembers();
+  const { performance } = usePerformance();
 
   if (isError) {
     toast.error("Failed to fetch team members");
@@ -18,9 +20,13 @@ const Hero = () => {
   return (
     <section className="mx-auto w-full h-dvh flex flex-col">
       <div className="w-full h-5/6 relative">
-        <Suspense fallback={<div className="w-full h-full bg-primary" />}>
-          <ParticleRing />
-        </Suspense>
+        {performance ? (
+          <div className="w-full h-full bg-primary" />
+        ) : (
+          <Suspense fallback={<div className="w-full h-full bg-primary" />}>
+            <ParticleRing />
+          </Suspense>
+        )}
         <div className="absolute top-0 left-0 max-w-full w-full h-full flex flex-col justify-end pointer-events-none md:p-20 p-4">
           <div className="pointer-events-auto">
             <h1 className="font-extrabold uppercase md:text-7xl text-4xl text-white mb-4">

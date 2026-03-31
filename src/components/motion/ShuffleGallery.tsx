@@ -26,7 +26,7 @@ const generateSquares = (squareData: { id: number; src: string }[]) => {
       key={sq.id}
       layout
       transition={{ duration: 1.5, type: "spring" }}
-      className="w-full h-full"
+      className="w-full aspect-square"
       style={{
         backgroundImage: `url(${sq.src})`,
         backgroundSize: "cover",
@@ -60,7 +60,7 @@ const ShuffleGallery = ({ images }: { images: string[] }) => {
   if (!squares) return null; // Prevent mismatch during initial SSR render
 
   return (
-    <div className="grid grid-cols-4 grid-rows-4 h-[450px] gap-1">
+    <div className="grid grid-cols-4 gap-1 w-3/4 mx-auto">
       {squares}
     </div>
   );
