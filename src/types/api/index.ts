@@ -39,3 +39,7 @@ export type Event = AppwriteDocument & {
   description: string;
   subtitle: string;
 };
+
+export type User = AppwriteDocument & {
+  
+}

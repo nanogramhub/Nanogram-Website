@@ -15,6 +15,8 @@ export const signInSchema = z.object({
     .min(6, { message: "Password must be at least 6 characters" }),
 });
 
+export type SigninFormValues = z.infer<typeof signInSchema>;
+
 export const signUpSchema = z.object({
   username: z
     .string()
@@ -22,18 +24,7 @@ export const signUpSchema = z.object({
     .regex(/^[a-z0-9_]+$/, {
       message:
         "Username can only contain lowercase letters, numbers, and underscores.",
-    })
-    .refine(
-      async (username) => {
-        const isAvailable = await queryClient.ensureQueryData(
-          authQueries.checkUsernameAvailability(username),
-        );
-        return isAvailable;
-      },
-      {
-        message: "Username is already taken.",
-      },
-    ),
+    }),
 
   name: z
     .string()
@@ -47,6 +38,8 @@ export const signUpSchema = z.object({
         "Password must contain at least one letter, one number, and one special character",
     }),
 });
+
+export type SignupFormValues = z.infer<typeof signUpSchema>;
 
 export const postFormSchema = z.object({
   caption: z

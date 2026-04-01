@@ -1,4 +1,4 @@
-import { signInSchema, type SigninFormValues } from "@/lib/validation";
+import { signUpSchema, type SignupFormValues } from "@/lib/validation";
 import { useForm } from "@tanstack/react-form";
 import {
   FieldGroup,
@@ -9,19 +9,24 @@ import {
 } from "../ui/field";
 import { Input } from "../ui/input";
 import { PasswordInput } from "../ui/password-input";
+import { queryClient } from "@/router";
+import { authQueries } from "@/lib/query/queryOptions";
+import { toast } from "sonner";
 
-interface LoginFormProps {
-  onSubmit: (data: SigninFormValues) => void;
+interface SignupFormProps {
+  onSubmit: (data: SignupFormValues) => void;
 }
 
-const LoginForm = ({ onSubmit }: LoginFormProps) => {
+const SignupForm = ({ onSubmit }: SignupFormProps) => {
   const form = useForm({
     defaultValues: {
       username: "",
+      name: "",
+      email: "",
       password: "",
-    } as SigninFormValues,
+    } as SignupFormValues,
     validators: {
-      onChange: signInSchema,
+      onChange: signUpSchema,
     },
     onSubmit: ({ value }) => {
       onSubmit(value);
@@ -30,7 +35,7 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
 
   return (
     <form
-      id="login-form"
+      id="signup-form"
       className="flex flex-col gap-3 w-full mx-auto text-justify py-5"
       onSubmit={(e) => {
         e.preventDefault();
@@ -54,6 +59,47 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                     placeholder="john_doe"
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          />
+          <form.Field
+            name="name"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor="name">Display Name</FieldLabel>
+                  <Input
+                    id={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="John Doe"
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          />
+          <form.Field
+            name="email"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <Input
+                    id={field.name}
+                    type="email"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="johndoe@domain.com"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -86,4 +132,4 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
   );
 };
 
-export default LoginForm;
+export default SignupForm;

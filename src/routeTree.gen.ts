@@ -16,6 +16,7 @@ import { Route as DefaultLayoutIndexRouteImport } from './routes/_defaultLayout/
 import { Route as DefaultLayoutGalleryRouteImport } from './routes/_defaultLayout/gallery'
 import { Route as DefaultLayoutEventsRouteImport } from './routes/_defaultLayout/events'
 import { Route as DefaultLayoutAboutUsRouteImport } from './routes/_defaultLayout/about-us'
+import { Route as AuthLayoutSignupRouteImport } from './routes/_authLayout/signup'
 import { Route as AuthLayoutLoginRouteImport } from './routes/_authLayout/login'
 
 const TestRoute = TestRouteImport.update({
@@ -51,6 +52,11 @@ const DefaultLayoutAboutUsRoute = DefaultLayoutAboutUsRouteImport.update({
   path: '/about-us',
   getParentRoute: () => DefaultLayoutRoute,
 } as any)
+const AuthLayoutSignupRoute = AuthLayoutSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
 const AuthLayoutLoginRoute = AuthLayoutLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/': typeof DefaultLayoutIndexRoute
   '/test': typeof TestRoute
   '/login': typeof AuthLayoutLoginRoute
+  '/signup': typeof AuthLayoutSignupRoute
   '/about-us': typeof DefaultLayoutAboutUsRoute
   '/events': typeof DefaultLayoutEventsRoute
   '/gallery': typeof DefaultLayoutGalleryRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/': typeof DefaultLayoutIndexRoute
   '/test': typeof TestRoute
   '/login': typeof AuthLayoutLoginRoute
+  '/signup': typeof AuthLayoutSignupRoute
   '/about-us': typeof DefaultLayoutAboutUsRoute
   '/events': typeof DefaultLayoutEventsRoute
   '/gallery': typeof DefaultLayoutGalleryRoute
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/_defaultLayout': typeof DefaultLayoutRouteWithChildren
   '/test': typeof TestRoute
   '/_authLayout/login': typeof AuthLayoutLoginRoute
+  '/_authLayout/signup': typeof AuthLayoutSignupRoute
   '/_defaultLayout/about-us': typeof DefaultLayoutAboutUsRoute
   '/_defaultLayout/events': typeof DefaultLayoutEventsRoute
   '/_defaultLayout/gallery': typeof DefaultLayoutGalleryRoute
@@ -86,15 +95,30 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/test' | '/login' | '/about-us' | '/events' | '/gallery'
+  fullPaths:
+    | '/'
+    | '/test'
+    | '/login'
+    | '/signup'
+    | '/about-us'
+    | '/events'
+    | '/gallery'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/test' | '/login' | '/about-us' | '/events' | '/gallery'
+  to:
+    | '/'
+    | '/test'
+    | '/login'
+    | '/signup'
+    | '/about-us'
+    | '/events'
+    | '/gallery'
   id:
     | '__root__'
     | '/_authLayout'
     | '/_defaultLayout'
     | '/test'
     | '/_authLayout/login'
+    | '/_authLayout/signup'
     | '/_defaultLayout/about-us'
     | '/_defaultLayout/events'
     | '/_defaultLayout/gallery'
@@ -158,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DefaultLayoutAboutUsRouteImport
       parentRoute: typeof DefaultLayoutRoute
     }
+    '/_authLayout/signup': {
+      id: '/_authLayout/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof AuthLayoutSignupRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
     '/_authLayout/login': {
       id: '/_authLayout/login'
       path: '/login'
@@ -170,10 +201,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthLayoutRouteChildren {
   AuthLayoutLoginRoute: typeof AuthLayoutLoginRoute
+  AuthLayoutSignupRoute: typeof AuthLayoutSignupRoute
 }
 
 const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
   AuthLayoutLoginRoute: AuthLayoutLoginRoute,
+  AuthLayoutSignupRoute: AuthLayoutSignupRoute,
 }
 
 const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(

@@ -1,4 +1,4 @@
-import LoginForm from "@/components/forms/LoginForm";
+import SignupForm from "@/components/forms/SignupForm";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authLayout/login")({
+export const Route = createFileRoute("/_authLayout/signup")({
   component: RouteComponent,
 });
 
@@ -96,10 +96,10 @@ function RouteComponent() {
 
           <Separator />
 
-          <LoginForm onSubmit={(data) => console.log(data)} />
+          <SignupForm onSubmit={(data) => console.log(data)} />
 
-          <Button size="lg" type="submit" form="login-form" className="w-full">
-            Login
+          <Button size="lg" type="submit" form="signup-form" className="w-full">
+            Sign Up
           </Button>
 
           {/* Forgot Password Button */}
@@ -109,18 +109,11 @@ function RouteComponent() {
               variant="link"
               className="text-info p-0 text-xs mx-1"
               render={(props) => (
-                <Link to="/signup" {...props}>
-                  Don&apos;t have an account? Sign Up
+                <Link to="/login" {...props}>
+                  Already have an account? Login
                 </Link>
               )}
             />
-            <Button
-              variant="link"
-              className="text-info p-0 text-xs mx-1"
-              // onClick={resetPassword}
-            >
-              Forgot Password?
-            </Button>
           </div>
         </CardContent>
       </Card>
