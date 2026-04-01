@@ -8,27 +8,31 @@ export function useGetTeamMembers() {
 export function useGetCoreMembers({
   cursorAfter,
   limit,
+  enabled,
 }: {
   cursorAfter?: string;
   limit?: number;
+  enabled: boolean;
 }) {
   return useInfiniteQuery(
-    nanogramQueries.getCoreMembers({ cursorAfter, limit }),
+    nanogramQueries.getCoreMembers({ cursorAfter, limit, enabled }),
   );
 }
 
 export function useGetAluminiMembers({
   cursorAfter,
   limit,
+  enabled,
 }: {
   cursorAfter?: string;
   limit?: number;
+  enabled: boolean;
 }) {
   return useInfiniteQuery(
-    nanogramQueries.getAluminiMembers({ cursorAfter, limit }),
+    nanogramQueries.getAluminiMembers({ cursorAfter, limit, enabled }),
   );
 }
 
-export function useGetTestimonials() {
-  return useQuery(nanogramQueries.getTestimonials());
+export function useGetTestimonials({ enabled }: { enabled: boolean }) {
+  return useQuery(nanogramQueries.getTestimonials(enabled));
 }

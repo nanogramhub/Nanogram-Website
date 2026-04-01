@@ -4,11 +4,13 @@ import { eventsQueries } from "@/lib/query/queryOptions";
 export function useGetEvents({
   cursorAfter,
   limit,
+  enabled,
 }: {
   cursorAfter?: string;
   limit?: number;
+  enabled: boolean;
 }) {
-  return useInfiniteQuery(eventsQueries.getEvents({ cursorAfter, limit }));
+  return useInfiniteQuery(eventsQueries.getEvents({ cursorAfter, limit, enabled }));
 }
 
 export function useGetNextEvent() {
@@ -19,6 +21,6 @@ export function useGetLatestCompletedEvent() {
   return useQuery(eventsQueries.getLatestCompletedEvent());
 }
 
-export function useGetUpcomingEvents() {
-  return useQuery(eventsQueries.getUpcomingEvents());
+export function useGetUpcomingEvents({ enabled }: { enabled: boolean }) {
+  return useQuery(eventsQueries.getUpcomingEvents({ enabled }));
 }

@@ -44,10 +44,7 @@ const Hero = () => {
                 size="lg"
                 className="w-fit text-primary-foreground"
                 render={(props) => (
-                  <Link
-                    to="/" // TODO: Add link to community page
-                    {...props}
-                  >
+                  <Link to="/community" {...props}>
                     Join the Community for Free!
                   </Link>
                 )}

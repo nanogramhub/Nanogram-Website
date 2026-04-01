@@ -13,11 +13,12 @@ export const authQueries = {
 };
 
 export const nanogramQueries = {
-  getTestimonials: () => {
+  getTestimonials: (enabled: boolean) => {
     return queryOptions({
       queryKey: queryKeys.nanogram.getTestimonials,
       queryFn: () => api.public.nanogram.getTestimonials(),
       staleTime: 1000 * 60 * 30, // 30 minutes
+      enabled,
     });
   },
   getTeamMembers: () => {
@@ -30,9 +31,11 @@ export const nanogramQueries = {
   getCoreMembers: ({
     cursorAfter,
     limit,
+    enabled,
   }: {
     cursorAfter?: string;
     limit?: number;
+    enabled: boolean;
   }) => {
     return infiniteQueryOptions({
       queryKey: [...queryKeys.nanogram.getCoreMembers, cursorAfter],
@@ -44,14 +47,17 @@ export const nanogramQueries = {
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
       staleTime: 1000 * 60 * 30, // 30 minutes
+      enabled,
     });
   },
   getAluminiMembers: ({
     cursorAfter,
     limit,
+    enabled,
   }: {
     cursorAfter?: string;
     limit?: number;
+    enabled: boolean;
   }) => {
     return infiniteQueryOptions({
       queryKey: [...queryKeys.nanogram.getAluminiMembers, cursorAfter],
@@ -66,6 +72,7 @@ export const nanogramQueries = {
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
       staleTime: 1000 * 60 * 30, // 30 minutes
+      enabled,
     });
   },
 };
@@ -74,9 +81,11 @@ export const eventsQueries = {
   getEvents: ({
     cursorAfter,
     limit,
+    enabled,
   }: {
     cursorAfter?: string;
     limit?: number;
+    enabled: boolean;
   }) => {
     return infiniteQueryOptions({
       queryKey: [...queryKeys.events.getEvents, cursorAfter],
@@ -87,6 +96,7 @@ export const eventsQueries = {
         lastPage.rows.length === 0
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
+      enabled,
     });
   },
   getNextEvent: () => {
@@ -101,10 +111,11 @@ export const eventsQueries = {
       queryFn: () => api.public.events.getLatestCompletedEvent(),
     });
   },
-  getUpcomingEvents: () => {
+  getUpcomingEvents: ({ enabled }: { enabled: boolean }) => {
     return queryOptions({
       queryKey: queryKeys.events.getUpcomingEvents,
       queryFn: () => api.public.events.getUpcomingEvents(),
+      enabled,
     });
   },
 };

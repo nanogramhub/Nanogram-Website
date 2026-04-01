@@ -7,13 +7,15 @@ import {
 } from "@/components/ui/carousel";
 import { useGetEvents } from "@/hooks/queries/useEvents";
 import { usePersistentInfiniteQuery } from "@/hooks/usePersistentInfiniteQuery";
+import { useInView } from "react-intersection-observer";
 
 const EventGallery = () => {
-  const getEventsResult = useGetEvents({});
+  const { ref: containerRef, inView } = useInView({ triggerOnce: true });
+  const getEventsResult = useGetEvents({ enabled: inView });
   const { items: events, ref } = usePersistentInfiniteQuery(getEventsResult);
 
   return (
-    <section className="max-w-7xl mx-auto py-20">
+    <section className="max-w-7xl mx-auto py-20" ref={containerRef}>
       <div className="mx-auto w-full max-w-7xl flex flex-col gap-12">
         <div className="w-full flex flex-col gap-6 text-center md:text-left">
           <h1 className="text-4xl font-semibold">Event Gallery</h1>

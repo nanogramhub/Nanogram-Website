@@ -1,13 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { NavTab, NavTabs } from "./fuild-nav-tabs";
 import { navbarItems } from "@/constants";
-import { useIsMobile } from "@/hooks/useMobile";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { ModeToggle } from "../theme/mode-toggle";
 import NavSheet from "./nav-sheet";
 import { PerformanceToggle } from "../performance/performance-toggle";
+import { useAuthStore } from "@/store/useAuthStore";
+import { Button } from "@/components/ui/button";
+import UserAvatar from "../profile/user-avatar";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const logout = useAuthStore((s) => s.logout);
   return (
     <div className="bg-primary py-2 px-3">
       <div className="flex relative justify-between">
@@ -38,6 +43,17 @@ const Navbar = () => {
             <div className="w-50 flex items-center justify-end gap-2">
               <PerformanceToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
               <ModeToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
+              {currentUser ? (
+                <>
+                  <Button onClick={logout}>Logout</Button>
+                  <UserAvatar
+                    name={currentUser.name}
+                    imageUrl={currentUser.imageUrl}
+                  />
+                </>
+              ) : (
+                <Link to="/login">Login</Link>
+              )}
             </div>
           </>
         )}

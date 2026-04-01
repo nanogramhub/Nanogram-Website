@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
+import { Route as PrivateLayoutRouteImport } from './routes/_privateLayout'
 import { Route as DefaultLayoutRouteImport } from './routes/_defaultLayout'
 import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
 import { Route as DefaultLayoutIndexRouteImport } from './routes/_defaultLayout/index'
+import { Route as PrivateLayoutCommunityRouteImport } from './routes/_privateLayout/community'
 import { Route as DefaultLayoutGalleryRouteImport } from './routes/_defaultLayout/gallery'
 import { Route as DefaultLayoutEventsRouteImport } from './routes/_defaultLayout/events'
 import { Route as DefaultLayoutAboutUsRouteImport } from './routes/_defaultLayout/about-us'
@@ -22,6 +24,10 @@ import { Route as AuthLayoutLoginRouteImport } from './routes/_authLayout/login'
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateLayoutRoute = PrivateLayoutRouteImport.update({
+  id: '/_privateLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DefaultLayoutRoute = DefaultLayoutRouteImport.update({
@@ -36,6 +42,11 @@ const DefaultLayoutIndexRoute = DefaultLayoutIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DefaultLayoutRoute,
+} as any)
+const PrivateLayoutCommunityRoute = PrivateLayoutCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => PrivateLayoutRoute,
 } as any)
 const DefaultLayoutGalleryRoute = DefaultLayoutGalleryRouteImport.update({
   id: '/gallery',
@@ -71,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/about-us': typeof DefaultLayoutAboutUsRoute
   '/events': typeof DefaultLayoutEventsRoute
   '/gallery': typeof DefaultLayoutGalleryRoute
+  '/community': typeof PrivateLayoutCommunityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof DefaultLayoutIndexRoute
@@ -80,17 +92,20 @@ export interface FileRoutesByTo {
   '/about-us': typeof DefaultLayoutAboutUsRoute
   '/events': typeof DefaultLayoutEventsRoute
   '/gallery': typeof DefaultLayoutGalleryRoute
+  '/community': typeof PrivateLayoutCommunityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authLayout': typeof AuthLayoutRouteWithChildren
   '/_defaultLayout': typeof DefaultLayoutRouteWithChildren
+  '/_privateLayout': typeof PrivateLayoutRouteWithChildren
   '/test': typeof TestRoute
   '/_authLayout/login': typeof AuthLayoutLoginRoute
   '/_authLayout/signup': typeof AuthLayoutSignupRoute
   '/_defaultLayout/about-us': typeof DefaultLayoutAboutUsRoute
   '/_defaultLayout/events': typeof DefaultLayoutEventsRoute
   '/_defaultLayout/gallery': typeof DefaultLayoutGalleryRoute
+  '/_privateLayout/community': typeof PrivateLayoutCommunityRoute
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
 }
 export interface FileRouteTypes {
@@ -103,6 +118,7 @@ export interface FileRouteTypes {
     | '/about-us'
     | '/events'
     | '/gallery'
+    | '/community'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -112,22 +128,26 @@ export interface FileRouteTypes {
     | '/about-us'
     | '/events'
     | '/gallery'
+    | '/community'
   id:
     | '__root__'
     | '/_authLayout'
     | '/_defaultLayout'
+    | '/_privateLayout'
     | '/test'
     | '/_authLayout/login'
     | '/_authLayout/signup'
     | '/_defaultLayout/about-us'
     | '/_defaultLayout/events'
     | '/_defaultLayout/gallery'
+    | '/_privateLayout/community'
     | '/_defaultLayout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
   DefaultLayoutRoute: typeof DefaultLayoutRouteWithChildren
+  PrivateLayoutRoute: typeof PrivateLayoutRouteWithChildren
   TestRoute: typeof TestRoute
 }
 
@@ -138,6 +158,13 @@ declare module '@tanstack/react-router' {
       path: '/test'
       fullPath: '/test'
       preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_privateLayout': {
+      id: '/_privateLayout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PrivateLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_defaultLayout': {
@@ -160,6 +187,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof DefaultLayoutIndexRouteImport
       parentRoute: typeof DefaultLayoutRoute
+    }
+    '/_privateLayout/community': {
+      id: '/_privateLayout/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof PrivateLayoutCommunityRouteImport
+      parentRoute: typeof PrivateLayoutRoute
     }
     '/_defaultLayout/gallery': {
       id: '/_defaultLayout/gallery'
@@ -231,9 +265,22 @@ const DefaultLayoutRouteWithChildren = DefaultLayoutRoute._addFileChildren(
   DefaultLayoutRouteChildren,
 )
 
+interface PrivateLayoutRouteChildren {
+  PrivateLayoutCommunityRoute: typeof PrivateLayoutCommunityRoute
+}
+
+const PrivateLayoutRouteChildren: PrivateLayoutRouteChildren = {
+  PrivateLayoutCommunityRoute: PrivateLayoutCommunityRoute,
+}
+
+const PrivateLayoutRouteWithChildren = PrivateLayoutRoute._addFileChildren(
+  PrivateLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   AuthLayoutRoute: AuthLayoutRouteWithChildren,
   DefaultLayoutRoute: DefaultLayoutRouteWithChildren,
+  PrivateLayoutRoute: PrivateLayoutRouteWithChildren,
   TestRoute: TestRoute,
 }
 export const routeTree = rootRouteImport

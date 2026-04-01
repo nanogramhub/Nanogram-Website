@@ -1,19 +1,17 @@
-import { Button } from "@/components/ui/button";
+import { cloudinary } from "@/lib/cloudinary";
+import { AdvancedImage } from "@cloudinary/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { api } from "@/lib/appwrite/api";
+// import { quality, format } from "@cloudinary/url-gen/actions/delivery";
 
 export const Route = createFileRoute("/test")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  async function run() {
-    const data = await api.public.events.getEvents({});
-    console.log(data);
-  }
+  // const images = cloudinary.image("");
   return (
     <div>
-      <Button onClick={run}>Click me</Button>
+      <AdvancedImage cldImg={cloudinary.image("nano51224_bcqwae")} />
     </div>
   );
 }

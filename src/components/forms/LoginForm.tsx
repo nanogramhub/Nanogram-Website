@@ -17,7 +17,7 @@ interface LoginFormProps {
 const LoginForm = ({ onSubmit }: LoginFormProps) => {
   const form = useForm({
     defaultValues: {
-      username: "",
+      identifier: "",
       password: "",
     } as SigninFormValues,
     validators: {
@@ -41,13 +41,15 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
       <FieldSet>
         <FieldGroup>
           <form.Field
-            name="username"
+            name="identifier"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched && !field.state.meta.isValid;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="username">Username</FieldLabel>
+                  <FieldLabel htmlFor="identifier">
+                    Email or Username
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     value={field.state.value}

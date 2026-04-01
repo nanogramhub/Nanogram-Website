@@ -1,8 +1,10 @@
 import EventCard from "@/components/shared/default/EventCard";
 import { useGetUpcomingEvents } from "@/hooks/queries/useEvents";
+import { useInView } from "react-intersection-observer";
 
 const Upcoming = () => {
-  const { data: events } = useGetUpcomingEvents();
+  const { ref: containerRef, inView } = useInView({ triggerOnce: true });
+  const { data: events } = useGetUpcomingEvents({ enabled: inView });
 
   if (!events) return null;
 
@@ -12,6 +14,7 @@ const Upcoming = () => {
         <section
           className="max-w-7xl mx-auto w-full text-base-content-black py-16 sm:py-10"
           id="new-events"
+          ref={containerRef}
         >
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
             <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-4">

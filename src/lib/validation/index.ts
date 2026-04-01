@@ -1,15 +1,9 @@
-import { queryClient } from "@/router";
 import * as z from "zod";
-import { authQueries } from "../query/queryOptions";
 
 export const signInSchema = z.object({
-  username: z
+  identifier: z
     .string()
-    .min(3, { message: "Username must be at least 3 characters" })
-    .regex(/^[a-z0-9_]+$/, {
-      message:
-        "Username can only contain lowercase letters, numbers, and underscores.",
-    }),
+    .min(3, { message: "Identifier must be at least 3 characters" }),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters" }),

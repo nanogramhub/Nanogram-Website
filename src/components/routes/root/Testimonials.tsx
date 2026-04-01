@@ -11,16 +11,19 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import TestimonialDiv from "@/components/shared/default/TestimonialDiv";
+import { useInView } from "react-intersection-observer";
 
 export default function Testimonials() {
   const { performance } = usePerformance();
-  const { data } = useGetTestimonials();
+  const { ref, inView } = useInView({ triggerOnce: true });
+  const { data } = useGetTestimonials({ enabled: inView });
 
   if (!data) return null;
   const testimonials = data.rows;
 
   return (
     <section
+      ref={ref}
       aria-label="Testimonials"
       className="relative w-full px-4 lg:pt-20 md:pt-32 pt-52 py-16 overflow-hidden"
     >

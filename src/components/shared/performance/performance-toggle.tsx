@@ -13,40 +13,42 @@ export function PerformanceToggle({ className }: { className?: string }) {
   const { performance, setPerformance } = usePerformance();
 
   return (
-    <Toggle
-      variant="default"
-      size="lg"
-      className={cn("cursor-pointer relative", className)}
-      onClick={() => setPerformance(!performance)}
-    >
-      <Tooltip>
-        <TooltipTrigger
-          className={cn(
-            "transition-all",
-            performance ? "rotate-0 scale-100" : "-rotate-90 scale-0",
-          )}
-        >
-          <Leaf />
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Low Performance</p>
-        </TooltipContent>
-      </Tooltip>
-      <Tooltip>
-        <TooltipTrigger
-          className={cn(
-            "absolute transition-all",
-            performance ? "rotate-90 scale-0" : "rotate-0 scale-100",
-          )}
-        >
-          <Gauge />
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>High Performance</p>
-        </TooltipContent>
-      </Tooltip>
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <Toggle
+            {...props}
+            variant="default"
+            size="lg"
+            className={cn("cursor-pointer relative", className)}
+            onClick={() => setPerformance(!performance)}
+          >
+            <span
+              className={cn(
+                "transition-all absolute",
+                performance ? "rotate-0 scale-100" : "-rotate-90 scale-0",
+              )}
+            >
+              <Leaf />
+            </span>
 
-      <span className="sr-only">Toggle performance</span>
-    </Toggle>
+            <span
+              className={cn(
+                "transition-all absolute",
+                performance ? "rotate-90 scale-0" : "rotate-0 scale-100",
+              )}
+            >
+              <Gauge />
+            </span>
+
+            <span className="sr-only">Toggle performance</span>
+          </Toggle>
+        )}
+      />
+
+      <TooltipContent>
+        <p>{performance ? "Low Performance" : "High Performance"}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }

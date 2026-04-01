@@ -11,7 +11,6 @@ import { Input } from "../ui/input";
 import { PasswordInput } from "../ui/password-input";
 import { queryClient } from "@/router";
 import { authQueries } from "@/lib/query/queryOptions";
-import { toast } from "sonner";
 
 interface SignupFormProps {
   onSubmit: (data: SignupFormValues) => void;
@@ -47,6 +46,18 @@ const SignupForm = ({ onSubmit }: SignupFormProps) => {
         <FieldGroup>
           <form.Field
             name="username"
+            validators={{
+              onBlurAsync: async ({ value }) => {
+                if (!value || value.length < 3) return;
+                const isAvailable = await queryClient.fetchQuery(
+                  authQueries.checkUsernameAvailability(value),
+                );
+                return isAvailable
+                  ? undefined
+                  : { message: "Username is already taken" };
+              },
+              onBlurAsyncDebounceMs: 500,
+            }}
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched && !field.state.meta.isValid;

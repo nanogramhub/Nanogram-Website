@@ -40,3 +40,20 @@ export const range = (start: number, end?: number, step = 1) => {
 export function formatDateTime(isoString: string, formatStr: string = "PPP") {
   return format(parseISO(isoString), formatStr);
 }
+
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function getInitials(name: string) {
+  // if firstname and lastname are present then return first letter of each
+  // else return first two letter of the name
+  const names = name.split(" ");
+  if (names.length > 1) {
+    return names
+      .map((n) => n.charAt(0))
+      .join("")
+      .toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase();
+}

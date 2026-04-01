@@ -8,18 +8,53 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import type { SigninFormValues } from "@/lib/validation";
+import { useAuthStore } from "@/store/useAuthStore";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { AppwriteException } from "appwrite";
+import { useState } from "react";
+import { toast } from "sonner";
+import z from "zod";
+
+const loginRedirectSchema = z.object({
+  redirectTo: z.string().optional(),
+});
 
 export const Route = createFileRoute("/_authLayout/login")({
   component: RouteComponent,
+  validateSearch: loginRedirectSchema,
 });
 
 function RouteComponent() {
+  const { redirectTo } = Route.useSearch();
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const login = useAuthStore((s) => s.login);
+  async function onSubmit(data: SigninFormValues) {
+    setLoading(true);
+    try {
+      const user = await login(data);
+      if (user) {
+        toast.success("Login successful");
+        navigate({
+          to: redirectTo || "/",
+        });
+      }
+    } catch (error) {
+      if (error instanceof AppwriteException) {
+        toast.error(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div className="flex flex-col h-dvh justify-center">
       <Card className="min-w-80 max-w-120 mx-auto text-center bg-base-200 p-10 rounded-lg">
         <CardHeader>
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center">
             <img
               src="/assets/images/nanogram_logo-bg-primary.svg"
               alt="logo"
@@ -28,7 +63,7 @@ function RouteComponent() {
               className="rounded-full"
             />
           </div>
-          <CardTitle className="text-2xl font-bold mb-4">
+          <CardTitle className="text-2xl font-bold">
             Sign in to Nanogram
           </CardTitle>
           <CardDescription>
@@ -36,11 +71,12 @@ function RouteComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="py-5 max-w-100 text-center flex flex-wrap justify-around gap-2">
+          <div className="pb-5 max-w-100 text-center flex flex-wrap justify-around gap-2">
             {/* Google */}
             <Button
               size="lg"
               className="bg-white text-black border-[#e5e5e5] hover:bg-gray-50"
+              disabled={loading}
               // onClick={() => handleOAuthSignIn("oauth_google")}
             >
               <svg
@@ -76,6 +112,7 @@ function RouteComponent() {
             <Button
               size="lg"
               className="bg-black text-white border-black hover:bg-gray-900"
+              disabled={loading}
               // onClick={() => handleOAuthSignIn("oauth_github")}
             >
               <svg
@@ -96,9 +133,15 @@ function RouteComponent() {
 
           <Separator />
 
-          <LoginForm onSubmit={(data) => console.log(data)} />
+          <LoginForm onSubmit={onSubmit} />
 
-          <Button size="lg" type="submit" form="login-form" className="w-full">
+          <Button
+            size="lg"
+            type="submit"
+            form="login-form"
+            className="w-full"
+            disabled={loading}
+          >
             Login
           </Button>
 
@@ -106,6 +149,7 @@ function RouteComponent() {
           <div className="flex flex-wrap justify-center md:justify-between mt-4">
             <Button
               nativeButton={false}
+              disabled={loading}
               variant="link"
               className="text-info p-0 text-xs mx-1"
               render={(props) => (
@@ -117,6 +161,7 @@ function RouteComponent() {
             <Button
               variant="link"
               className="text-info p-0 text-xs mx-1"
+              disabled={loading}
               // onClick={resetPassword}
             >
               Forgot Password?

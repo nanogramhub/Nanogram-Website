@@ -2,15 +2,16 @@ import GridTeamList from "@/components/shared/default/GridTeamList";
 import { useGetCoreMembers } from "@/hooks/queries/useNanogram";
 import { usePersistentInfiniteQuery } from "@/hooks/usePersistentInfiniteQuery";
 import type { Nanogram } from "@/types/api";
+import { useInView } from "react-intersection-observer";
 
 const Team = () => {
-  const infiniteQueryResult = useGetCoreMembers({});
-  const { items: teamMembers, ref } = usePersistentInfiniteQuery<Nanogram>(
-    infiniteQueryResult,
-  );
+  const { ref: containerRef, inView } = useInView({ triggerOnce: true });
+  const infiniteQueryResult = useGetCoreMembers({ enabled: inView });
+  const { items: teamMembers, ref } =
+    usePersistentInfiniteQuery<Nanogram>(infiniteQueryResult);
 
   return (
-    <div className="w-full pt-20" id="team">
+    <div className="w-full pt-20" id="team" ref={containerRef}>
       <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="mx-auto max-w-2xl sm:text-center">
           <h2 className="text-4xl font-extrabold text-neutral-black">
