@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { format, parseISO } from "date-fns";
+import { format, formatDistanceToNow, parseISO } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -41,8 +41,36 @@ export function formatDateTime(isoString: string, formatStr: string = "PPP") {
   return format(parseISO(isoString), formatStr);
 }
 
+/**
+ * Formats an ISO date string into a relative time string.
+ *
+ * Examples:
+ * - "just now"
+ * - "5 minutes ago"
+ * - "2 hours ago"
+ * - "3 days ago"
+ *
+ * @param isoString - The ISO date string to be formatted.
+ * @param addSuffix - Whether to include "ago" / "in" (default: true).
+ * @returns The relative time string.
+ */
+export function formatRelativeTime(
+  isoString: string,
+  addSuffix: boolean = true,
+) {
+  const date = parseISO(isoString);
+
+  return formatDistanceToNow(date, {
+    addSuffix,
+  });
+}
+
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function kebabCasetoTitleCase(str: string) {
+  return str.split("-").map(capitalize).join(" ");
 }
 
 export function getInitials(name: string) {

@@ -1,5 +1,5 @@
 import { Gauge, Leaf } from "lucide-react";
-import { usePerformance } from "@/hooks/usePerformance";
+import { usePerformance } from "@/hooks/use-performance";
 
 import { Toggle } from "../../ui/toggle";
 import { cn } from "@/lib/utils";

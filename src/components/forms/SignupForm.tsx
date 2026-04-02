@@ -10,7 +10,7 @@ import {
 import { Input } from "../ui/input";
 import { PasswordInput } from "../ui/password-input";
 import { queryClient } from "@/router";
-import { authQueries } from "@/lib/query/queryOptions";
+import { authQueries } from "@/lib/query/query-options";
 
 interface SignupFormProps {
   onSubmit: (data: SignupFormValues) => void;

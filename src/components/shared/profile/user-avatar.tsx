@@ -1,10 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
-import type { User } from "@/types/api";
+import type { User } from "@/types/schema";
+import type { AvatarRootProps } from "@base-ui/react";
 
-const UserAvatar = ({ name, imageUrl }: Pick<User, "name" | "imageUrl">) => {
+type UserAvatarProps = AvatarRootProps &
+  Pick<User, "name" | "imageUrl"> & {
+    size?: "default" | "sm" | "lg";
+  };
+
+const UserAvatar = ({ name, imageUrl, size, ...props }: UserAvatarProps) => {
   return (
-    <Avatar>
+    <Avatar size={size} {...props}>
       <AvatarImage src={imageUrl} />
       <AvatarFallback>{getInitials(name)}</AvatarFallback>
     </Avatar>

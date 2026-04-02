@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import type { NavigationItems } from "@/types";
 
+export const webappUrl = import.meta.env.VITE_WEBAPP_URL;
+
 export const navbarItems: NavigationItems = [
   { to: "/", icon: House, label: "Home" },
   { to: "/about-us", icon: Info, label: "About Us" },
@@ -24,41 +26,9 @@ export const sidebarItems: NavigationItems = [
   { to: "/community", icon: Play, label: "FYP" },
   { to: "/explore", icon: Compass, label: "Explore" },
   { to: "/all-users", icon: Users, label: "People" },
-  { to: "/saved", icon: Album, label: "Saved" },
+  { to: "/saved-posts", icon: Album, label: "Saved" },
   { to: "/create-post", icon: SquarePlus, label: "Create Post" },
   { to: "/messages", icon: MessageCircleMore, label: "Messages" },
-];
-
-export const bottombarItems: NavigationItems = [
-  { to: "/community", icon: Play, label: "FYP" },
-  { to: "/explore", icon: Compass, label: "Explore" },
-  { to: "/create-post", icon: SquarePlus, label: "Create Post" },
-  { to: "/messages", icon: MessageCircleMore, label: "Messages" },
-  { to: "/saved", icon: Album, label: "Saved" },
-];
-
-export const communityPaths = [
-  "/community",
-  "/explore",
-  "/all-users",
-  "/saved",
-  "/create-post",
-  "/liked-post",
-  "/update-post",
-  "/posts",
-  "/profile",
-  "/update-profile",
-  "/newsletter",
-];
-
-export const publicRoutes = [
-  "/sign-in",
-  "/sign-up",
-  "/",
-  "/about-us",
-  "/events",
-  "/gallery",
-  "*",
 ];
 
 // export const adminId = "676ad11a00039ac69abb";

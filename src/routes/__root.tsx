@@ -37,5 +37,5 @@ export const Route = createRootRoute({
       }
     }
   },
-  pendingComponent: () => <div>Loading...</div>,
+  pendingComponent: () => <Outlet />,
 });

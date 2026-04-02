@@ -1,12 +1,13 @@
-import React from "react";
+import type { SVGProps } from "react";
 
-const Saved = ({ className = "w-5 h-5" }) => {
+const Saved = ({ className, ...props }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       className={className}
       viewBox="0 0 20 20"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <path
         d="M17.5,9.2v4.2c0,2.6,0,3.9-0.6,4.4c-0.3,0.3-0.7,0.4-1.1,0.5c-0.8,0.1-1.8-0.8-3.7-2.5

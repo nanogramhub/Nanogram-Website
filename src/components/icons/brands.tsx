@@ -119,36 +119,3 @@ export const Linkedin = createBrandIcon("linkedin");
 export const Telegram = createBrandIcon("telegram");
 export const Reddit = createBrandIcon("reddit");
 export const Mail = createBrandIcon("mail");
-
-// Export all icons as an object for easier access
-export const BrandIcons = {
-  Whatsapp,
-  Github,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Telegram,
-  Reddit,
-  Mail,
-} as const;
-
-// Export icon names for TypeScript support
-export type BrandIconName = keyof typeof brandIcons;
-
-// Helper function to get icon by name
-const brandIconKeyMap: Record<BrandIconName, keyof typeof BrandIcons> = {
-  whatsapp: "Whatsapp",
-  github: "Github",
-  facebook: "Facebook",
-  twitter: "Twitter",
-  instagram: "Instagram",
-  linkedin: "Linkedin",
-  telegram: "Telegram",
-  reddit: "Reddit",
-  mail: "Mail",
-};
-
-export const getBrandIcon = (name: BrandIconName) => {
-  return BrandIcons[brandIconKeyMap[name]];
-};

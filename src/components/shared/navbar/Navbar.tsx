@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { NavTab, NavTabs } from "./fuild-nav-tabs";
 import { navbarItems } from "@/constants";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { ModeToggle } from "../theme/mode-toggle";
 import NavSheet from "./nav-sheet";
 import { PerformanceToggle } from "../performance/performance-toggle";

@@ -1,1 +1,1 @@
-export { default as GalleryPage } from "./Gallery";
+export { default as GalleryPage } from "./gallery-page";

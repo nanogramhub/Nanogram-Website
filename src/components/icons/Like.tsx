@@ -1,12 +1,13 @@
-import React from "react";
+import type { SVGProps } from "react";
 
-const Like = ({ className = "" }) => {
+const Like = ({ className, ...props }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       className={className}
       viewBox="0 0 18 16"
       xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
+      {...props}
     >
       <path
         fillRule="evenodd"

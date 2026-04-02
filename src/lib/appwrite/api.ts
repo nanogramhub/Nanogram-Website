@@ -1,8 +1,23 @@
-import { ID, Query } from "appwrite";
+import { ID, OAuthProvider } from "appwrite";
 import { account, appwriteConfig, avatars, database, storage } from "./config";
-import type { AppwriteResponse, Event, Nanogram, User } from "@/types/api";
+import type { AppwriteResponse, Event, Nanogram, User } from "@/types/schema";
 import type { SigninFormValues, SignupFormValues } from "../validation";
+import type { PostCardData, PostDetailsData, PostsFilter } from "@/types/api";
+import { querySelector } from "./queries";
+import { webappUrl } from "@/constants";
 // import { getUserKarma } from "../utils";
+
+async function getEmailFromIdentifier(identifier: string) {
+  if (identifier.includes("@")) {
+    return identifier;
+  }
+  const response = await database.listRows({
+    databaseId: appwriteConfig.databaseId,
+    tableId: appwriteConfig.usersTableId,
+    queries: querySelector.users.getUserByUsernameQueries(identifier),
+  });
+  return response.rows[0].email;
+}
 
 export const api = {
   avatars: {
@@ -14,26 +29,20 @@ export const api = {
 
   auth: {
     async signIn({ identifier, password }: SigninFormValues) {
-      let email = identifier;
-
-      // If it's not an email, we assume it's a username and look up the email
-      if (!identifier.includes("@")) {
-        const response = await database.listRows({
-          databaseId: appwriteConfig.databaseId,
-          tableId: appwriteConfig.usersTableId,
-          queries: [Query.equal("username", identifier), Query.limit(1)],
-        });
-        if (response.rows.length === 0) {
-          throw new Error("No user found with the given username.");
-        }
-        email = response.rows[0].email;
-      }
-
+      const email = await getEmailFromIdentifier(identifier);
       const response = await account.createEmailPasswordSession({
         email,
         password,
       });
       return response;
+    },
+
+    async loginWithGithub() {
+      account.createOAuth2Session({
+        provider: OAuthProvider.Github,
+        success: `${webappUrl}/`,
+        failure: `${webappUrl}/login?error=github`,
+      });
     },
 
     async signOut() {
@@ -67,9 +76,26 @@ export const api = {
       const response = await database.listRows({
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.usersTableId,
-        queries: [Query.equal("username", username), Query.limit(1)],
+        queries: querySelector.auth.getCheckUsernameQueries(username),
       });
       return response.rows.length === 0;
+    },
+
+    async sendResetPasswordEmail(email: string) {
+      const response = await account.createRecovery({
+        email,
+        url: `${webappUrl}/reset-password`,
+      });
+      return response;
+    },
+
+    async resetPassword(userId: string, secret: string, password: string) {
+      const response = await account.updateRecovery({
+        userId,
+        secret,
+        password,
+      });
+      return response;
     },
   },
 
@@ -83,11 +109,7 @@ export const api = {
         >({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.nanogramsTableId,
-          queries: [
-            Query.isNotNull("content"),
-            Query.orderAsc("$createdAt"),
-            Query.limit(10),
-          ],
+          queries: querySelector.nanogram.getTestimonialQueries(),
         });
         return response;
       },
@@ -99,18 +121,13 @@ export const api = {
         cursorAfter?: string;
         limit?: number;
       }): Promise<AppwriteResponse<Nanogram>> {
-        const queries = [
-          Query.equal("core", true),
-          Query.orderAsc("priority"),
-          Query.limit(limit),
-        ];
-        if (cursorAfter) {
-          queries.push(Query.cursorAfter(cursorAfter));
-        }
         const response = await database.listRows<Nanogram>({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.nanogramsTableId,
-          queries,
+          queries: querySelector.nanogram.getCoreMemberQueries({
+            cursorAfter,
+            limit,
+          }),
         });
         return response;
       },
@@ -122,39 +139,27 @@ export const api = {
         cursorAfter?: string;
         limit?: number;
       }): Promise<AppwriteResponse<Nanogram>> {
-        const queries = [
-          Query.equal("alumini", true),
-          Query.orderAsc("priority"),
-          Query.limit(limit),
-        ];
-        if (cursorAfter) {
-          queries.push(Query.cursorAfter(cursorAfter));
-        }
         const response = await database.listRows<Nanogram>({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.nanogramsTableId,
-          queries,
+          queries: querySelector.nanogram.getAluminiMemberQueries({
+            cursorAfter,
+            limit,
+          }),
         });
         return response;
       },
     },
 
     events: {
-      async getEvents({
-        cursorAfter,
-        limit = 10,
-      }: {
+      async getEvents(modifiers: {
         cursorAfter?: string;
         limit?: number;
       }): Promise<AppwriteResponse<Event>> {
-        const queries = [Query.orderDesc("date"), Query.limit(limit)];
-        if (cursorAfter) {
-          queries.push(Query.cursorAfter(cursorAfter));
-        }
         const response = await database.listRows<Event>({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.eventsTableId,
-          queries,
+          queries: querySelector.events.getEventsQueries(modifiers),
         });
         return response;
       },
@@ -163,11 +168,7 @@ export const api = {
         const events = await database.listRows<Event>({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.eventsTableId,
-          queries: [
-            Query.orderAsc("date"),
-            Query.limit(1),
-            Query.equal("completed", false),
-          ],
+          queries: querySelector.events.getNextEventQueries(),
         });
 
         return events.rows[0] ?? null;
@@ -177,11 +178,7 @@ export const api = {
         const events = await database.listRows<Event>({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.eventsTableId,
-          queries: [
-            Query.orderDesc("date"),
-            Query.limit(1),
-            Query.equal("completed", true),
-          ],
+          queries: querySelector.events.getLatestCompletedEventQueries(),
         });
 
         return events.rows[0] ?? null;
@@ -191,14 +188,8 @@ export const api = {
         const events = await database.listRows<Event>({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.eventsTableId,
-          queries: [
-            Query.orderAsc("date"),
-            Query.limit(10),
-            Query.equal("completed", false),
-          ],
+          queries: querySelector.events.getUpcomingEventsQueries(),
         });
-
-        if (!events) throw Error;
 
         return events;
       },
@@ -206,23 +197,15 @@ export const api = {
   },
 
   user: {
-    async createuser({
-      email,
-      name,
-      username,
-      accountId,
-      imageUrl,
-    }: SignupFormValues & { accountId: string; imageUrl: string }) {
+    async createuser(
+      data: SignupFormValues & { accountId: string; imageUrl: string },
+    ) {
       const user = await database.createRow<User>({
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.usersTableId,
         rowId: ID.unique(),
         data: {
-          accountId,
-          email,
-          name,
-          username,
-          imageUrl,
+          ...data,
           karma: 0,
           admin: false,
         },
@@ -235,9 +218,35 @@ export const api = {
       const response = await database.listRows<User>({
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.usersTableId,
-        queries: [Query.equal("accountId", id), Query.limit(1)],
+        queries: querySelector.users.getUserByAccountIdQueries(id),
       });
       return response.rows[0] ?? null;
+    },
+  },
+
+  posts: {
+    async getPosts(modifiers: {
+      cursorAfter?: string;
+      limit?: number;
+      filter?: PostsFilter;
+      search: string | undefined;
+    }) {
+      const response = await database.listRows<PostCardData>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        queries: querySelector.posts.getPostCardDataQuery(modifiers),
+      });
+      return response;
+    },
+
+    async getPostById(id: string) {
+      const response = await database.getRow<PostDetailsData>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        rowId: id,
+        queries: querySelector.posts.getPostDetailsDataQuery(),
+      });
+      return response;
     },
   },
 };

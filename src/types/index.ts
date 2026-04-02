@@ -11,3 +11,9 @@ export interface Point {
 }
 
 export type NavigationItems = { to: string; icon: LucideIcon; label: string }[];
+
+export type LinkifyOptions = {
+  target?: "_blank" | "_self";
+  rel?: string;
+  className?: string;
+};

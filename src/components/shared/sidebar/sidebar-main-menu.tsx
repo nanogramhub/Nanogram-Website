@@ -1,4 +1,4 @@
-import { useSidebar } from "@/components/ui/hooks/useSidebar";
+import { useSidebar } from "@/components/ui/hooks/use-sidebar";
 import {
   SidebarGroup,
   SidebarMenu,
@@ -26,7 +26,7 @@ const SidebarMainMenu = () => {
   }
   return (
     <SidebarGroup>
-      <SidebarMenu>
+      <SidebarMenu className="gap-2">
         {sidebarItems.map((item, index) => (
           <SidebarMenuItem key={index}>
             <Tooltip>

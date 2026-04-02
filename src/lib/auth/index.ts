@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/useAuthStore";
-import type { User } from "@/types/api";
+import type { User } from "@/types/schema";
 import type { SignupFormValues } from "../validation";
 import { api } from "../appwrite/api";
 

@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { api } from "@/lib/appwrite/api";
 import type { SigninFormValues } from "@/lib/validation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -18,6 +19,13 @@ import z from "zod";
 
 const loginRedirectSchema = z.object({
   redirectTo: z.string().optional(),
+  error: z
+    .object({
+      message: z.string(),
+      type: z.string(),
+      code: z.number(),
+    })
+    .optional(),
 });
 
 export const Route = createFileRoute("/_authLayout/login")({
@@ -26,12 +34,13 @@ export const Route = createFileRoute("/_authLayout/login")({
 });
 
 function RouteComponent() {
-  const { redirectTo } = Route.useSearch();
+  const { redirectTo, error } = Route.useSearch();
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const login = useAuthStore((s) => s.login);
+
   async function onSubmit(data: SigninFormValues) {
     setLoading(true);
     try {
@@ -50,6 +59,7 @@ function RouteComponent() {
       setLoading(false);
     }
   }
+
   return (
     <div className="flex flex-col h-dvh justify-center">
       <Card className="min-w-80 max-w-120 mx-auto text-center bg-base-200 p-10 rounded-lg">
@@ -113,7 +123,7 @@ function RouteComponent() {
               size="lg"
               className="bg-black text-white border-black hover:bg-gray-900"
               disabled={loading}
-              // onClick={() => handleOAuthSignIn("oauth_github")}
+              onClick={() => api.auth.loginWithGithub()}
             >
               <svg
                 aria-label="GitHub logo"
@@ -130,6 +140,12 @@ function RouteComponent() {
               Continue with GitHub
             </Button>
           </div>
+
+          {error && (
+            <div className="flex text-destructive text-left gap-2">
+              <span>{error.message}</span>
+            </div>
+          )}
 
           <Separator />
 
