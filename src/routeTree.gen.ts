@@ -14,13 +14,18 @@ import { Route as PrivateLayoutRouteImport } from './routes/_privateLayout'
 import { Route as DefaultLayoutRouteImport } from './routes/_defaultLayout'
 import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
 import { Route as DefaultLayoutIndexRouteImport } from './routes/_defaultLayout/index'
+import { Route as PrivateLayoutSavedPostsRouteImport } from './routes/_privateLayout/saved-posts'
 import { Route as PrivateLayoutExploreRouteImport } from './routes/_privateLayout/explore'
 import { Route as PrivateLayoutCommunityRouteImport } from './routes/_privateLayout/community'
+import { Route as PrivateLayoutAllUsersRouteImport } from './routes/_privateLayout/all-users'
 import { Route as DefaultLayoutGalleryRouteImport } from './routes/_defaultLayout/gallery'
 import { Route as DefaultLayoutEventsRouteImport } from './routes/_defaultLayout/events'
 import { Route as DefaultLayoutAboutUsRouteImport } from './routes/_defaultLayout/about-us'
 import { Route as AuthLayoutSignupRouteImport } from './routes/_authLayout/signup'
+import { Route as AuthLayoutResetPasswordRouteImport } from './routes/_authLayout/reset-password'
 import { Route as AuthLayoutLoginRouteImport } from './routes/_authLayout/login'
+import { Route as AuthLayoutForgotPasswordRouteImport } from './routes/_authLayout/forgot-password'
+import { Route as PrivateLayoutUUserIdRouteImport } from './routes/_privateLayout/u/$userId'
 import { Route as PrivateLayoutPostsPostIdRouteImport } from './routes/_privateLayout/posts/$postId'
 
 const TestRoute = TestRouteImport.update({
@@ -45,6 +50,11 @@ const DefaultLayoutIndexRoute = DefaultLayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DefaultLayoutRoute,
 } as any)
+const PrivateLayoutSavedPostsRoute = PrivateLayoutSavedPostsRouteImport.update({
+  id: '/saved-posts',
+  path: '/saved-posts',
+  getParentRoute: () => PrivateLayoutRoute,
+} as any)
 const PrivateLayoutExploreRoute = PrivateLayoutExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
@@ -53,6 +63,11 @@ const PrivateLayoutExploreRoute = PrivateLayoutExploreRouteImport.update({
 const PrivateLayoutCommunityRoute = PrivateLayoutCommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => PrivateLayoutRoute,
+} as any)
+const PrivateLayoutAllUsersRoute = PrivateLayoutAllUsersRouteImport.update({
+  id: '/all-users',
+  path: '/all-users',
   getParentRoute: () => PrivateLayoutRoute,
 } as any)
 const DefaultLayoutGalleryRoute = DefaultLayoutGalleryRouteImport.update({
@@ -75,10 +90,26 @@ const AuthLayoutSignupRoute = AuthLayoutSignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => AuthLayoutRoute,
 } as any)
+const AuthLayoutResetPasswordRoute = AuthLayoutResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
 const AuthLayoutLoginRoute = AuthLayoutLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthLayoutRoute,
+} as any)
+const AuthLayoutForgotPasswordRoute =
+  AuthLayoutForgotPasswordRouteImport.update({
+    id: '/forgot-password',
+    path: '/forgot-password',
+    getParentRoute: () => AuthLayoutRoute,
+  } as any)
+const PrivateLayoutUUserIdRoute = PrivateLayoutUUserIdRouteImport.update({
+  id: '/u/$userId',
+  path: '/u/$userId',
+  getParentRoute: () => PrivateLayoutRoute,
 } as any)
 const PrivateLayoutPostsPostIdRoute =
   PrivateLayoutPostsPostIdRouteImport.update({
@@ -90,26 +121,36 @@ const PrivateLayoutPostsPostIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof DefaultLayoutIndexRoute
   '/test': typeof TestRoute
+  '/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/login': typeof AuthLayoutLoginRoute
+  '/reset-password': typeof AuthLayoutResetPasswordRoute
   '/signup': typeof AuthLayoutSignupRoute
   '/about-us': typeof DefaultLayoutAboutUsRoute
   '/events': typeof DefaultLayoutEventsRoute
   '/gallery': typeof DefaultLayoutGalleryRoute
+  '/all-users': typeof PrivateLayoutAllUsersRoute
   '/community': typeof PrivateLayoutCommunityRoute
   '/explore': typeof PrivateLayoutExploreRoute
+  '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
+  '/u/$userId': typeof PrivateLayoutUUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof DefaultLayoutIndexRoute
   '/test': typeof TestRoute
+  '/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/login': typeof AuthLayoutLoginRoute
+  '/reset-password': typeof AuthLayoutResetPasswordRoute
   '/signup': typeof AuthLayoutSignupRoute
   '/about-us': typeof DefaultLayoutAboutUsRoute
   '/events': typeof DefaultLayoutEventsRoute
   '/gallery': typeof DefaultLayoutGalleryRoute
+  '/all-users': typeof PrivateLayoutAllUsersRoute
   '/community': typeof PrivateLayoutCommunityRoute
   '/explore': typeof PrivateLayoutExploreRoute
+  '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
+  '/u/$userId': typeof PrivateLayoutUUserIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,56 +158,76 @@ export interface FileRoutesById {
   '/_defaultLayout': typeof DefaultLayoutRouteWithChildren
   '/_privateLayout': typeof PrivateLayoutRouteWithChildren
   '/test': typeof TestRoute
+  '/_authLayout/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/_authLayout/login': typeof AuthLayoutLoginRoute
+  '/_authLayout/reset-password': typeof AuthLayoutResetPasswordRoute
   '/_authLayout/signup': typeof AuthLayoutSignupRoute
   '/_defaultLayout/about-us': typeof DefaultLayoutAboutUsRoute
   '/_defaultLayout/events': typeof DefaultLayoutEventsRoute
   '/_defaultLayout/gallery': typeof DefaultLayoutGalleryRoute
+  '/_privateLayout/all-users': typeof PrivateLayoutAllUsersRoute
   '/_privateLayout/community': typeof PrivateLayoutCommunityRoute
   '/_privateLayout/explore': typeof PrivateLayoutExploreRoute
+  '/_privateLayout/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
   '/_privateLayout/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
+  '/_privateLayout/u/$userId': typeof PrivateLayoutUUserIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/test'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/signup'
     | '/about-us'
     | '/events'
     | '/gallery'
+    | '/all-users'
     | '/community'
     | '/explore'
+    | '/saved-posts'
     | '/posts/$postId'
+    | '/u/$userId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/test'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/signup'
     | '/about-us'
     | '/events'
     | '/gallery'
+    | '/all-users'
     | '/community'
     | '/explore'
+    | '/saved-posts'
     | '/posts/$postId'
+    | '/u/$userId'
   id:
     | '__root__'
     | '/_authLayout'
     | '/_defaultLayout'
     | '/_privateLayout'
     | '/test'
+    | '/_authLayout/forgot-password'
     | '/_authLayout/login'
+    | '/_authLayout/reset-password'
     | '/_authLayout/signup'
     | '/_defaultLayout/about-us'
     | '/_defaultLayout/events'
     | '/_defaultLayout/gallery'
+    | '/_privateLayout/all-users'
     | '/_privateLayout/community'
     | '/_privateLayout/explore'
+    | '/_privateLayout/saved-posts'
     | '/_defaultLayout/'
     | '/_privateLayout/posts/$postId'
+    | '/_privateLayout/u/$userId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -213,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DefaultLayoutIndexRouteImport
       parentRoute: typeof DefaultLayoutRoute
     }
+    '/_privateLayout/saved-posts': {
+      id: '/_privateLayout/saved-posts'
+      path: '/saved-posts'
+      fullPath: '/saved-posts'
+      preLoaderRoute: typeof PrivateLayoutSavedPostsRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
     '/_privateLayout/explore': {
       id: '/_privateLayout/explore'
       path: '/explore'
@@ -225,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof PrivateLayoutCommunityRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
+    '/_privateLayout/all-users': {
+      id: '/_privateLayout/all-users'
+      path: '/all-users'
+      fullPath: '/all-users'
+      preLoaderRoute: typeof PrivateLayoutAllUsersRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
     '/_defaultLayout/gallery': {
@@ -255,12 +330,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLayoutSignupRouteImport
       parentRoute: typeof AuthLayoutRoute
     }
+    '/_authLayout/reset-password': {
+      id: '/_authLayout/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthLayoutResetPasswordRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
     '/_authLayout/login': {
       id: '/_authLayout/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof AuthLayoutLoginRouteImport
       parentRoute: typeof AuthLayoutRoute
+    }
+    '/_authLayout/forgot-password': {
+      id: '/_authLayout/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthLayoutForgotPasswordRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
+    '/_privateLayout/u/$userId': {
+      id: '/_privateLayout/u/$userId'
+      path: '/u/$userId'
+      fullPath: '/u/$userId'
+      preLoaderRoute: typeof PrivateLayoutUUserIdRouteImport
+      parentRoute: typeof PrivateLayoutRoute
     }
     '/_privateLayout/posts/$postId': {
       id: '/_privateLayout/posts/$postId'
@@ -273,12 +369,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthLayoutRouteChildren {
+  AuthLayoutForgotPasswordRoute: typeof AuthLayoutForgotPasswordRoute
   AuthLayoutLoginRoute: typeof AuthLayoutLoginRoute
+  AuthLayoutResetPasswordRoute: typeof AuthLayoutResetPasswordRoute
   AuthLayoutSignupRoute: typeof AuthLayoutSignupRoute
 }
 
 const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLayoutForgotPasswordRoute: AuthLayoutForgotPasswordRoute,
   AuthLayoutLoginRoute: AuthLayoutLoginRoute,
+  AuthLayoutResetPasswordRoute: AuthLayoutResetPasswordRoute,
   AuthLayoutSignupRoute: AuthLayoutSignupRoute,
 }
 
@@ -305,15 +405,21 @@ const DefaultLayoutRouteWithChildren = DefaultLayoutRoute._addFileChildren(
 )
 
 interface PrivateLayoutRouteChildren {
+  PrivateLayoutAllUsersRoute: typeof PrivateLayoutAllUsersRoute
   PrivateLayoutCommunityRoute: typeof PrivateLayoutCommunityRoute
   PrivateLayoutExploreRoute: typeof PrivateLayoutExploreRoute
+  PrivateLayoutSavedPostsRoute: typeof PrivateLayoutSavedPostsRoute
   PrivateLayoutPostsPostIdRoute: typeof PrivateLayoutPostsPostIdRoute
+  PrivateLayoutUUserIdRoute: typeof PrivateLayoutUUserIdRoute
 }
 
 const PrivateLayoutRouteChildren: PrivateLayoutRouteChildren = {
+  PrivateLayoutAllUsersRoute: PrivateLayoutAllUsersRoute,
   PrivateLayoutCommunityRoute: PrivateLayoutCommunityRoute,
   PrivateLayoutExploreRoute: PrivateLayoutExploreRoute,
+  PrivateLayoutSavedPostsRoute: PrivateLayoutSavedPostsRoute,
   PrivateLayoutPostsPostIdRoute: PrivateLayoutPostsPostIdRoute,
+  PrivateLayoutUUserIdRoute: PrivateLayoutUUserIdRoute,
 }
 
 const PrivateLayoutRouteWithChildren = PrivateLayoutRoute._addFileChildren(

@@ -23,3 +23,19 @@ export const useGetPosts = ({
 export const usePostById = (postId: string) => {
   return useQuery(postsQueries.getPostById(postId));
 };
+
+export const useGetPostsByUserId = ({
+  userId,
+  cursorAfter,
+  limit,
+  enabled,
+}: {
+  userId: string;
+  cursorAfter?: string;
+  limit?: number;
+  enabled: boolean;
+}) => {
+  return useInfiniteQuery(
+    postsQueries.getPostsByUserId({ userId, cursorAfter, limit, enabled }),
+  );
+};

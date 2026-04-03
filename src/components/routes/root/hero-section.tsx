@@ -1,4 +1,4 @@
-import ParticleRing from "@/components/motion/ParticleRing";
+import ParticleRing from "@/components/motion/particle-ring";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Plus } from "lucide-react";

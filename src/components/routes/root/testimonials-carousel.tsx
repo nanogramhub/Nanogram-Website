@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import AnimatedTestimonial from "@/components/motion/AnimatedTestimonial";
+import AnimatedTestimonial from "@/components/motion/animated-testimonial";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetTestimonials } from "@/hooks/queries/use-nanogram";
 import { usePerformance } from "@/hooks/use-performance";

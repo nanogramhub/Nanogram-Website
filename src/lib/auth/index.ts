@@ -22,7 +22,7 @@ export const ensureAuth = async () => {
 export const signUpUser = async (data: SignupFormValues) => {
   const authUser = await api.auth.createAccount(data);
   const imageUrl = api.avatars.getInitials(data.name);
-  const user = await api.user.createuser({
+  const user = await api.users.createuser({
     ...data,
     accountId: authUser.$id,
     imageUrl,

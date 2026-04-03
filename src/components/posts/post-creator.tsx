@@ -24,7 +24,11 @@ const PostCreator = ({
     <HoverCard>
       <HoverCardTrigger
         render={(props) => (
-          <Link {...props} to="/test">
+          <Link
+            {...props}
+            to="/u/$userId"
+            params={{ userId: creator.username }}
+          >
             <div className="flex items-center gap-2 cursor-pointer">
               <UserAvatar
                 name={creator.name}
@@ -34,7 +38,7 @@ const PostCreator = ({
               {!onlyImage && (
                 <div className="text-start">
                   <h2 className="text-sm font-bold">{creator.name}</h2>
-                  <p className="text-xs">@{creator.username}</p>
+                  <p className="text-xs">{creator.username}</p>
                 </div>
               )}
             </div>
@@ -56,7 +60,7 @@ const PostCreator = ({
                 {creator.name ? creator.name : "[deleted user]"}
               </h2>
               <p className="text-xs">
-                {creator.username ? `@${creator.username}` : "[deleted user]"}
+                {creator.username ? `${creator.username}` : "[deleted user]"}
               </p>
             </div>
           </div>
@@ -81,9 +85,8 @@ const PostCreator = ({
                   nativeButton={false}
                   render={(props) => (
                     <Link
-                      to="/community"
-                      // TODO: Add the route for the user profile
-                      //   params={{ username: creator.username }}
+                      to="/u/$userId"
+                      params={{ userId: creator.username }}
                       {...props}
                     >
                       View

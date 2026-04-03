@@ -1,12 +1,16 @@
 import type { AppwriteDocument, Comment, Post, User } from "../schema";
 
+export type CurrentUser = User & {
+  following: (AppwriteDocument & { followed: User["$id"] })[];
+};
+
 export type PostsFilter = "recent" | "oldest" | "trending";
-
-
 
 // User
 type PostCreator = AppwriteDocument &
   Pick<User, "username" | "name" | "imageUrl" | "bio" | "karma">;
+
+type PostCreatorMinimal = AppwriteDocument & Pick<User, "name" | "imageUrl">;
 
 type Like = AppwriteDocument & Pick<User, "$id">; // Like :: User
 
@@ -21,6 +25,34 @@ export type PostCardData = Omit<Post, "creator"> & {
 type CommentCreator = AppwriteDocument &
   Pick<User, "username" | "name" | "imageUrl">;
 
-export type PostDetailsData = PostCardData & {
-  comments: Omit<Comment, "commentor"> & { commentor: CommentCreator }[];
+export type PostCardMinimal = Omit<Post, "creator"> & {
+  creator: PostCreatorMinimal;
+};
+
+export type SavedPostData = AppwriteDocument & {
+  post: PostCardData;
+};
+
+type UserFollower = AppwriteDocument & Pick<User, "$id">;
+
+type UserPostsCount = AppwriteDocument & Pick<Post, "$id">;
+
+export type UserProfileData = User & {
+  followers: UserFollower[];
+  following: UserFollower[];
+  posts: UserPostsCount[];
+};
+
+export type Followers = AppwriteDocument & {
+  follower: AppwriteDocument &
+    Pick<User, "$id" | "username" | "name" | "imageUrl">;
+};
+export type Following = AppwriteDocument & {
+  followed: AppwriteDocument &
+    Pick<User, "$id" | "username" | "name" | "imageUrl">;
+};
+
+export type CommentData = Omit<Comment, "commentor"> & {
+  commentor: CommentCreator;
+  likes: Like[];
 };

@@ -10,14 +10,17 @@ const SidebarHead = () => {
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton
+          variant="outline"
           render={(props) => (
             <Link to="/" {...props}>
               <img
-                src="/assets/images/nanogram_logo-no-bg.svg"
+                src="/assets/images/nanogram_logo-bg-primary.svg"
                 alt="logo"
                 className="aspect-square h-full"
               />
-              <span className="font-bold font-blanka">Nanogram</span>
+              <span className="font-bold dark:text-foreground text-primary font-blanka">
+                Nanogram
+              </span>
             </Link>
           )}
         />

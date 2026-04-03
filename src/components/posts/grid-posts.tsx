@@ -1,20 +1,54 @@
-import type { PostCardData } from "@/types/api";
+import type { PostCardData, PostCardMinimal } from "@/types/api";
 import { Link } from "@tanstack/react-router";
 import PostStats from "./post-stats";
 import UserAvatar from "../shared/profile/user-avatar";
+import type { Post } from "@/types/schema";
 
-interface GridPostsProps {
+interface GridPostsFullProps {
   posts: PostCardData[];
   displayOptions: {
-    showUser?: boolean;
+    showUser?: true;
     showStats?: boolean;
   };
 }
+interface GridPostsMinimalProps {
+  posts: PostCardMinimal[];
+  displayOptions: {
+    showUser?: true;
+    showStats?: false;
+  };
+}
 
-const GridPosts = ({
-  posts,
-  displayOptions: { showUser = true, showStats = true },
-}: GridPostsProps) => {
+interface GridPostsLiteProps {
+  posts: Post[];
+  displayOptions: {
+    showUser?: false;
+    showStats?: false;
+  };
+}
+
+type GridPostsProps =
+  | GridPostsFullProps
+  | GridPostsMinimalProps
+  | GridPostsLiteProps;
+
+function checkHasCreator(
+  post: Post | PostCardData | PostCardMinimal,
+): post is PostCardData | PostCardMinimal {
+  return typeof post.creator === "object" && post.creator !== null;
+}
+
+function checkHasStats(
+  post: Post | PostCardData | PostCardMinimal,
+): post is PostCardData {
+  return "likes" in post && "save" in post;
+}
+
+const GridPosts = (props: GridPostsProps) => {
+  const { posts, displayOptions } = props;
+  const showUser = displayOptions.showUser ?? true;
+  const showStats = displayOptions.showStats ?? true;
+
   if (!posts || posts.length === 0) {
     return (
       <div className="h-36 flex items-center justify-center text-muted-foreground py-5">
@@ -22,59 +56,66 @@ const GridPosts = ({
       </div>
     );
   }
+
   return (
     <ul className="flex flex-wrap gap-4 justify-center py-5">
-      {posts.map((post) => (
-        <li
-          key={post.$id}
-          className="relative w-72 aspect-square shadow-lg rounded-lg"
-        >
-          <div className="w-full h-full rounded-lg overflow-hidden">
-            <Link
-              to="/posts/$postId"
-              params={{ postId: post.$id }}
-              title={
-                post.caption
-                  ? post.caption.substring(0, 100) + "..."
-                  : `A Post by ${post.creator.name}`
-              }
-            >
-              <img
-                src={post.imageUrl}
-                alt="post"
-                className="object-cover w-full h-full"
-                loading="lazy"
-              />
-            </Link>
+      {posts.map((post) => {
+        // Safe access checks for narrower types
+        const hasCreator = checkHasCreator(post);
+        const hasStats = checkHasStats(post);
 
-            {(showUser || showStats) && (
-              <div className="w-full bg-linear-to-t from-muted absolute bottom-0 flex rounded-b-md">
-                {showUser && (
-                  <div className="flex items-center gap-2 px-2 py-2">
-                    <UserAvatar
-                      name={post.creator.name}
-                      imageUrl={post.creator.imageUrl}
-                    />
-                    <p className="text-bold">{post.creator.name}</p>
-                  </div>
-                )}
-                {showStats && (
-                  <div className="w-full flex items-center">
-                    <PostStats
-                      post={post}
-                      displayOptions={{
-                        showComments: false,
-                        showShare: false,
-                        align: "end",
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </li>
-      ))}
+        return (
+          <li
+            key={post.$id}
+            className="relative w-72 aspect-square shadow-lg rounded-lg"
+          >
+            <div className="w-full h-full rounded-lg overflow-hidden">
+              <Link
+                to="/posts/$postId"
+                params={{ postId: post.$id }}
+                title={
+                  post.caption
+                    ? post.caption.substring(0, 100) + "..."
+                    : `post:${post.$id}`
+                }
+              >
+                <img
+                  src={post.imageUrl}
+                  alt="post"
+                  className="object-cover w-full h-full"
+                  loading="lazy"
+                />
+              </Link>
+
+              {(showUser || showStats) && (
+                <div className="w-full bg-linear-to-t from-muted absolute bottom-0 flex rounded-b-md">
+                  {showUser && hasCreator && (
+                    <div className="flex items-center gap-2 px-2 py-2">
+                      <UserAvatar
+                        name={post.creator.name}
+                        imageUrl={post.creator.imageUrl}
+                      />
+                      <p className="text-bold">{post.creator.name}</p>
+                    </div>
+                  )}
+                  {showStats && hasStats && (
+                    <div className="w-full flex items-center">
+                      <PostStats
+                        post={post}
+                        displayOptions={{
+                          showComments: false,
+                          showShare: false,
+                          align: "end",
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 };

@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { NavTab, NavTabs } from "./fuild-nav-tabs";
 import { navbarItems } from "@/constants";
 import { useIsMobile } from "@/hooks/use-is-mobile";
@@ -11,6 +11,7 @@ import UserAvatar from "../profile/user-avatar";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
+  const location = useLocation();
   const currentUser = useAuthStore((s) => s.currentUser);
   const logout = useAuthStore((s) => s.logout);
   return (
@@ -52,7 +53,20 @@ const Navbar = () => {
                   />
                 </>
               ) : (
-                <Link to="/login">Login</Link>
+                <Button
+                  nativeButton={false}
+                  render={(props) => (
+                    <Link
+                      to="/login"
+                      search={{
+                        redirectTo: location.pathname,
+                      }}
+                      {...props}
+                    />
+                  )}
+                >
+                  Login
+                </Button>
               )}
             </div>
           </>

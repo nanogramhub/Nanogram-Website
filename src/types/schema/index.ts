@@ -124,4 +124,5 @@ export type Post = AppwriteDocument & {
 export type Comment = AppwriteDocument & {
   content: string;
   commentor: string;
+  post: string;
 };

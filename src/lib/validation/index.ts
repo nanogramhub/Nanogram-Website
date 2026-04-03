@@ -35,6 +35,26 @@ export const signUpSchema = z.object({
 
 export type SignupFormValues = z.infer<typeof signUpSchema>;
 
+export const forgotPasswordSchema = z.object({
+  email: z.email({ message: "Invalid email address" }),
+});
+
+export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  secret: z.string().min(1, "Secret is required"),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" })
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, {
+      message:
+        "Password must contain at least one letter, one number, and one special character",
+    }),
+});
+
+export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
+
 export const postFormSchema = z.object({
   caption: z
     .string()

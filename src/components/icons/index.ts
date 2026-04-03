@@ -1,4 +1,4 @@
-export { default as Like } from "./Like";
-export { default as Liked } from "./Liked";
-export { default as Save } from "./Save";
-export { default as Saved } from "./Saved";
+export { default as Like } from "./like-icon";
+export { default as Liked } from "./liked-icon";
+export { default as Save } from "./save-icon";
+export { default as Saved } from "./saved-icon";

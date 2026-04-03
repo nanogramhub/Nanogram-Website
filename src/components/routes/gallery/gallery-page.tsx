@@ -1,5 +1,5 @@
 import { useIsMouseAvailable } from "@/hooks/use-is-mouse-available";
-import MouseImageTrail from "@/components/motion/MouseImageTrail";
+import MouseImageTrail from "@/components/motion/mouse-image-trail";
 import Masonry from "react-masonry-css";
 import { images as galleryImages } from "@/constants";
 import "@/styles/waterfall.css";

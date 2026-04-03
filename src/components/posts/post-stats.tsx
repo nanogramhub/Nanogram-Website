@@ -5,6 +5,10 @@ import type { User } from "@/types/schema";
 import { CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import type { PostCardData } from "@/types/api";
+import { useUpdateLikes } from "@/hooks/mutations/use-posts";
+import { useSavePost, useUnSavePost } from "@/hooks/mutations/use-saves";
+import Comments from "./dialogs/comments";
+import { MessageCircle } from "lucide-react";
 
 interface PostStatsProps {
   post: Pick<PostCardData, "$id" | "likes" | "save">;
@@ -17,8 +21,12 @@ interface PostStatsProps {
   };
 }
 
+function flattenLikes(likes: PostStatsProps["post"]["likes"]) {
+  return likes.map((like) => like.$id);
+}
+
 function hasLiked(likes: PostStatsProps["post"]["likes"], currentUser: User) {
-  return likes.some((like) => like.$id === currentUser.$id);
+  return flattenLikes(likes).includes(currentUser.$id);
 }
 
 function hasSaved(saves: PostStatsProps["post"]["save"], currentUser: User) {
@@ -39,37 +47,51 @@ const PostStats = ({
   const [liked, setLiked] = useState<boolean>(false);
   const [likedCount, setLikedCount] = useState(post.likes.length);
   const [saved, setSaved] = useState<boolean>(false);
+  const updateLikes = useUpdateLikes();
+  const savePost = useSavePost();
+  const unSavePost = useUnSavePost();
 
   const toggleLike = async () => {
-    try {
-      // Optimistically update the liked state
-      setLikedCount(liked ? likedCount - 1 : likedCount + 1);
-      setLiked(!liked);
-      // TODO: nutation
-      // const res = await likePost({
-      //   postId: post._id.toString(),
-      //   userId: user._id.toString(),
-      // });
-      // if (!res) {
-      //   setLiked(!liked);
-      // }
-    } catch (error) {
-      console.error("Error liking post:", error);
-    }
+    if (!currentUser) return;
+    // Optimistically update UI
+    const nextLiked = !liked;
+    setLiked(nextLiked);
+    setLikedCount((c) => (nextLiked ? c + 1 : c - 1));
+
+    const nextLikeArray = nextLiked
+      ? [...flattenLikes(post.likes), currentUser.$id]
+      : flattenLikes(post.likes).filter((id) => id !== currentUser.$id);
+
+    updateLikes.mutate(
+      { likeArray: nextLikeArray, postId: post.$id },
+      {
+        onError: () => {
+          // Roll back on failure
+          setLiked(!nextLiked);
+          setLikedCount((c) => (nextLiked ? c - 1 : c + 1));
+        },
+      },
+    );
   };
+
   const toggleSave = async () => {
-    try {
-      setSaved(!saved);
-      // TODO: mutation
-      // const res = await savePost({
-      //   postId: post._id.toString(),
-      //   userId: user._id.toString(),
-      // });
-      // if (!res) {
-      //   setSaved(!saved);
-      // }
-    } catch (error) {
-      console.error("Error liking post:", error);
+    if (!currentUser) return;
+    // Optimistically update UI
+    const nextSaved = !saved;
+    setSaved(nextSaved);
+
+    if (nextSaved) {
+      savePost.mutate(
+        { userId: currentUser.$id, postId: post.$id },
+        { onError: () => setSaved(!nextSaved) },
+      );
+    } else {
+      const saveRecord = post.save.find((s) => s.user === currentUser.$id);
+      if (!saveRecord) return;
+      unSavePost.mutate(
+        { savedRecordId: saveRecord.$id },
+        { onError: () => setSaved(!nextSaved) },
+      );
     }
   };
 
@@ -104,10 +126,22 @@ const PostStats = ({
             <p className="mt-0.5 text-xs">{likedCount}</p>
           </div>
         )}
-        {/* {showComments && <Comments post={post} currentUser={user} />} */}
+        {showComments && (
+          <div className="flex items-center gap-1">
+            <Comments
+              postId={post.$id}
+              trigger={<MessageCircle className="size-5" />}
+            />
+          </div>
+        )}
         {/* {showShare && <Share currentUser={user} post={post} />} */}
         {showSave && (
-          <Button variant="ghost" size="icon-lg" onClick={() => toggleSave()}>
+          <Button
+            variant="ghost"
+            size="icon-lg"
+            onClick={() => toggleSave()}
+            disabled={savePost.isPending || unSavePost.isPending}
+          >
             {saved ? (
               <Saved className="text-primary size-5" />
             ) : (

@@ -1,14 +1,15 @@
 import { create } from "zustand";
-import type { User } from "@/types/schema";
 import { api } from "@/lib/appwrite/api";
 import type { SigninFormValues } from "@/lib/validation";
+import { UserNotFoundException } from "@/exceptions";
+import type { CurrentUser } from "@/types/api";
 
 interface AuthStore {
-  currentUser: User | null;
+  currentUser: CurrentUser | null;
   isAdmin: boolean;
-  setCurrentUser: (user: User | null) => void;
-  getCurrentUser: () => Promise<User>;
-  login: (data: SigninFormValues) => Promise<User>;
+  setCurrentUser: (user: CurrentUser | null) => void;
+  getCurrentUser: () => Promise<CurrentUser>;
+  login: (data: SigninFormValues) => Promise<CurrentUser>;
   logout: () => Promise<void>;
 }
 
@@ -22,7 +23,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     try {
       const authUser = await api.auth.getCurrentSession();
       const isAdmin = authUser.labels.includes("admin");
-      const user = await api.user.getUserByAccountId(authUser.$id);
+      const user = await api.users.getUserByAccountId(authUser.$id);
+      if (!user) {
+        throw new UserNotFoundException(
+          `No user found in database for account id: ${authUser.$id}`,
+        );
+      }
 
       set({ currentUser: user, isAdmin });
       return user;

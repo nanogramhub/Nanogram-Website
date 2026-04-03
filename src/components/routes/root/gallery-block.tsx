@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import ShuffleGallery from "@/components/motion/ShuffleGallery";
+import ShuffleGallery from "@/components/motion/shuffle-gallery";
 import { Button } from "@/components/ui/button";
 import { images } from "@/constants";
 import { usePerformance } from "@/hooks/use-performance";

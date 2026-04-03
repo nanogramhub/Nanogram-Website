@@ -1,5 +1,6 @@
 import { SidebarLeft } from "@/components/shared/sidebar";
 import { ModeToggle } from "@/components/shared/theme/mode-toggle";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -7,16 +8,17 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePageName } from "@/hooks/use-page-name";
 import { ensureAuth } from "@/lib/auth";
-import { capitalize, kebabCasetoTitleCase } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppwriteException } from "appwrite";
+import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/_privateLayout")({
   component: RouteComponent,
-  loader: async () => {
+  loader: async ({ location }) => {
     try {
       await ensureAuth();
     } catch (error) {
@@ -25,7 +27,7 @@ export const Route = createFileRoute("/_privateLayout")({
           throw redirect({
             to: "/login",
             search: {
-              redirectTo: location.pathname + location.search,
+              redirectTo: location.pathname,
             },
           });
         throw error;
@@ -36,7 +38,7 @@ export const Route = createFileRoute("/_privateLayout")({
       throw redirect({
         to: "/login",
         search: {
-          redirectTo: location.pathname + location.search,
+          redirectTo: location.pathname,
         },
       });
     }
@@ -69,6 +71,8 @@ export const Route = createFileRoute("/_privateLayout")({
 });
 
 function RouteComponent() {
+  const router = useRouter();
+  const page = usePageName();
   return (
     <SidebarProvider>
       <SidebarLeft collapsible="icon" />
@@ -80,9 +84,14 @@ function RouteComponent() {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4 mt-1"
             />
-            {kebabCasetoTitleCase(
-              location.pathname.split("/").at(1) || "Community",
-            )}
+            <Button
+              variant="ghost"
+              size="icon-lg"
+              onClick={() => router.history.back()}
+            >
+              <ArrowLeft />
+            </Button>
+            {page}
           </div>
           <div className="flex items-center gap-2 px-3">
             <ModeToggle />

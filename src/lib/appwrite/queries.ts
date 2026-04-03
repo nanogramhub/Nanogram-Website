@@ -108,10 +108,85 @@ export const querySelector = {
   },
   users: {
     getUserByUsernameQueries(username: string) {
-      return [Query.equal("username", username), Query.limit(1)];
+      return [
+        Query.select(["*", "posts.$id", "followers.$id", "following.$id"]),
+        Query.equal("username", username),
+        Query.limit(1),
+      ];
+    },
+    getUsersQueries({
+      cursorAfter,
+      limit = 10,
+      searchTerm,
+    }: {
+      cursorAfter?: string;
+      limit?: number;
+      searchTerm?: string;
+    }) {
+      const queries = [
+        Query.orderDesc("$createdAt"),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+      if (searchTerm) {
+        if (searchTerm.startsWith("@")) {
+          queries.push(Query.search("username", searchTerm.slice(1)));
+        } else {
+          queries.push(Query.search("name", searchTerm));
+        }
+      }
+      return queries;
     },
     getUserByAccountIdQueries(accountId: string) {
-      return [Query.equal("accountId", accountId), Query.limit(1)];
+      return [
+        Query.select(["*", "following.*"]),
+        Query.equal("accountId", accountId),
+        Query.limit(1),
+      ];
+    },
+  },
+  follows: {
+    getFollowersQueries({
+      userId,
+      cursorAfter,
+      limit = 10,
+    }: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.select([
+          "follower.$id",
+          "follower.name",
+          "follower.imageUrl",
+          "follower.username",
+        ]),
+        Query.equal("followed", userId),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
+    getFollowingQueries({
+      userId,
+      cursorAfter,
+      limit = 10,
+    }: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.select([
+          "followed.$id",
+          "followed.name",
+          "followed.imageUrl",
+          "followed.username",
+        ]),
+        Query.equal("follower", userId),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
     },
   },
   posts: {
@@ -127,42 +202,82 @@ export const querySelector = {
       search?: string;
     }) {
       return [
-        Query.select([
-          "caption",
-          "imageId",
-          "imageUrl",
-          "creator.name",
-          "creator.imageUrl",
-          "creator.username",
-          "creator.karma",
-          "likes.$id",
-          "save.*",
-          "tags",
-        ]),
+        ...querySelector.posts.getPostQuery(),
         getPostFilterQueries(filter),
         ...getSearchQueries(search),
         ...querySelector.general.addCursorIfPresent(cursorAfter),
         Query.limit(limit),
       ];
     },
-    getPostDetailsDataQuery() {
+    getPostQuery() {
       return [
         Query.select([
-          "caption",
-          "imageId",
-          "imageUrl",
+          "*",
           "creator.name",
           "creator.imageUrl",
           "creator.username",
           "creator.karma",
           "likes.$id",
           "save.*",
-          "tags",
-          "comments.*",
-          "comments.commentor.name",
-          "comments.commentor.imageUrl",
-          "comments.commentor.username",
         ]),
+      ];
+    },
+    getPostsByUserIdQueries({
+      userId,
+      cursorAfter,
+      limit = 10,
+    }: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.select(["*"]),
+        Query.equal("creator.$id", userId),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
+  },
+  saves: {
+    getSavedPostsQueries({
+      userId,
+      cursorAfter,
+      limit = 10,
+    }: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.select(["post.*", "post.creator.name", "post.creator.imageUrl"]),
+        Query.equal("user", userId),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
+  },
+  comments: {
+    getCommentsByPostIdQueries({
+      postId,
+      cursorAfter,
+      limit = 10,
+    }: {
+      postId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.select([
+          "*",
+          "commentor.name",
+          "commentor.imageUrl",
+          "commentor.username",
+          "likes.$id",
+        ]),
+        Query.equal("post.$id", postId),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
       ];
     },
   },

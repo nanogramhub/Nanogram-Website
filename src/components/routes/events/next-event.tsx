@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import ShiftingCountdown from "@/components/motion/ShiftingCountdown";
-import Banner from "@/components/motion/Banner";
+import ShiftingCountdown from "@/components/motion/shifting-countdown";
+import Banner from "@/components/motion/event-banner";
 import { CalendarDays, Pin } from "lucide-react";
 import { useGetNextEvent } from "@/hooks/queries/use-events";
 import { formatDateTime } from "@/lib/utils";

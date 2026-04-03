@@ -4,13 +4,13 @@ import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-quer
 import { postsQueries } from "@/lib/query/query-options";
 import { range } from "@/lib/utils";
 import { queryClient } from "@/router";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_privateLayout/community")({
   component: RouteComponent,
   loader: async () => {
     await queryClient.prefetchInfiniteQuery(
-      postsQueries.getPosts({ limit: 2, enabled: true }),
+      postsQueries.getPosts({ limit: 2, enabled: true, search: undefined }),
     );
   },
   pendingComponent: () => (
@@ -26,6 +26,7 @@ function RouteComponent() {
   const recentPostsResult = useGetPosts({
     limit: 2,
     enabled: true,
+    search: undefined,
   });
   const {
     items: posts,
@@ -43,15 +44,6 @@ function RouteComponent() {
         <div>
           <PostCardSkeleton />
         </div>
-      )}
-      {!hasNextPage && (
-        <p className="text-center text-muted-foreground">
-          <span>Check out the </span>
-          <Link to="/explore" className="text-primary">
-            Explore
-          </Link>
-          <span> page for more posts</span>
-        </p>
       )}
       <div ref={ref} />
     </div>

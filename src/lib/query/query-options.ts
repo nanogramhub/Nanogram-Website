@@ -121,6 +121,52 @@ export const eventsQueries = {
   },
 };
 
+export const usersQueries = {
+  getUserByAccountId: (userId: string) => {
+    return queryOptions({
+      queryKey: [...queryKeys.users.getUserByAccountId, userId],
+      queryFn: () => api.users.getUserByAccountId(userId),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled: !!userId,
+    });
+  },
+  getUserByUsername: (username: string) => {
+    return queryOptions({
+      queryKey: [...queryKeys.users.getUserByUsername, username],
+      queryFn: () => api.users.getUserByUsername(username),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled: !!username,
+    });
+  },
+  getUsers: ({
+    cursorAfter,
+    limit,
+    enabled,
+    searchTerm,
+  }: {
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+    searchTerm?: string;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.users.getUsers,
+        { cursorAfter, limit, searchTerm },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.users.getUsers({ cursorAfter: pageParam, limit, searchTerm }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
+};
+
 export const postsQueries = {
   getPosts: ({
     cursorAfter,
@@ -155,6 +201,170 @@ export const postsQueries = {
       queryKey: [...queryKeys.posts.getPostById, postId],
       queryFn: () => api.posts.getPostById(postId),
       staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+  },
+  getPostsByUserId: ({
+    userId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    userId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.posts.getPostsByUserId,
+        { userId, cursorAfter, limit },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.posts.getPostsByUserId({
+          userId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
+};
+
+export const commentQueries = {
+  getCommentsByPostId: ({
+    postId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    postId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.comments.getCommentsByPostId,
+        { postId, cursorAfter, limit },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.posts.comments.getCommentsByPostId({
+          postId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
+};
+
+export const savesQueries = {
+  getSavedPosts: ({
+    userId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    userId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.saves.getSavedPosts,
+        { userId, cursorAfter, limit },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.posts.saves.getSavedPosts({
+          userId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
+};
+
+export const followsQueries = {
+  getFollowers: ({
+    userId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    userId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.follows.getFollowers,
+        { userId, cursorAfter, limit },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.users.follows.getFollowers({
+          userId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
+  getFollowing: ({
+    userId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    userId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.follows.getFollowing,
+        { userId, cursorAfter, limit },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.users.follows.getFollowing({
+          userId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
     });
   },
 };

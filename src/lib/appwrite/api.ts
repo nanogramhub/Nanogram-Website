@@ -1,21 +1,42 @@
 import { ID, OAuthProvider } from "appwrite";
 import { account, appwriteConfig, avatars, database, storage } from "./config";
-import type { AppwriteResponse, Event, Nanogram, User } from "@/types/schema";
+import type {
+  AppwriteResponse,
+  Event,
+  Nanogram,
+  Post,
+  User,
+} from "@/types/schema";
 import type { SigninFormValues, SignupFormValues } from "../validation";
-import type { PostCardData, PostDetailsData, PostsFilter } from "@/types/api";
+import type {
+  CommentData,
+  CurrentUser,
+  Followers,
+  Following,
+  PostCardData,
+  PostsFilter,
+  SavedPostData,
+  UserProfileData,
+} from "@/types/api";
 import { querySelector } from "./queries";
 import { webappUrl } from "@/constants";
+import { UserNotFoundException } from "@/exceptions";
 // import { getUserKarma } from "../utils";
 
 async function getEmailFromIdentifier(identifier: string) {
   if (identifier.includes("@")) {
     return identifier;
   }
-  const response = await database.listRows({
+  const response = await database.listRows<User>({
     databaseId: appwriteConfig.databaseId,
     tableId: appwriteConfig.usersTableId,
     queries: querySelector.users.getUserByUsernameQueries(identifier),
   });
+  if (!response.rows[0]) {
+    throw new UserNotFoundException(
+      `No user found for identifier: ${identifier}`,
+    );
+  }
   return response.rows[0].email;
 }
 
@@ -37,11 +58,19 @@ export const api = {
       return response;
     },
 
-    async loginWithGithub() {
+    async loginWithGithub(redirect: string) {
       account.createOAuth2Session({
         provider: OAuthProvider.Github,
-        success: `${webappUrl}/`,
-        failure: `${webappUrl}/login?error=github`,
+        success: `${webappUrl}${redirect}`,
+        failure: `${webappUrl}/login`,
+      });
+    },
+
+    async loginWithGoogle(redirect: string) {
+      account.createOAuth2Session({
+        provider: OAuthProvider.Google,
+        success: `${webappUrl}${redirect}`,
+        failure: `${webappUrl}/login`,
       });
     },
 
@@ -196,7 +225,7 @@ export const api = {
     },
   },
 
-  user: {
+  users: {
     async createuser(
       data: SignupFormValues & { accountId: string; imageUrl: string },
     ) {
@@ -214,13 +243,101 @@ export const api = {
       return user;
     },
 
-    async getUserByAccountId(id: string) {
+    async getUsers(modifiers: {
+      cursorAfter?: string;
+      limit?: number;
+      searchTerm?: string;
+    }) {
       const response = await database.listRows<User>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.usersTableId,
+        queries: querySelector.users.getUsersQueries(modifiers),
+      });
+      return response;
+    },
+
+    async getUserByUsername(username: string): Promise<UserProfileData | null> {
+      const response = await database.listRows<UserProfileData>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.usersTableId,
+        queries: querySelector.users.getUserByUsernameQueries(username),
+      });
+      return response.rows[0] ?? null;
+    },
+
+    async getUserByAccountId(id: string): Promise<CurrentUser | null> {
+      const response = await database.listRows<CurrentUser>({
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.usersTableId,
         queries: querySelector.users.getUserByAccountIdQueries(id),
       });
       return response.rows[0] ?? null;
+    },
+
+    follows: {
+      async getFollowers({
+        userId,
+        cursorAfter,
+        limit = 10,
+      }: {
+        userId: string;
+        cursorAfter?: string;
+        limit?: number;
+      }) {
+        const response = await database.listRows<Followers>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.followsTableId,
+          queries: querySelector.follows.getFollowersQueries({
+            userId,
+            cursorAfter,
+            limit,
+          }),
+        });
+        return response;
+      },
+
+      async getFollowing({
+        userId,
+        cursorAfter,
+        limit = 10,
+      }: {
+        userId: string;
+        cursorAfter?: string;
+        limit?: number;
+      }) {
+        const response = await database.listRows<Following>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.followsTableId,
+          queries: querySelector.follows.getFollowingQueries({
+            userId,
+            cursorAfter,
+            limit,
+          }),
+        });
+        return response;
+      },
+
+      async followUser(followerId: string, followedId: string) {
+        const response = await database.createRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.followsTableId,
+          rowId: ID.unique(),
+          data: {
+            follower: followerId,
+            followed: followedId,
+          },
+        });
+        return response;
+      },
+
+      async unfollowUser(followedRecordId: string) {
+        const response = await database.deleteRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.followsTableId,
+          rowId: followedRecordId,
+        });
+        return response;
+      },
     },
   },
 
@@ -240,13 +357,88 @@ export const api = {
     },
 
     async getPostById(id: string) {
-      const response = await database.getRow<PostDetailsData>({
+      const response = await database.getRow<PostCardData>({
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.postsTableId,
         rowId: id,
-        queries: querySelector.posts.getPostDetailsDataQuery(),
+        queries: querySelector.posts.getPostQuery(),
       });
       return response;
+    },
+
+    async getPostsByUserId(modifiers: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      const response = await database.listRows<Post>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        queries: querySelector.posts.getPostsByUserIdQueries(modifiers),
+      });
+      return response;
+    },
+
+    async updateLikes(likeArray: string[], postId: string) {
+      const response = await database.updateRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        rowId: postId,
+        data: {
+          likes: likeArray,
+        },
+      });
+      return response;
+    },
+
+    saves: {
+      async getSavedPosts(modifiers: {
+        userId: string;
+        cursorAfter?: string;
+        limit?: number;
+      }) {
+        const response = await database.listRows<SavedPostData>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.savesTableId,
+          queries: querySelector.saves.getSavedPostsQueries(modifiers),
+        });
+        return response;
+      },
+      async savePost(userId: string, postId: string) {
+        const response = await database.createRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.savesTableId,
+          rowId: ID.unique(),
+          data: {
+            user: userId,
+            post: postId,
+          },
+        });
+        return response;
+      },
+      async unsavePost(savedRecordId: string) {
+        const response = await database.deleteRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.savesTableId,
+          rowId: savedRecordId,
+        });
+        return response;
+      },
+    },
+
+    comments: {
+      async getCommentsByPostId(modifiers: {
+        postId: string;
+        cursorAfter?: string;
+        limit?: number;
+      }) {
+        const response = await database.listRows<CommentData>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.commentsTableId,
+          queries: querySelector.comments.getCommentsByPostIdQueries(modifiers),
+        });
+        return response;
+      },
     },
   },
 };

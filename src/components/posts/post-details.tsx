@@ -3,45 +3,66 @@ import PostCreator from "./post-creator";
 import PostActions from "./post-actions";
 import { formatRelativeTime } from "@/lib/utils";
 import PostStats from "./post-stats";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { linkifyReact } from "../shared/default/linkify-text";
 
 const PostDetails = ({ post }: { post: PostDetailsData }) => {
   return (
-    <Card className="w-full flex flex-wrap lg:flex-row p-0 gap-0">
-      <CardHeader className="lg:w-1/2 w-full block p-0">
+    <Card className="w-full max-w-6xl mx-auto border-none shadow-xl flex flex-col lg:relative overflow-hidden bg-background min-h-[400px] py-0">
+      <div className="relative w-full lg:w-1/2 aspect-square bg-muted flex items-center justify-center overflow-hidden">
         <img
           src={post.imageUrl}
           alt={post.imageId || "post"}
-          className="object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-      </CardHeader>
-      <CardContent className="flex md:justify-between flex-1 flex-col lg:aspect-square p-2">
-        <div className="md:overflow-y-auto">
-          <div className="sticky top-0 bg-base-200 flex justify-between py-2">
-            <PostCreator creator={post.creator} />
-            <PostActions
-              post={{ $id: post.$id, creator: post.creator.$id }}
-              showViewButton={false}
-            />
-          </div>
-          <p className="text-xs text-base-content/30">
-            Posted on Nanogram, {formatRelativeTime(post.$createdAt)}
-          </p>
-          <p className="text-sm">{post.caption}</p>
-          <ul className="flex flex-wrap gap-1 mt-1">
-            {post.tags.length === 0
-              ? null
-              : post.tags.map((tag) => (
-                  <li key={tag} className="text-primary font-light">
-                    #{tag}
-                  </li>
-                ))}
-          </ul>
+      </div>
+
+      <div className="w-full lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-1/2 flex flex-col lg:border-l border-border/50">
+        <div className="p-4 flex items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 shrink-0">
+          <PostCreator creator={post.creator} />
+          <PostActions
+            post={{ $id: post.$id, creator: post.creator.$id }}
+            showViewButton={false}
+          />
         </div>
-        <div className="">
+
+        <ScrollArea className="flex-1 min-h-0">
+          <CardContent className="p-4 md:p-6 flex flex-col gap-4">
+            <div className="space-y-4">
+              <p className="text-xs text-muted-foreground/80 font-medium tracking-tight">
+                Posted on Nanogram • {formatRelativeTime(post.$createdAt)}
+              </p>
+
+              {post.caption && (
+                <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap wrap-break-word">
+                  {linkifyReact(post.caption, {
+                    className:
+                      "text-blue-500 hover:text-blue-600 transition-colors cursor-pointer font-medium",
+                  })}
+                </div>
+              )}
+
+              {post.tags && post.tags.length > 0 && (
+                <ul className="flex flex-wrap gap-x-2 gap-y-1">
+                  {post.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="text-sm text-blue-500 hover:underline cursor-pointer transition-all active:scale-95"
+                    >
+                      #{tag}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </CardContent>
+        </ScrollArea>
+
+        <div className="shrink-0 border-t border-border/50 bg-background">
           <PostStats post={post} displayOptions={{ align: "between" }} />
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };
