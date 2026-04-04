@@ -24,10 +24,16 @@ export const queryKeys = {
     getRecentPosts: ["posts", "recent"],
     getPostById: ["posts", "id"],
     getPostsByUserId: ["posts", "user-id"],
+    createPost: ["posts", "create"],
+    updatePost: ["posts", "update"],
     updateLikes: ["posts", "likes"],
+    deletePost: ["posts", "delete"],
   },
   comments: {
     getCommentsByPostId: ["comments", "post-id"],
+    updateLikes: ["comments", "likes"],
+    createComment: ["comments", "create"],
+    deleteComment: ["comments", "delete"],
   },
   saves: {
     getSavedPosts: ["saves", "saved-posts"],

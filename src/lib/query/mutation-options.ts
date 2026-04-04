@@ -2,7 +2,8 @@ import { mutationOptions } from "@tanstack/react-query";
 import { api } from "../appwrite/api";
 import { queryKeys } from "./query-keys";
 import { queryClient } from "@/router";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
+import { createPost, deletePost, updatePost } from "../posts";
 
 export const getSendResetLinkMutationOptions = () => {
   return mutationOptions({
@@ -161,6 +162,146 @@ export const getUnsavePostMutationOptions = () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.saves.getSavedPosts,
       });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getRecentPosts,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getPostById,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getPostsByUserId,
+      });
+    },
+  });
+};
+
+export const getUpdateCommentLikesMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.comments.updateLikes,
+    mutationFn: async ({
+      likeArray,
+      commentId,
+    }: {
+      likeArray: string[];
+      commentId: string;
+    }) => {
+      const response = await api.posts.comments.updateLikes(
+        likeArray,
+        commentId,
+      );
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.comments.getCommentsByPostId,
+      });
+    },
+  });
+};
+
+export const getCreateCommentMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.comments.createComment,
+    mutationFn: async ({
+      content,
+      postId,
+      userId,
+    }: {
+      content: string;
+      postId: string;
+      userId: string;
+    }) => {
+      const response = await api.posts.comments.createComment(
+        content,
+        postId,
+        userId,
+      );
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.comments.getCommentsByPostId,
+      });
+    },
+  });
+};
+
+export const getDeleteCommentMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.comments.deleteComment,
+    mutationFn: async ({ commentId }: { commentId: string }) => {
+      const response = await api.posts.comments.deleteComment(commentId);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.comments.getCommentsByPostId,
+      });
+    },
+  });
+};
+
+export const getCreatePostMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.posts.createPost,
+    mutationFn: async (data: {
+      creator: string;
+      caption: string;
+      tags: string[];
+      imageFile: File;
+    }) => {
+      const response = await createPost(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getRecentPosts,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getPostById,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getPostsByUserId,
+      });
+    },
+  });
+};
+
+export const getUpdatePostMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.posts.updatePost,
+    mutationFn: async (data: {
+      postId: string;
+      caption?: string;
+      tags?: string[];
+      imageId?: string;
+      imageFile?: File;
+    }) => {
+      const response = await updatePost(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getRecentPosts,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getPostById,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getPostsByUserId,
+      });
+    },
+  });
+};
+
+export const getDeletePostMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.posts.deletePost,
+    mutationFn: async (data: { postId: string; imageId: string }) => {
+      const response = await deletePost(data);
+      return response;
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.posts.getRecentPosts,
       });

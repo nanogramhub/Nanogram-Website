@@ -18,18 +18,17 @@ export default function Testimonials() {
   const { ref, inView } = useInView({ triggerOnce: true });
   const { data } = useGetTestimonials({ enabled: inView });
 
-  if (!data) return null;
+  if (!data) return <div ref={ref} />;
   const testimonials = data.rows;
 
   return (
     <section
-      ref={ref}
       aria-label="Testimonials"
       className="relative w-full px-4 lg:pt-20 md:pt-32 pt-52 py-16 overflow-hidden"
     >
       <div className="max-w-4xl mx-auto">
         {performance ? (
-          <Carousel>
+          <Carousel opts={{ loop: true }}>
             <CarouselPrevious />
             <CarouselNext />
             <CarouselContent>

@@ -20,7 +20,7 @@ export const useGetPosts = ({
   );
 };
 
-export const usePostById = (postId: string) => {
+export const useGetPostById = (postId: string) => {
   return useQuery(postsQueries.getPostById(postId));
 };
 

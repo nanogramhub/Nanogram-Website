@@ -48,6 +48,31 @@ export const api = {
     },
   },
 
+  storage: {
+    async uploadFile(file: File) {
+      const response = await storage.createFile({
+        bucketId: appwriteConfig.storageBucketId,
+        fileId: ID.unique(),
+        file,
+      });
+      return response;
+    },
+
+    getFileUrl(fileId: string) {
+      return storage.getFileDownload({
+        bucketId: appwriteConfig.storageBucketId,
+        fileId,
+      });
+    },
+
+    async deleteFile(fileId: string) {
+      await storage.deleteFile({
+        bucketId: appwriteConfig.storageBucketId,
+        fileId,
+      });
+    },
+  },
+
   auth: {
     async signIn({ identifier, password }: SigninFormValues) {
       const email = await getEmailFromIdentifier(identifier);
@@ -75,10 +100,9 @@ export const api = {
     },
 
     async signOut() {
-      const response = await account.deleteSession({
+      await account.deleteSession({
         sessionId: "current",
       });
-      return response;
     },
 
     async createAccount({
@@ -379,6 +403,41 @@ export const api = {
       return response;
     },
 
+    async createPost(
+      creator: string,
+      caption: string,
+      tags: string[],
+      imageId: string,
+      imageUrl: string,
+    ) {
+      const response = await database.createRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        rowId: ID.unique(),
+        data: {
+          creator,
+          caption,
+          tags,
+          imageId,
+          imageUrl,
+        },
+      });
+      return response;
+    },
+
+    async updatePost(
+      postId: string,
+      data: Partial<Pick<Post, "caption" | "tags" | "imageId" | "imageUrl">>,
+    ) {
+      const response = await database.updateRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        rowId: postId,
+        data,
+      });
+      return response;
+    },
+
     async updateLikes(likeArray: string[], postId: string) {
       const response = await database.updateRow({
         databaseId: appwriteConfig.databaseId,
@@ -387,6 +446,15 @@ export const api = {
         data: {
           likes: likeArray,
         },
+      });
+      return response;
+    },
+
+    async deletePost(postId: string) {
+      const response = await database.deleteRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        rowId: postId,
       });
       return response;
     },
@@ -404,6 +472,7 @@ export const api = {
         });
         return response;
       },
+
       async savePost(userId: string, postId: string) {
         const response = await database.createRow({
           databaseId: appwriteConfig.databaseId,
@@ -416,6 +485,7 @@ export const api = {
         });
         return response;
       },
+
       async unsavePost(savedRecordId: string) {
         const response = await database.deleteRow({
           databaseId: appwriteConfig.databaseId,
@@ -436,6 +506,41 @@ export const api = {
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.commentsTableId,
           queries: querySelector.comments.getCommentsByPostIdQueries(modifiers),
+        });
+        return response;
+      },
+
+      async updateLikes(likeArray: string[], commentId: string) {
+        const response = await database.updateRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.commentsTableId,
+          rowId: commentId,
+          data: {
+            likes: likeArray,
+          },
+        });
+        return response;
+      },
+
+      async createComment(content: string, postId: string, userId: string) {
+        const response = await database.createRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.commentsTableId,
+          rowId: ID.unique(),
+          data: {
+            content,
+            post: postId,
+            commentor: userId,
+          },
+        });
+        return response;
+      },
+
+      async deleteComment(commentId: string) {
+        const response = await database.deleteRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.commentsTableId,
+          rowId: commentId,
         });
         return response;
       },

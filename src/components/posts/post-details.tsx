@@ -1,4 +1,4 @@
-import type { PostDetailsData } from "@/types/api";
+import type { PostCardData } from "@/types/api";
 import PostCreator from "./post-creator";
 import PostActions from "./post-actions";
 import { formatRelativeTime } from "@/lib/utils";
@@ -7,7 +7,7 @@ import { Card, CardContent } from "../ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { linkifyReact } from "../shared/default/linkify-text";
 
-const PostDetails = ({ post }: { post: PostDetailsData }) => {
+const PostDetails = ({ post }: { post: PostCardData }) => {
   return (
     <Card className="w-full max-w-6xl mx-auto border-none shadow-xl flex flex-col lg:relative overflow-hidden bg-background min-h-[400px] py-0">
       <div className="relative w-full lg:w-1/2 aspect-square bg-muted flex items-center justify-center overflow-hidden">
@@ -22,7 +22,11 @@ const PostDetails = ({ post }: { post: PostDetailsData }) => {
         <div className="p-4 flex items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-sm z-10 shrink-0">
           <PostCreator creator={post.creator} />
           <PostActions
-            post={{ $id: post.$id, creator: post.creator.$id }}
+            post={{
+              $id: post.$id,
+              creator: post.creator.$id,
+              imageId: post.imageId,
+            }}
             showViewButton={false}
           />
         </div>
@@ -34,14 +38,12 @@ const PostDetails = ({ post }: { post: PostDetailsData }) => {
                 Posted on Nanogram • {formatRelativeTime(post.$createdAt)}
               </p>
 
-              {post.caption && (
-                <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap wrap-break-word">
-                  {linkifyReact(post.caption, {
-                    className:
-                      "text-blue-500 hover:text-blue-600 transition-colors cursor-pointer font-medium",
-                  })}
-                </div>
-              )}
+              <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap wrap-break-word">
+                {linkifyReact(post.caption, {
+                  className:
+                    "text-blue-500 hover:text-blue-600 transition-colors cursor-pointer font-medium",
+                })}
+              </div>
 
               {post.tags && post.tags.length > 0 && (
                 <ul className="flex flex-wrap gap-x-2 gap-y-1">

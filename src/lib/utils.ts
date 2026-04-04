@@ -85,3 +85,46 @@ export function getInitials(name: string) {
   }
   return name.slice(0, 2).toUpperCase();
 }
+
+/**
+ * Generates a random alphanumeric string of a given length.
+ * @param length - The length of the string to generate.
+ * @returns A random alphanumeric string.
+ */
+export function generateRandomString(length: number = 8) {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+/**
+ * Generates a random filename with an optional prefix and extension.
+ * @param prefix - An optional prefix for the filename.
+ * @param extension - An optional extension (including the dot, e.g., ".jpg").
+ * @returns A random filename.
+ */
+export function generateRandomFileName(
+  extension: string = ".jpg",
+  prefix: string = "file",
+) {
+  const timestamp = Date.now();
+  const randomStr = generateRandomString(6);
+  return `${prefix}_${timestamp}_${randomStr}${extension}`;
+}
+
+/**
+ * Formats a size in bytes into a human-readable string (e.g., "1.2 MB").
+ * @param bytes - The size in bytes.
+ * @returns A formatted size string.
+ */
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}

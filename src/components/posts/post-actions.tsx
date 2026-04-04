@@ -1,45 +1,45 @@
 import { Edit, Ellipsis, Eye, Trash2 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Button } from "../ui/button";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import type { Post } from "@/types/schema";
+import { useDeletePost } from "@/hooks/mutations/use-posts";
+import { toast } from "sonner";
 
 const PostActions = ({
   post,
   showViewButton = true,
 }: {
-  post: Pick<Post, "$id" | "creator">;
+  post: Pick<Post, "$id" | "creator" | "imageId">;
   showViewButton?: boolean;
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const currentUser = useAuthStore((state) => state.currentUser);
+
+  const deletePost = useDeletePost();
+  const handleDelete = () => {
+    deletePost.mutate(
+      { postId: post.$id, imageId: post.imageId },
+      {
+        onSuccess: () => {
+          toast.success("Post deleted successfully");
+          if (location.pathname.startsWith("/posts")) {
+            navigate({ to: "/community" });
+          }
+        },
+        onError: () => {
+          toast.error("Failed to delete post");
+        },
+      },
+    );
+  };
+
   if (!currentUser) {
     return null;
   }
-  // TOOD: Replace with mutation
-  //   const deleteThisPost = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await deletePostById(post._id.toString());
-  //       if (!res) {
-  //         throw new Error("Failed to delete post");
-  //       }
-  //       toast("Post deleted successfully", {
-  //         description:
-  //           "Your post has been removed.\nChanges may take a moment to reflect.",
-  //       });
-  //     } catch (error) {
-  //       console.error("Failed to delete post:", error);
-  //       toast("Failed to delete post", {
-  //         description: "Please try again later.",
-  //       });
-  //     } finally {
-  //       setLoading(false);
-  //       setOpen(false);
-  //       router.push("/community");
-  //       router.refresh();
-  //     }
-  //   };
+
   return (
     <Popover>
       <PopoverTrigger>
@@ -51,6 +51,7 @@ const PostActions = ({
             <Button
               nativeButton={false}
               size="icon-lg"
+              disabled={deletePost.isPending}
               render={(props) => (
                 <Link
                   to="/posts/$postId"
@@ -68,11 +69,11 @@ const PostActions = ({
               <Button
                 nativeButton={false}
                 size="icon-lg"
+                disabled={deletePost.isPending}
                 render={(props) => (
                   <Link
-                    to="/community"
-                    // to="/update-post/$postId"
-                    // params={{ postId: post._id.toString() }}
+                    to="/edit-post/$postId"
+                    params={{ postId: post.$id }}
                     {...props}
                   >
                     <Edit strokeWidth={1.5} />
@@ -80,7 +81,12 @@ const PostActions = ({
                   </Link>
                 )}
               />
-              <Button variant="destructive" size="icon-lg">
+              <Button
+                variant="destructive"
+                size="icon-lg"
+                onClick={handleDelete}
+                disabled={deletePost.isPending}
+              >
                 <Trash2 strokeWidth={1.5} />
                 <span className="sr-only">Delete Post</span>
               </Button>

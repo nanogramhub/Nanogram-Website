@@ -21,16 +21,15 @@ export const PostCard = ({ post }: PostCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [expandedTags, setExpandedTags] = useState(false);
 
-  const isLong = post.caption && post.caption.length > CAPTION_LIMIT;
+  const isLong = post.caption.length > CAPTION_LIMIT;
   const displayedCaption =
     isLong && !expanded
-      ? post.caption!.slice(0, CAPTION_LIMIT).trimEnd()
+      ? post.caption.slice(0, CAPTION_LIMIT).trimEnd()
       : post.caption;
 
   const hasManyTags = post.tags.length > TAGS_LIMIT;
-  const displayedTags = hasManyTags && !expandedTags
-    ? post.tags.slice(0, TAGS_LIMIT)
-    : post.tags;
+  const displayedTags =
+    hasManyTags && !expandedTags ? post.tags.slice(0, TAGS_LIMIT) : post.tags;
 
   return (
     <Card className="md:w-136 w-full shadow-sm">
@@ -38,8 +37,12 @@ export const PostCard = ({ post }: PostCardProps) => {
         <div className="flex items-center justify-between shrink-0">
           <PostCreator creator={post.creator} />
           <PostActions
-            post={{ $id: post.$id, creator: post.creator.$id }}
-            showViewButton={false}
+            post={{
+              $id: post.$id,
+              creator: post.creator.$id,
+              imageId: post.imageId,
+            }}
+            showViewButton={true}
           />
         </div>
         <p className="text-xs text-muted-foreground/80 font-medium tracking-tight">
@@ -47,30 +50,28 @@ export const PostCard = ({ post }: PostCardProps) => {
         </p>
       </CardHeader>
       <CardContent>
-        {post.caption && (
-          <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap wrap-break-word">
-            {linkifyReact(displayedCaption!, {
-              className:
-                "text-blue-500 hover:text-blue-600 transition-colors cursor-pointer font-medium",
-            })}
-            {isLong && !expanded && (
-              <button
-                onClick={() => setExpanded(true)}
-                className="text-muted-foreground hover:text-foreground font-medium transition-colors ml-0.5 cursor-pointer"
-              >
-                ...more
-              </button>
-            )}
-            {isLong && expanded && (
-              <button
-                onClick={() => setExpanded(false)}
-                className="block text-xs text-muted-foreground hover:text-foreground font-medium transition-colors mt-1 cursor-pointer"
-              >
-                show less
-              </button>
-            )}
-          </div>
-        )}
+        <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap wrap-break-word">
+          {linkifyReact(displayedCaption!, {
+            className:
+              "text-blue-500 hover:text-blue-600 transition-colors cursor-pointer font-medium",
+          })}
+          {isLong && !expanded && (
+            <button
+              onClick={() => setExpanded(true)}
+              className="text-muted-foreground hover:text-foreground font-medium transition-colors ml-0.5 cursor-pointer"
+            >
+              ...more
+            </button>
+          )}
+          {isLong && expanded && (
+            <button
+              onClick={() => setExpanded(false)}
+              className="block text-xs text-muted-foreground hover:text-foreground font-medium transition-colors mt-1 cursor-pointer"
+            >
+              show less
+            </button>
+          )}
+        </div>
         {post.tags.length > 0 && (
           <ul className="flex flex-wrap gap-1 mt-1 text-xs items-center">
             {displayedTags.map((tag) => (
@@ -106,6 +107,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           <img
             src={post.imageUrl || "/assets/images/placeholder.png"}
             alt={post.$id}
+            className="w-full object-cover"
           />
         </figure>
       </Link>

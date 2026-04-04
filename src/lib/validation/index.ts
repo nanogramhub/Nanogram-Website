@@ -55,28 +55,34 @@ export const resetPasswordSchema = z.object({
 
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 5MB
+
 export const postFormSchema = z.object({
+  creator: z.string().min(1, "Creator is required"),
   caption: z
     .string()
-    .min(1, "Caption is required")
-    .max(3000, "Caption is too long"),
-  tags: z.string().optional(),
-  image: z.any().nullable(),
+    .min(5, "Caption must be at least 5 characters")
+    .max(2200, "Caption is too long"),
+  tags: z.array(z.string()),
+  image: z
+    .custom<File | string | null>()
+    .optional()
+    .refine((val) => {
+      if (val instanceof File) {
+        return val.size <= MAX_FILE_SIZE;
+      }
+      return true;
+    }, "File size must be less than 4MB"),
+  quality: z.number().min(0.1).max(1.0),
 });
+
+export type PostFormValues = z.infer<typeof postFormSchema>;
 
 export const userProfileFormSchema = z.object({
   avatar: z.any().nullable(),
   name: z.string().min(2, "Display name must be at least 2 characters"),
   email: z.email({ message: "Invalid email address" }),
   bio: z.string().max(150, "Bio is too long"),
-});
-
-export const commentFormSchema = z.object({
-  comment: z.string().min(1, "Comment is required"),
-});
-
-export const messageFormSchema = z.object({
-  message: z.string().min(1, "Message is required"),
 });
 
 export const newsLetterFormSchema = z.object({

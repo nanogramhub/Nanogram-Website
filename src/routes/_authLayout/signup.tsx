@@ -11,7 +11,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { signUpUser } from "@/lib/auth";
 import type { SignupFormValues } from "@/lib/validation";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppwriteException } from "appwrite";
 import { useState } from "react";

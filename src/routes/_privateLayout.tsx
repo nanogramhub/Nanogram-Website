@@ -10,7 +10,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePageName } from "@/hooks/use-page-name";
 import { ensureAuth } from "@/lib/auth";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { Link, useRouter } from "@tanstack/react-router";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppwriteException } from "appwrite";

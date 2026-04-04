@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { SigninFormValues } from "@/lib/validation";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppwriteException } from "appwrite";
 import { useState } from "react";

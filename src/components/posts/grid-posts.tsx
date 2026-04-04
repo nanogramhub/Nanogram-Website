@@ -73,11 +73,7 @@ const GridPosts = (props: GridPostsProps) => {
               <Link
                 to="/posts/$postId"
                 params={{ postId: post.$id }}
-                title={
-                  post.caption
-                    ? post.caption.substring(0, 100) + "..."
-                    : `post:${post.$id}`
-                }
+                title={post.caption.substring(0, 100) + "..."}
               >
                 <img
                   src={post.imageUrl}

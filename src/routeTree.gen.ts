@@ -16,6 +16,7 @@ import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
 import { Route as DefaultLayoutIndexRouteImport } from './routes/_defaultLayout/index'
 import { Route as PrivateLayoutSavedPostsRouteImport } from './routes/_privateLayout/saved-posts'
 import { Route as PrivateLayoutExploreRouteImport } from './routes/_privateLayout/explore'
+import { Route as PrivateLayoutCreatePostRouteImport } from './routes/_privateLayout/create-post'
 import { Route as PrivateLayoutCommunityRouteImport } from './routes/_privateLayout/community'
 import { Route as PrivateLayoutAllUsersRouteImport } from './routes/_privateLayout/all-users'
 import { Route as DefaultLayoutGalleryRouteImport } from './routes/_defaultLayout/gallery'
@@ -27,6 +28,7 @@ import { Route as AuthLayoutLoginRouteImport } from './routes/_authLayout/login'
 import { Route as AuthLayoutForgotPasswordRouteImport } from './routes/_authLayout/forgot-password'
 import { Route as PrivateLayoutUUserIdRouteImport } from './routes/_privateLayout/u/$userId'
 import { Route as PrivateLayoutPostsPostIdRouteImport } from './routes/_privateLayout/posts/$postId'
+import { Route as PrivateLayoutEditPostPostIdRouteImport } from './routes/_privateLayout/edit-post/$postId'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -58,6 +60,11 @@ const PrivateLayoutSavedPostsRoute = PrivateLayoutSavedPostsRouteImport.update({
 const PrivateLayoutExploreRoute = PrivateLayoutExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
+  getParentRoute: () => PrivateLayoutRoute,
+} as any)
+const PrivateLayoutCreatePostRoute = PrivateLayoutCreatePostRouteImport.update({
+  id: '/create-post',
+  path: '/create-post',
   getParentRoute: () => PrivateLayoutRoute,
 } as any)
 const PrivateLayoutCommunityRoute = PrivateLayoutCommunityRouteImport.update({
@@ -117,6 +124,12 @@ const PrivateLayoutPostsPostIdRoute =
     path: '/posts/$postId',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
+const PrivateLayoutEditPostPostIdRoute =
+  PrivateLayoutEditPostPostIdRouteImport.update({
+    id: '/edit-post/$postId',
+    path: '/edit-post/$postId',
+    getParentRoute: () => PrivateLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof DefaultLayoutIndexRoute
@@ -130,8 +143,10 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof DefaultLayoutGalleryRoute
   '/all-users': typeof PrivateLayoutAllUsersRoute
   '/community': typeof PrivateLayoutCommunityRoute
+  '/create-post': typeof PrivateLayoutCreatePostRoute
   '/explore': typeof PrivateLayoutExploreRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
+  '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/u/$userId': typeof PrivateLayoutUUserIdRoute
 }
@@ -147,8 +162,10 @@ export interface FileRoutesByTo {
   '/gallery': typeof DefaultLayoutGalleryRoute
   '/all-users': typeof PrivateLayoutAllUsersRoute
   '/community': typeof PrivateLayoutCommunityRoute
+  '/create-post': typeof PrivateLayoutCreatePostRoute
   '/explore': typeof PrivateLayoutExploreRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
+  '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/u/$userId': typeof PrivateLayoutUUserIdRoute
 }
@@ -167,9 +184,11 @@ export interface FileRoutesById {
   '/_defaultLayout/gallery': typeof DefaultLayoutGalleryRoute
   '/_privateLayout/all-users': typeof PrivateLayoutAllUsersRoute
   '/_privateLayout/community': typeof PrivateLayoutCommunityRoute
+  '/_privateLayout/create-post': typeof PrivateLayoutCreatePostRoute
   '/_privateLayout/explore': typeof PrivateLayoutExploreRoute
   '/_privateLayout/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
+  '/_privateLayout/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/_privateLayout/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/_privateLayout/u/$userId': typeof PrivateLayoutUUserIdRoute
 }
@@ -187,8 +206,10 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/all-users'
     | '/community'
+    | '/create-post'
     | '/explore'
     | '/saved-posts'
+    | '/edit-post/$postId'
     | '/posts/$postId'
     | '/u/$userId'
   fileRoutesByTo: FileRoutesByTo
@@ -204,8 +225,10 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/all-users'
     | '/community'
+    | '/create-post'
     | '/explore'
     | '/saved-posts'
+    | '/edit-post/$postId'
     | '/posts/$postId'
     | '/u/$userId'
   id:
@@ -223,9 +246,11 @@ export interface FileRouteTypes {
     | '/_defaultLayout/gallery'
     | '/_privateLayout/all-users'
     | '/_privateLayout/community'
+    | '/_privateLayout/create-post'
     | '/_privateLayout/explore'
     | '/_privateLayout/saved-posts'
     | '/_defaultLayout/'
+    | '/_privateLayout/edit-post/$postId'
     | '/_privateLayout/posts/$postId'
     | '/_privateLayout/u/$userId'
   fileRoutesById: FileRoutesById
@@ -286,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: '/explore'
       fullPath: '/explore'
       preLoaderRoute: typeof PrivateLayoutExploreRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
+    '/_privateLayout/create-post': {
+      id: '/_privateLayout/create-post'
+      path: '/create-post'
+      fullPath: '/create-post'
+      preLoaderRoute: typeof PrivateLayoutCreatePostRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
     '/_privateLayout/community': {
@@ -365,6 +397,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateLayoutPostsPostIdRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
+    '/_privateLayout/edit-post/$postId': {
+      id: '/_privateLayout/edit-post/$postId'
+      path: '/edit-post/$postId'
+      fullPath: '/edit-post/$postId'
+      preLoaderRoute: typeof PrivateLayoutEditPostPostIdRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
   }
 }
 
@@ -407,8 +446,10 @@ const DefaultLayoutRouteWithChildren = DefaultLayoutRoute._addFileChildren(
 interface PrivateLayoutRouteChildren {
   PrivateLayoutAllUsersRoute: typeof PrivateLayoutAllUsersRoute
   PrivateLayoutCommunityRoute: typeof PrivateLayoutCommunityRoute
+  PrivateLayoutCreatePostRoute: typeof PrivateLayoutCreatePostRoute
   PrivateLayoutExploreRoute: typeof PrivateLayoutExploreRoute
   PrivateLayoutSavedPostsRoute: typeof PrivateLayoutSavedPostsRoute
+  PrivateLayoutEditPostPostIdRoute: typeof PrivateLayoutEditPostPostIdRoute
   PrivateLayoutPostsPostIdRoute: typeof PrivateLayoutPostsPostIdRoute
   PrivateLayoutUUserIdRoute: typeof PrivateLayoutUUserIdRoute
 }
@@ -416,8 +457,10 @@ interface PrivateLayoutRouteChildren {
 const PrivateLayoutRouteChildren: PrivateLayoutRouteChildren = {
   PrivateLayoutAllUsersRoute: PrivateLayoutAllUsersRoute,
   PrivateLayoutCommunityRoute: PrivateLayoutCommunityRoute,
+  PrivateLayoutCreatePostRoute: PrivateLayoutCreatePostRoute,
   PrivateLayoutExploreRoute: PrivateLayoutExploreRoute,
   PrivateLayoutSavedPostsRoute: PrivateLayoutSavedPostsRoute,
+  PrivateLayoutEditPostPostIdRoute: PrivateLayoutEditPostPostIdRoute,
   PrivateLayoutPostsPostIdRoute: PrivateLayoutPostsPostIdRoute,
   PrivateLayoutUUserIdRoute: PrivateLayoutUUserIdRoute,
 }

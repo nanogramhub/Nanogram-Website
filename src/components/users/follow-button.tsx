@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import type { CurrentUser } from "@/types/api";
 import { Button, buttonVariants } from "../ui/button";
 import { useFollowUser, useUnfollowUser } from "@/hooks/mutations/use-follows";

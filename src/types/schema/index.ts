@@ -114,7 +114,7 @@ export type User = AppwriteDocument & {
 };
 
 export type Post = AppwriteDocument & {
-  caption?: string;
+  caption: string;
   tags: string[];
   imageUrl: string;
   imageId: string;

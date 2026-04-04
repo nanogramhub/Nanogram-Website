@@ -7,24 +7,19 @@ import { Spinner } from "@/components/ui/spinner";
 import FollowersDialog from "@/components/users/dialogs/followers-dialog";
 import FollowingDialog from "@/components/users/dialogs/following-dialog";
 import FollowButton from "@/components/users/follow-button";
-import { UserNotFoundException } from "@/exceptions";
 import { useGetPostsByUserId } from "@/hooks/queries/use-posts";
 import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
 import { usersQueries } from "@/lib/query/query-options";
 import { formatDateTime, getInitials } from "@/lib/utils";
 import { queryClient } from "@/router";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_privateLayout/u/$userId")({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const user = await queryClient.ensureQueryData(
-      usersQueries.getUserByUsername(params.userId),
-    );
-    if (!user) throw new UserNotFoundException("User not found");
-    return { user };
+  loader: ({ params }) => {
+    queryClient.prefetchQuery(usersQueries.getUserByUsername(params.userId));
   },
 });
 

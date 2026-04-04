@@ -1,5 +1,5 @@
 import { ensureAuth } from "@/lib/auth";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppwriteException } from "appwrite";
 

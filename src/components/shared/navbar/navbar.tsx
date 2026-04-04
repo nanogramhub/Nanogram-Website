@@ -5,7 +5,7 @@ import { useIsMobile } from "@/hooks/use-is-mobile";
 import { ModeToggle } from "../theme/mode-toggle";
 import NavSheet from "./nav-sheet";
 import { PerformanceToggle } from "../performance/performance-toggle";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "../profile/user-avatar";
 

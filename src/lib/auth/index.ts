@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import type { User } from "@/types/schema";
 import type { SignupFormValues } from "../validation";
 import { api } from "../appwrite/api";

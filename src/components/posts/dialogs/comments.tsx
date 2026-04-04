@@ -21,6 +21,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { CommentTextarea } from "@/components/posts/comments/comment-textarea";
+import { DeleteComment } from "../comments/delete";
 
 interface CommentsProps {
   postId: string;
@@ -45,11 +48,17 @@ function CommentsList({ postId }: { postId: string }) {
       <div className="flex flex-col gap-4 py-2">
         {items.map((comment) => (
           <div key={comment.$id} className="flex gap-3 items-start">
-            <UserAvatar
-              name={comment.commentor.name}
-              imageUrl={comment.commentor.imageUrl}
-              size="sm"
-            />
+            <Link
+              to="/u/$userId"
+              params={{ userId: comment.commentor.username }}
+              className="shrink-0"
+            >
+              <UserAvatar
+                name={comment.commentor.name}
+                imageUrl={comment.commentor.imageUrl}
+                size="sm"
+              />
+            </Link>
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline justify-between gap-2">
                 <span className="text-xs font-semibold truncate">
@@ -62,6 +71,7 @@ function CommentsList({ postId }: { postId: string }) {
               <p className="text-sm text-foreground/90 leading-relaxed mt-0.5 whitespace-pre-wrap wrap-break-word">
                 {comment.content}
               </p>
+              <DeleteComment comment={comment} />
             </div>
             <CommentLike comment={comment} />
           </div>
@@ -88,8 +98,9 @@ const Comments = ({ postId, trigger }: CommentsProps) => {
           <DrawerHeader>
             <DrawerTitle>Comments</DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-4 flex flex-col gap-2">
             <CommentsList postId={postId} />
+            <CommentTextarea postId={postId} />
           </div>
         </DrawerContent>
       </Drawer>
@@ -103,7 +114,10 @@ const Comments = ({ postId, trigger }: CommentsProps) => {
         <DialogHeader>
           <DialogTitle>Comments</DialogTitle>
         </DialogHeader>
-        <CommentsList postId={postId} />
+        <div className="flex flex-col gap-2">
+          <CommentsList postId={postId} />
+          <CommentTextarea postId={postId} />
+        </div>
       </DialogContent>
     </Dialog>
   );

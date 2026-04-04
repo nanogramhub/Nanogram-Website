@@ -1,5 +1,5 @@
 import { Like, Liked, Save, Saved } from "../icons";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/use-auth-store";
 import { useEffect, useState } from "react";
 import type { User } from "@/types/schema";
 import { CardFooter } from "../ui/card";
@@ -116,6 +116,7 @@ const PostStats = ({
               size="icon-lg"
               className="flex p-0"
               onClick={() => toggleLike()}
+              disabled={updateLikes.isPending}
             >
               {liked ? (
                 <Liked className="size-6" />
