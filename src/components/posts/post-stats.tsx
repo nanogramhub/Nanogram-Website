@@ -8,10 +8,11 @@ import type { PostCardData } from "@/types/api";
 import { useUpdateLikes } from "@/hooks/mutations/use-posts";
 import { useSavePost, useUnSavePost } from "@/hooks/mutations/use-saves";
 import Comments from "./dialogs/comments";
+import ShareDialog from "./dialogs/share";
 import { MessageCircle } from "lucide-react";
 
 interface PostStatsProps {
-  post: Pick<PostCardData, "$id" | "likes" | "save">;
+  post: Pick<PostCardData, "$id" | "likes" | "save" | "caption">;
   displayOptions: {
     showLikes?: boolean;
     showComments?: boolean;
@@ -100,42 +101,48 @@ const PostStats = ({
       setLiked(hasLiked(post.likes, currentUser));
       setSaved(hasSaved(post.save, currentUser));
     }
-  }, [currentUser]);
+  }, [currentUser, post.likes, post.save]);
 
   // If no post is provided and all stats are set to true, return null
   if (!post && showLikes && showComments && showShare && showSave) {
     return null;
   }
+
+  const shareUrl = `${window.location.origin}/posts/${post.$id}`;
+
   return (
     <CardFooter className="w-full">
-      <div className={`w-full flex justify-${align} gap-2`}>
-        {showLikes && (
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon-lg"
-              className="flex p-0"
-              onClick={() => toggleLike()}
-              disabled={updateLikes.isPending}
-            >
-              {liked ? (
-                <Liked className="size-6" />
-              ) : (
-                <Like className="size-5" />
-              )}
-            </Button>
-            <p className="mt-0.5 text-xs">{likedCount}</p>
-          </div>
-        )}
-        {showComments && (
-          <div className="flex items-center gap-1">
-            <Comments
-              postId={post.$id}
-              trigger={<MessageCircle className="size-5" />}
-            />
-          </div>
-        )}
-        {/* {showShare && <Share currentUser={user} post={post} />} */}
+      <div className={`w-full flex justify-${align} items-center gap-2`}>
+        <div className="flex items-center gap-4">
+          {showLikes && (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon-lg"
+                className="flex p-0"
+                onClick={() => toggleLike()}
+                disabled={updateLikes.isPending}
+              >
+                {liked ? (
+                  <Liked className="size-6" />
+                ) : (
+                  <Like className="size-5" />
+                )}
+              </Button>
+              <p className="mt-0.5 text-xs">{likedCount}</p>
+            </div>
+          )}
+          {showComments && (
+            <div className="flex items-center gap-1">
+              <Comments
+                postId={post.$id}
+                trigger={<MessageCircle className="size-5" />}
+              />
+            </div>
+          )}
+          {showShare && <ShareDialog url={shareUrl} title={post.caption} />}
+        </div>
+
         {showSave && (
           <Button
             variant="ghost"

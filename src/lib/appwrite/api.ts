@@ -4,6 +4,7 @@ import type {
   AppwriteResponse,
   Event,
   Nanogram,
+  Newsletter,
   Post,
   User,
 } from "@/types/schema";
@@ -544,6 +545,26 @@ export const api = {
         });
         return response;
       },
+    },
+  },
+
+  newsletters: {
+    async getNewsletters(modifiers: { cursorAfter?: string; limit?: number }) {
+      const response = await database.listRows<Newsletter>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.newsTableId,
+        queries: querySelector.newsletters.getNewslettersQueries(modifiers),
+      });
+      return response;
+    },
+
+    async getNewsletterById(id: string) {
+      const response = await database.getRow<Newsletter>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.newsTableId,
+        rowId: id,
+      });
+      return response;
     },
   },
 };

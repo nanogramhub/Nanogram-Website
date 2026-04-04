@@ -78,6 +78,42 @@ export const nanogramQueries = {
   },
 };
 
+export const newslettersQueries = {
+  getNewsletters: ({
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.newsletters.getNewsletters,
+        { cursorAfter, limit },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.newsletters.getNewsletters({ cursorAfter: pageParam, limit }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 30, // 30 minutes
+      enabled,
+    });
+  },
+  getNewsletterById: (id: string) => {
+    return queryOptions({
+      queryKey: [...queryKeys.newsletters.getNewsletters, id],
+      queryFn: () => api.newsletters.getNewsletterById(id),
+      staleTime: 1000 * 60 * 30, // 30 minutes
+      enabled: !!id,
+    });
+  },
+};
+
 export const eventsQueries = {
   getEvents: ({
     cursorAfter,

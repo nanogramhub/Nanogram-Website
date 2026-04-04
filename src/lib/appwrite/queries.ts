@@ -281,4 +281,19 @@ export const querySelector = {
       ];
     },
   },
+  newsletters: {
+    getNewslettersQueries({
+      cursorAfter,
+      limit = 10,
+    }: {
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.orderDesc("$createdAt"),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
+  },
 };

@@ -126,3 +126,9 @@ export type Comment = AppwriteDocument & {
   commentor: string;
   post: string;
 };
+
+export type Newsletter = AppwriteDocument & {
+  title: string;
+  fileUrl: string;
+  fileId: string;
+};

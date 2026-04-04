@@ -15,11 +15,11 @@ function RouteComponent() {
   //   return currentUser.following.some((f) => f.followed === userId);
   // }
   async function run() {
-    const data = await api.storage.deleteFile("69d132a2002d9da0e77f");
-    // if (!data) {
-    //   console.log("No data returned");
-    //   return;
-    // }
+    const data = await api.newsletters.getNewsletters({});
+    if (!data) {
+      console.log("No data returned");
+      return;
+    }
     console.log(data);
     // console.log(isFollowing(data, "69cd10b3000e43fde8bb"));
   }

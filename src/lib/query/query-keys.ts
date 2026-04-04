@@ -46,4 +46,7 @@ export const queryKeys = {
     followUser: ["follows", "follow"],
     unfollowUser: ["follows", "unfollow"],
   },
+  newsletters: {
+    getNewsletters: ["newsletters"],
+  },
 };
