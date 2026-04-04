@@ -52,12 +52,19 @@ export function EmojiPickerPopover({
 export function ReactionSelector({
   onSelectEmoji,
   className,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: {
   onSelectEmoji: (emojiData: EmojiClickData) => void;
   className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const emojis = ["1f600", "1f601", "1f602"];
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = controlledOnOpenChange ?? setInternalOpen;
+  const emojis = ["1f600", "1f601", "1f602", "2764", "1f44d", "1f62e"]; // Added more default emojis
+
 
   const handleReactionClick = (emojiData: EmojiClickData) => {
     if (onSelectEmoji) {
@@ -74,7 +81,7 @@ export function ReactionSelector({
   };
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="hidden group-hover:flex">
+      <PopoverTrigger className="p-1 rounded-full hover:bg-muted transition-colors flex items-center justify-center">
         <Laugh className={cn(className)} />
       </PopoverTrigger>
       <PopoverContent

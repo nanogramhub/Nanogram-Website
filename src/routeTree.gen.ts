@@ -27,9 +27,11 @@ import { Route as AuthLayoutResetPasswordRouteImport } from './routes/_authLayou
 import { Route as AuthLayoutLoginRouteImport } from './routes/_authLayout/login'
 import { Route as AuthLayoutForgotPasswordRouteImport } from './routes/_authLayout/forgot-password'
 import { Route as PrivateLayoutNewsletterIndexRouteImport } from './routes/_privateLayout/newsletter/index'
+import { Route as PrivateLayoutMessagesIndexRouteImport } from './routes/_privateLayout/messages/index'
 import { Route as PrivateLayoutUUserIdRouteImport } from './routes/_privateLayout/u/$userId'
 import { Route as PrivateLayoutPostsPostIdRouteImport } from './routes/_privateLayout/posts/$postId'
 import { Route as PrivateLayoutNewsletterNewsIdRouteImport } from './routes/_privateLayout/newsletter/$newsId'
+import { Route as PrivateLayoutMessagesUserIdRouteImport } from './routes/_privateLayout/messages/$userId'
 import { Route as PrivateLayoutEditPostPostIdRouteImport } from './routes/_privateLayout/edit-post/$postId'
 
 const TestRoute = TestRouteImport.update({
@@ -121,6 +123,12 @@ const PrivateLayoutNewsletterIndexRoute =
     path: '/newsletter/',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
+const PrivateLayoutMessagesIndexRoute =
+  PrivateLayoutMessagesIndexRouteImport.update({
+    id: '/messages/',
+    path: '/messages/',
+    getParentRoute: () => PrivateLayoutRoute,
+  } as any)
 const PrivateLayoutUUserIdRoute = PrivateLayoutUUserIdRouteImport.update({
   id: '/u/$userId',
   path: '/u/$userId',
@@ -136,6 +144,12 @@ const PrivateLayoutNewsletterNewsIdRoute =
   PrivateLayoutNewsletterNewsIdRouteImport.update({
     id: '/newsletter/$newsId',
     path: '/newsletter/$newsId',
+    getParentRoute: () => PrivateLayoutRoute,
+  } as any)
+const PrivateLayoutMessagesUserIdRoute =
+  PrivateLayoutMessagesUserIdRouteImport.update({
+    id: '/messages/$userId',
+    path: '/messages/$userId',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
 const PrivateLayoutEditPostPostIdRoute =
@@ -161,9 +175,11 @@ export interface FileRoutesByFullPath {
   '/explore': typeof PrivateLayoutExploreRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
+  '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/u/$userId': typeof PrivateLayoutUUserIdRoute
+  '/messages/': typeof PrivateLayoutMessagesIndexRoute
   '/newsletter/': typeof PrivateLayoutNewsletterIndexRoute
 }
 export interface FileRoutesByTo {
@@ -182,9 +198,11 @@ export interface FileRoutesByTo {
   '/explore': typeof PrivateLayoutExploreRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
+  '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/u/$userId': typeof PrivateLayoutUUserIdRoute
+  '/messages': typeof PrivateLayoutMessagesIndexRoute
   '/newsletter': typeof PrivateLayoutNewsletterIndexRoute
 }
 export interface FileRoutesById {
@@ -207,9 +225,11 @@ export interface FileRoutesById {
   '/_privateLayout/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
   '/_privateLayout/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
+  '/_privateLayout/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/_privateLayout/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
   '/_privateLayout/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/_privateLayout/u/$userId': typeof PrivateLayoutUUserIdRoute
+  '/_privateLayout/messages/': typeof PrivateLayoutMessagesIndexRoute
   '/_privateLayout/newsletter/': typeof PrivateLayoutNewsletterIndexRoute
 }
 export interface FileRouteTypes {
@@ -230,9 +250,11 @@ export interface FileRouteTypes {
     | '/explore'
     | '/saved-posts'
     | '/edit-post/$postId'
+    | '/messages/$userId'
     | '/newsletter/$newsId'
     | '/posts/$postId'
     | '/u/$userId'
+    | '/messages/'
     | '/newsletter/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -251,9 +273,11 @@ export interface FileRouteTypes {
     | '/explore'
     | '/saved-posts'
     | '/edit-post/$postId'
+    | '/messages/$userId'
     | '/newsletter/$newsId'
     | '/posts/$postId'
     | '/u/$userId'
+    | '/messages'
     | '/newsletter'
   id:
     | '__root__'
@@ -275,9 +299,11 @@ export interface FileRouteTypes {
     | '/_privateLayout/saved-posts'
     | '/_defaultLayout/'
     | '/_privateLayout/edit-post/$postId'
+    | '/_privateLayout/messages/$userId'
     | '/_privateLayout/newsletter/$newsId'
     | '/_privateLayout/posts/$postId'
     | '/_privateLayout/u/$userId'
+    | '/_privateLayout/messages/'
     | '/_privateLayout/newsletter/'
   fileRoutesById: FileRoutesById
 }
@@ -416,6 +442,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateLayoutNewsletterIndexRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
+    '/_privateLayout/messages/': {
+      id: '/_privateLayout/messages/'
+      path: '/messages'
+      fullPath: '/messages/'
+      preLoaderRoute: typeof PrivateLayoutMessagesIndexRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
     '/_privateLayout/u/$userId': {
       id: '/_privateLayout/u/$userId'
       path: '/u/$userId'
@@ -435,6 +468,13 @@ declare module '@tanstack/react-router' {
       path: '/newsletter/$newsId'
       fullPath: '/newsletter/$newsId'
       preLoaderRoute: typeof PrivateLayoutNewsletterNewsIdRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
+    '/_privateLayout/messages/$userId': {
+      id: '/_privateLayout/messages/$userId'
+      path: '/messages/$userId'
+      fullPath: '/messages/$userId'
+      preLoaderRoute: typeof PrivateLayoutMessagesUserIdRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
     '/_privateLayout/edit-post/$postId': {
@@ -490,9 +530,11 @@ interface PrivateLayoutRouteChildren {
   PrivateLayoutExploreRoute: typeof PrivateLayoutExploreRoute
   PrivateLayoutSavedPostsRoute: typeof PrivateLayoutSavedPostsRoute
   PrivateLayoutEditPostPostIdRoute: typeof PrivateLayoutEditPostPostIdRoute
+  PrivateLayoutMessagesUserIdRoute: typeof PrivateLayoutMessagesUserIdRoute
   PrivateLayoutNewsletterNewsIdRoute: typeof PrivateLayoutNewsletterNewsIdRoute
   PrivateLayoutPostsPostIdRoute: typeof PrivateLayoutPostsPostIdRoute
   PrivateLayoutUUserIdRoute: typeof PrivateLayoutUUserIdRoute
+  PrivateLayoutMessagesIndexRoute: typeof PrivateLayoutMessagesIndexRoute
   PrivateLayoutNewsletterIndexRoute: typeof PrivateLayoutNewsletterIndexRoute
 }
 
@@ -503,9 +545,11 @@ const PrivateLayoutRouteChildren: PrivateLayoutRouteChildren = {
   PrivateLayoutExploreRoute: PrivateLayoutExploreRoute,
   PrivateLayoutSavedPostsRoute: PrivateLayoutSavedPostsRoute,
   PrivateLayoutEditPostPostIdRoute: PrivateLayoutEditPostPostIdRoute,
+  PrivateLayoutMessagesUserIdRoute: PrivateLayoutMessagesUserIdRoute,
   PrivateLayoutNewsletterNewsIdRoute: PrivateLayoutNewsletterNewsIdRoute,
   PrivateLayoutPostsPostIdRoute: PrivateLayoutPostsPostIdRoute,
   PrivateLayoutUUserIdRoute: PrivateLayoutUUserIdRoute,
+  PrivateLayoutMessagesIndexRoute: PrivateLayoutMessagesIndexRoute,
   PrivateLayoutNewsletterIndexRoute: PrivateLayoutNewsletterIndexRoute,
 }
 

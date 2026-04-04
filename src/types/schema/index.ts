@@ -132,3 +132,10 @@ export type Newsletter = AppwriteDocument & {
   fileUrl: string;
   fileId: string;
 };
+
+export type Message = AppwriteDocument & {
+  sender: string; // relationship with User
+  receiver: string; // relationship with User
+  content: string;
+  reactions: string[];
+};

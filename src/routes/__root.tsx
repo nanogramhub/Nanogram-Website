@@ -16,7 +16,9 @@ const RootLayout = () => {
         storageKey="nanogram-performance"
       >
         <TooltipProvider delay={100}>
-          <Outlet />
+          <div className="bg-background text-foreground">
+            <Outlet />
+          </div>
           <TanStackRouterDevtools position="bottom-right" />
         </TooltipProvider>
         <Toaster />

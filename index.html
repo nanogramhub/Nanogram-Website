@@ -144,9 +144,53 @@
       gtag("js", new Date());
       gtag("config", "G-7Q89F5T687");
     </script>
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border-width: 0;
+      }
+      .bg {
+        background-color: oklch(1 0 0);
+        color: oklch(25.33% 0.016 252.42)
+      }
+      @media (prefers-color-scheme: dark) {
+        .bg {
+          background-color: oklch(25.33% 0.016 252.42);
+          color: oklch(0.987 0.002 197.1)
+        }
+      }
+
+    </style>
   </head>
-  <body>
+  <body class="bg">
     <nav aria-label="primary navigation" class="sr-only">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/community">Community</a></li>
+        <li><a href="/events">Events</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li><a href="/events#faq">FAQ</a></li>
+        <li><a href="/about-us#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="primary navigation" style="
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+">
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/community">Community</a></li>
@@ -170,6 +214,6 @@
     <div id="root"></div>
 
     <!-- Main JavaScript -->
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

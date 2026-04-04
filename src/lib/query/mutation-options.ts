@@ -314,3 +314,83 @@ export const getDeletePostMutationOptions = () => {
     },
   });
 };
+
+// ==================
+// Message Mutation Options
+// ==================
+
+/** Send a new message and invalidate both messages and contacts caches */
+export const getSendMessageMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.messages.sendMessage,
+    mutationFn: async ({
+      senderId,
+      receiverId,
+      content,
+    }: {
+      senderId: string;
+      receiverId: string;
+      content: string;
+    }) => {
+      const response = await api.messages.sendMessage({
+        senderId,
+        receiverId,
+        content,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      // Refresh messages list and contacts sidebar
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.messages.getMessages,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.messages.getContacts,
+      });
+    },
+  });
+};
+
+/** Update a message's content or reactions */
+export const getUpdateMessageMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.messages.updateMessage,
+    mutationFn: async ({
+      messageId,
+      content,
+      reactions,
+    }: {
+      messageId: string;
+      content?: string;
+      reactions?: string[];
+    }) => {
+      const response = await api.messages.updateMessage({
+        messageId,
+        content,
+        reactions,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.messages.getMessages,
+      });
+    },
+  });
+};
+
+/** Delete a message by ID */
+export const getDeleteMessageMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.messages.deleteMessage,
+    mutationFn: async ({ messageId }: { messageId: string }) => {
+      const response = await api.messages.deleteMessage(messageId);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.messages.getMessages,
+      });
+    },
+  });
+};

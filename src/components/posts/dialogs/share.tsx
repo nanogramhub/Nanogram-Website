@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, Copy, Check, Share2 } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Link, Copy, Check, Share2, MessageCircleMore, Search } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,7 @@ import {
 } from "../../ui/dialog";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import {
   Whatsapp,
   Twitter,
@@ -20,18 +21,88 @@ import {
   Reddit,
 } from "../../icons/brands";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/use-auth-store";
+import { useSendMessage } from "@/hooks/mutations/use-messages";
+import { useGetContacts } from "@/hooks/queries/use-messages";
+import { getInitials } from "@/lib/utils";
+import type { ContactUser } from "@/types/api";
 
 interface ShareDialogProps {
   url: string;
+  /** Post ID for in-app sharing via nanogram:// protocol */
+  postId?: string;
   title?: string;
   trigger?: React.ReactNode;
 }
 
 const ShareDialog = ({
   url,
+  postId,
   title = "Check out this post on Nanogram!",
 }: ShareDialogProps) => {
   const [copied, setCopied] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [sentTo, setSentTo] = useState<Set<string>>(new Set());
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const sendMessage = useSendMessage();
+
+  // Fetch contacts for the "Send to Message" section
+  const contactsQuery = useGetContacts({
+    userId: currentUser?.$id ?? "",
+    enabled: !!currentUser?.$id,
+  });
+
+  // Derive unique contacts from messages
+  const contacts = useMemo(() => {
+    if (!contactsQuery.data?.pages || !currentUser) return [];
+
+    const contactMap = new Map<string, ContactUser>();
+    for (const page of contactsQuery.data.pages) {
+      for (const message of page.rows) {
+        const otherUser =
+          message.sender.$id === currentUser.$id
+            ? message.receiver
+            : message.sender;
+        if (!contactMap.has(otherUser.$id)) {
+          contactMap.set(otherUser.$id, otherUser);
+        }
+      }
+    }
+    return Array.from(contactMap.values());
+  }, [contactsQuery.data, currentUser]);
+
+  // Filter contacts by search
+  const filteredContacts = useMemo(() => {
+    if (!searchValue) return contacts.slice(0, 5); // Show first 5 by default
+    const lower = searchValue.toLowerCase();
+    return contacts.filter(
+      (c) =>
+        c.name.toLowerCase().includes(lower) ||
+        c.username.toLowerCase().includes(lower),
+    );
+  }, [contacts, searchValue]);
+
+  /** Send post as in-app message using nanogram:// protocol */
+  const handleSendToUser = (userId: string) => {
+    if (!currentUser || !postId) return;
+
+    sendMessage.mutate(
+      {
+        senderId: currentUser.$id,
+        receiverId: userId,
+        content: `nanogram://${postId}`,
+      },
+      {
+        onSuccess: () => {
+          setSentTo((prev) => new Set(prev).add(userId));
+          toast.success("Post sent!");
+        },
+        onError: () => {
+          toast.error("Failed to send post");
+        },
+      },
+    );
+  };
 
   const shareData = {
     title: "Nanogram",
@@ -95,8 +166,6 @@ const ShareDialog = ({
           toast.error("Error sharing");
         }
       }
-    } else {
-      // Fallback is handled by the manual platform buttons in the dialog
     }
   };
 
@@ -110,7 +179,7 @@ const ShareDialog = ({
           </Button>
         )}
       ></DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-xl border-border/50">
+      <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-xl border-border/50 max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold tracking-tight">
             Share Post
@@ -121,6 +190,90 @@ const ShareDialog = ({
         </DialogHeader>
 
         <div className="flex flex-col gap-6 py-4">
+          {/* ==================
+              In-App Message Section
+              ================== */}
+          {postId && currentUser && (
+            <div className="flex flex-col gap-3">
+              <h4 className="text-sm font-medium text-muted-foreground ml-1 flex items-center gap-1.5">
+                <MessageCircleMore className="size-3.5" />
+                Send via Message
+              </h4>
+
+              {/* Contact search */}
+              {contacts.length > 3 && (
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+                  <Input
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    placeholder="Search contacts..."
+                    className="pl-8 h-8 text-xs"
+                  />
+                </div>
+              )}
+
+              {/* Contact list */}
+              <div className="flex flex-col gap-1 max-h-36 overflow-y-auto">
+                {filteredContacts.length === 0 ? (
+                  <p className="text-xs text-muted-foreground/60 text-center py-3">
+                    {contacts.length === 0
+                      ? "No contacts yet. Start a conversation first."
+                      : "No matching contacts"}
+                  </p>
+                ) : (
+                  filteredContacts.map((contact) => (
+                    <div
+                      key={contact.$id}
+                      className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-secondary/40 transition-colors"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Avatar size="sm">
+                          <AvatarImage
+                            src={
+                              contact.imageUrl || "/assets/icons/user.svg"
+                            }
+                            alt={contact.name}
+                          />
+                          <AvatarFallback>
+                            {getInitials(contact.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-xs font-medium truncate">
+                            {contact.name}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground truncate">
+                            @{contact.username}
+                          </span>
+                        </div>
+                      </div>
+
+                      <Button
+                        variant={sentTo.has(contact.$id) ? "default" : "secondary"}
+                        size="sm"
+                        className="shrink-0 h-7 text-xs px-3"
+                        disabled={
+                          sentTo.has(contact.$id) || sendMessage.isPending
+                        }
+                        onClick={() => handleSendToUser(contact.$id)}
+                      >
+                        {sentTo.has(contact.$id) ? (
+                          <>
+                            <Check className="size-3 mr-1" />
+                            Sent
+                          </>
+                        ) : (
+                          "Send"
+                        )}
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Copy Link Section */}
           <div className="flex flex-col gap-2">
             <h4 className="text-sm font-medium text-muted-foreground ml-1">

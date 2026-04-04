@@ -49,4 +49,12 @@ export const queryKeys = {
   newsletters: {
     getNewsletters: ["newsletters"],
   },
+  // Message query and mutation keys
+  messages: {
+    getMessages: ["messages"],
+    getContacts: ["messages", "contacts"],
+    sendMessage: ["messages", "send"],
+    updateMessage: ["messages", "update"],
+    deleteMessage: ["messages", "delete"],
+  },
 };

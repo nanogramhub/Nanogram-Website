@@ -140,7 +140,7 @@ const PostStats = ({
               />
             </div>
           )}
-          {showShare && <ShareDialog url={shareUrl} title={post.caption} />}
+          {showShare && <ShareDialog url={shareUrl} postId={post.$id} title={post.caption} />}
         </div>
 
         {showSave && (

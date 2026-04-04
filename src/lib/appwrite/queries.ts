@@ -296,4 +296,92 @@ export const querySelector = {
       ];
     },
   },
+
+  // ==================
+  // Message Queries
+  // ==================
+  messages: {
+    /**
+     * Returns queries to fetch messages between two users (bidirectional).
+     * Uses Query.or with two Query.and clauses to cover both directions.
+     * Results are ordered newest-first for reverse-chronological display.
+     */
+    getMessagesBetweenUsersQueries({
+      senderId,
+      receiverId,
+      cursorAfter,
+      limit = 20,
+    }: {
+      senderId: string;
+      receiverId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        // Select message fields + expanded sender/receiver info
+        Query.select([
+          "*",
+          "sender.$id",
+          "sender.name",
+          "sender.imageUrl",
+          "sender.username",
+          "receiver.$id",
+          "receiver.name",
+          "receiver.imageUrl",
+          "receiver.username",
+        ]),
+        // Bidirectional: (A→B) OR (B→A)
+        Query.or([
+          Query.and([
+            Query.equal("sender", senderId),
+            Query.equal("receiver", receiverId),
+          ]),
+          Query.and([
+            Query.equal("sender", receiverId),
+            Query.equal("receiver", senderId),
+          ]),
+        ]),
+        Query.orderDesc("$createdAt"),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
+
+    /**
+     * Returns queries to fetch the most recent messages involving a user.
+     * Used to derive a contacts list from message history.
+     */
+    getContactsQueries({
+      userId,
+      cursorAfter,
+      limit = 25,
+    }: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.select([
+          "$id",
+          "$createdAt",
+          "sender.$id",
+          "sender.name",
+          "sender.imageUrl",
+          "sender.username",
+          "receiver.$id",
+          "receiver.name",
+          "receiver.imageUrl",
+          "receiver.username",
+        ]),
+        // Messages where user is either sender or receiver
+        Query.or([
+          Query.equal("sender", userId),
+          Query.equal("receiver", userId),
+        ]),
+        Query.orderDesc("$createdAt"),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
+  },
 };

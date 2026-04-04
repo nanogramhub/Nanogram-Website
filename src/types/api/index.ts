@@ -1,4 +1,4 @@
-import type { AppwriteDocument, Comment, Post, User } from "../schema";
+import type { AppwriteDocument, Comment, Message, Post, User } from "../schema";
 
 export type CurrentUser = User & {
   following: (AppwriteDocument & { followed: User["$id"] })[];
@@ -56,3 +56,17 @@ export type CommentData = Omit<Comment, "commentor"> & {
   commentor: CommentCreator;
   likes: Like[];
 };
+
+// ==================
+// Message Types
+// ==================
+
+/** A message document with expanded sender/receiver user relationships */
+export type MessageData = Omit<Message, "sender" | "receiver"> & {
+  sender: AppwriteDocument & Pick<User, "name" | "imageUrl" | "username">;
+  receiver: AppwriteDocument & Pick<User, "name" | "imageUrl" | "username">;
+};
+
+/** Lightweight user info used in the contacts sidebar */
+export type ContactUser = AppwriteDocument &
+  Pick<User, "name" | "imageUrl" | "username">;

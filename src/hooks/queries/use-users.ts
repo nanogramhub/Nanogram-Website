@@ -18,3 +18,7 @@ export const useGetUsers = ({
 export const useGetUserByUsername = (username: string) => {
   return useQuery(usersQueries.getUserByUsername(username));
 };
+
+export const useGetUserById = (userId: string | undefined) => {
+  return useQuery(usersQueries.getUserById(userId));
+};

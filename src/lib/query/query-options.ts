@@ -201,6 +201,14 @@ export const usersQueries = {
       enabled,
     });
   },
+  getUserById: (userId: string | undefined) => {
+    return queryOptions({
+      queryKey: [...queryKeys.users.getUsers, userId],
+      queryFn: () => (userId ? api.users.getUserById(userId) : null),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled: !!userId,
+    });
+  },
 };
 
 export const postsQueries = {
@@ -400,6 +408,87 @@ export const followsQueries = {
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
       staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
+};
+
+// ==================
+// Message Query Options
+// ==================
+export const messagesQueries = {
+  /**
+   * Infinite query for messages between two users.
+   * Pages load older messages as the user scrolls up.
+   */
+  getMessages: ({
+    senderId,
+    receiverId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    senderId: string;
+    receiverId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.messages.getMessages,
+        { senderId, receiverId },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.messages.getMessages({
+          senderId,
+          receiverId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      // Messages are mostly realtime-driven, keep a short stale time
+      staleTime: 1000 * 30, // 30 seconds
+      enabled,
+    });
+  },
+
+  /**
+   * Infinite query to fetch messages for contact derivation.
+   * The UI de-duplicates sender/receiver to build a unique contacts list.
+   */
+  getContacts: ({
+    userId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    userId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.messages.getContacts,
+        { userId },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.messages.getContacts({
+          userId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 2, // 2 minutes
       enabled,
     });
   },

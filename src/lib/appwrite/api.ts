@@ -3,6 +3,7 @@ import { account, appwriteConfig, avatars, database, storage } from "./config";
 import type {
   AppwriteResponse,
   Event,
+  Message,
   Nanogram,
   Newsletter,
   Post,
@@ -14,6 +15,7 @@ import type {
   CurrentUser,
   Followers,
   Following,
+  MessageData,
   PostCardData,
   PostsFilter,
   SavedPostData,
@@ -299,6 +301,15 @@ export const api = {
       return response.rows[0] ?? null;
     },
 
+    async getUserById(id: string): Promise<User | null> {
+      const response = await database.getRow<User>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.usersTableId,
+        rowId: id,
+      });
+      return response;
+    },
+
     follows: {
       async getFollowers({
         userId,
@@ -563,6 +574,110 @@ export const api = {
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.newsTableId,
         rowId: id,
+      });
+      return response;
+    },
+  },
+
+  // ==================
+  // Message Functions
+  // ==================
+  messages: {
+    /**
+     * Fetch paginated messages between two users.
+     * Returns messages with expanded sender/receiver user data.
+     */
+    async getMessages(modifiers: {
+      senderId: string;
+      receiverId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }): Promise<AppwriteResponse<MessageData>> {
+      const response = await database.listRows<MessageData>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.messagesTableId,
+        queries: querySelector.messages.getMessagesBetweenUsersQueries(modifiers),
+      });
+      return response;
+    },
+
+    /**
+     * Send a new message from sender to receiver.
+     * Content can be text or a nanogram:// post link.
+     */
+    async sendMessage({
+      senderId,
+      receiverId,
+      content,
+    }: {
+      senderId: string;
+      receiverId: string;
+      content: string;
+    }) {
+      const response = await database.createRow<Message>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.messagesTableId,
+        rowId: ID.unique(),
+        data: {
+          sender: senderId,
+          receiver: receiverId,
+          content,
+          reactions: [],
+        },
+      });
+      return response;
+    },
+
+    /**
+     * Update a message's content and/or reactions.
+     * Reactions are capped at 2 entries (matching old behavior).
+     */
+    async updateMessage({
+      messageId,
+      content,
+      reactions,
+    }: {
+      messageId: string;
+      content?: string;
+      reactions?: string[];
+    }) {
+      const data: Partial<Pick<Message, "content" | "reactions">> = {};
+      if (content !== undefined) data.content = content;
+      if (reactions !== undefined)
+        data.reactions = reactions;
+
+      const response = await database.updateRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.messagesTableId,
+        rowId: messageId,
+        data,
+      });
+      return response;
+    },
+
+    /** Delete a message by ID */
+    async deleteMessage(messageId: string) {
+      const response = await database.deleteRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.messagesTableId,
+        rowId: messageId,
+      });
+      return response;
+    },
+
+    /**
+     * Fetch recent messages for a user to derive the contacts list.
+     * The UI will de-duplicate sender/receiver to build unique contacts.
+     */
+    async getContacts(modifiers: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      const response = await database.listRows<MessageData>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.messagesTableId,
+        queries: querySelector.messages.getContactsQueries(modifiers),
       });
       return response;
     },
