@@ -16,6 +16,7 @@ import { Spinner } from "@/components/ui/spinner";
 import type { MessageData } from "@/types/api";
 import type { AppwriteResponse } from "@/types/schema";
 import type { InfiniteData } from "@tanstack/react-query";
+import type { RealtimeSubscription } from "appwrite";
 
 export const Route = createFileRoute("/_privateLayout/messages/$userId")({
   component: ChatView,
@@ -92,13 +93,16 @@ function ChatView() {
   useEffect(() => {
     if (!currentUser?.$id) return;
 
-    const unsubscribe = messageRealtime(currentUser.$id, ({ event, payload }) => {
-      // Only handle messages in this conversation
+    let cancelled = false;
+    let subscription: RealtimeSubscription | null = null;
+
+    messageRealtime(currentUser.$id, ({ event, payload }) => {
+      // ... logic ... (keep existing)
       const isRelevant =
-        (payload.sender.$id === currentUser.$id &&
-          payload.receiver.$id === otherUserId) ||
-        (payload.sender.$id === otherUserId &&
-          payload.receiver.$id === currentUser.$id);
+        (payload.sender?.$id === currentUser.$id &&
+          payload.receiver?.$id === otherUserId) ||
+        (payload.sender?.$id === otherUserId &&
+          payload.receiver?.$id === currentUser.$id);
 
       if (!isRelevant) return;
 
@@ -108,15 +112,12 @@ function ChatView() {
       ];
 
       if (event === "create") {
-        // Invalidate instead of manual adding to ensure we get expanded sender/receiver info
         queryClient.invalidateQueries({ queryKey });
 
-        // Scroll to bottom for new messages
         setTimeout(() => {
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
         }, 100);
       } else if (event === "update") {
-        // Update message in cache while preserving expanded objects
         queryClient.setQueryData<
           InfiniteData<AppwriteResponse<MessageData>>
         >(queryKey, (old) => {
@@ -139,7 +140,6 @@ function ChatView() {
           return { ...old, pages: newPages };
         });
       } else if (event === "delete") {
-        // Remove message from cache
         queryClient.setQueryData<
           InfiniteData<AppwriteResponse<MessageData>>
         >(queryKey, (old) => {
@@ -154,9 +154,18 @@ function ChatView() {
           return { ...old, pages: newPages };
         });
       }
+    }).then((sub) => {
+      if (cancelled) {
+        sub.close();
+      } else {
+        subscription = sub;
+      }
     });
 
-    return () => unsubscribe();
+    return () => {
+      cancelled = true;
+      if (subscription) subscription.close();
+    };
   }, [currentUser?.$id, otherUserId, queryClient]);
 
   /** Send a new message */

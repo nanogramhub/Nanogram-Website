@@ -21,6 +21,7 @@ import { getContactsRealtime } from "@/lib/appwrite/realtime";
 import { getInitials, cn } from "@/lib/utils";
 import { MessageCircleMore, Search, SquarePen } from "lucide-react";
 import type { ContactUser } from "@/types/api";
+import type { RealtimeSubscription } from "appwrite";
 
 /**
  * Contacts sidebar for the messages page.
@@ -110,15 +111,27 @@ export const ContactsSidebar = () => {
   useEffect(() => {
     if (!currentUser?.$id) return;
 
-    const unsubscribe = getContactsRealtime(currentUser.$id, (contact) => {
+    let cancelled = false;
+    let subscription: RealtimeSubscription | null = null;
+
+    getContactsRealtime(currentUser.$id, (contact) => {
       setRealtimeContacts((prev) => {
         // Move to front if already exists, or add as new
         const filtered = prev.filter((c) => c.$id !== contact.$id);
         return [contact, ...filtered];
       });
+    }).then((sub) => {
+      if (cancelled) {
+        sub.close();
+      } else {
+        subscription = sub;
+      }
     });
 
-    return () => unsubscribe();
+    return () => {
+      cancelled = true;
+      if (subscription) subscription.close();
+    };
   }, [currentUser?.$id]);
 
   // Close dialog on navigation
