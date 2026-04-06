@@ -79,12 +79,6 @@ const useTimer = (unit: string, countdownFrom: Date) => {
 
   const [time, setTime] = useState(0);
 
-  useEffect(() => {
-    intervalRef.current = setInterval(handleCountdown, 1000);
-
-    return () => clearInterval(intervalRef.current || undefined);
-  }, []);
-
   const handleCountdown = async () => {
     const end = new Date(countdownFrom); // Use the passed countdownFrom
     const now = new Date();
@@ -121,6 +115,12 @@ const useTimer = (unit: string, countdownFrom: Date) => {
       );
     }
   };
+
+  useEffect(() => {
+    intervalRef.current = setInterval(handleCountdown, 1000);
+
+    return () => clearInterval(intervalRef.current || undefined);
+  }, [handleCountdown]);
 
   return { ref, time };
 };

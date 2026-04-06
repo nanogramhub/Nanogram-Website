@@ -1,10 +1,11 @@
-import type { CommentData } from "@/types/api";
-import { Button } from "@/components/ui/button";
-import { Like, Liked } from "@/components/icons";
-import type { User } from "@/types/schema";
+import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import { useUpdateCommentLikes } from "@/hooks/mutations/use-comments";
 import { useAuthStore } from "@/store/use-auth-store";
+import type { CommentData } from "@/types/api";
+import type { User } from "@/types/schema";
 
 interface CommentLikeProps {
   comment: Pick<CommentData, "$id" | "likes">;
@@ -55,7 +56,7 @@ const CommentLike = ({ comment }: CommentLikeProps) => {
       setLiked(hasLiked(comment.likes, currentUser));
       setLikedCount(comment.likes.length);
     }
-  }, [currentUser]);
+  }, [currentUser, comment.likes]);
 
   return (
     <div className="flex gap-1">
@@ -67,9 +68,9 @@ const CommentLike = ({ comment }: CommentLikeProps) => {
         disabled={updateCommentLikes.isPending}
       >
         {liked ? (
-          <Liked className="size-4 text-primary" />
+          <Heart className="size-4 text-red-500 fill-red-500" />
         ) : (
-          <Like className="size-4" />
+          <Heart className="size-4" />
         )}
       </Button>
       <span>{likedCount}</span>

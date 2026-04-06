@@ -1,22 +1,26 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import type { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/use-auth-store";
-import { useSendMessage, useUpdateMessage } from "@/hooks/mutations/use-messages";
-import { useGetUserById } from "@/hooks/queries/use-users";
-import { messagesQueries } from "@/lib/query/query-options";
-import { messageRealtime } from "@/lib/appwrite/realtime";
-import { queryKeys } from "@/lib/query/query-keys";
-import { MessageBubble } from "@/components/messages/message-bubble";
-import { MessageInput } from "@/components/messages/message-input";
+import { createFileRoute } from "@tanstack/react-router";
+import type { RealtimeSubscription } from "appwrite";
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { ChatHeader } from "@/components/messages/chat-header";
 import { ContactsSidebar } from "@/components/messages/contacts-sidebar";
+import { MessageBubble } from "@/components/messages/message-bubble";
+import { MessageInput } from "@/components/messages/message-input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  useSendMessage,
+  useUpdateMessage,
+} from "@/hooks/mutations/use-messages";
+import { useGetUserById } from "@/hooks/queries/use-users";
+import { messageRealtime } from "@/lib/appwrite/realtime";
+import { queryKeys } from "@/lib/query/query-keys";
+import { messagesQueries } from "@/lib/query/query-options";
+import { useAuthStore } from "@/store/use-auth-store";
 import type { MessageData } from "@/types/api";
 import type { AppwriteResponse } from "@/types/schema";
-import type { InfiniteData } from "@tanstack/react-query";
-import type { RealtimeSubscription } from "appwrite";
 
 export const Route = createFileRoute("/_privateLayout/messages/$userId")({
   component: ChatView,
@@ -61,7 +65,11 @@ function ChatView() {
 
   // Scroll to bottom on initial load
   useEffect(() => {
-    if (isInitialLoad && messagesQuery.isSuccess && messagesQuery.data?.pages?.[0]?.rows.length) {
+    if (
+      isInitialLoad &&
+      messagesQuery.isSuccess &&
+      messagesQuery.data?.pages?.[0]?.rows.length
+    ) {
       messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
       setIsInitialLoad(false);
     }
@@ -118,41 +126,43 @@ function ChatView() {
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
         }, 100);
       } else if (event === "update") {
-        queryClient.setQueryData<
-          InfiniteData<AppwriteResponse<MessageData>>
-        >(queryKey, (old) => {
-          if (!old) return old;
+        queryClient.setQueryData<InfiniteData<AppwriteResponse<MessageData>>>(
+          queryKey,
+          (old) => {
+            if (!old) return old;
 
-          const newPages = old.pages.map((page) => ({
-            ...page,
-            rows: page.rows.map((msg) =>
-              msg.$id === payload.$id
-                ? {
-                    ...msg,
-                    content: (payload as any).content ?? msg.content,
-                    reactions: (payload as any).reactions ?? msg.reactions,
-                    $updatedAt: (payload as any).$updatedAt ?? msg.$updatedAt,
-                  }
-                : msg,
-            ),
-          }));
+            const newPages = old.pages.map((page) => ({
+              ...page,
+              rows: page.rows.map((msg) =>
+                msg.$id === payload.$id
+                  ? {
+                      ...msg,
+                      content: payload.content ?? msg.content,
+                      reactions: payload.reactions ?? msg.reactions,
+                      $updatedAt: payload.$updatedAt ?? msg.$updatedAt,
+                    }
+                  : msg,
+              ),
+            }));
 
-          return { ...old, pages: newPages };
-        });
+            return { ...old, pages: newPages };
+          },
+        );
       } else if (event === "delete") {
-        queryClient.setQueryData<
-          InfiniteData<AppwriteResponse<MessageData>>
-        >(queryKey, (old) => {
-          if (!old) return old;
+        queryClient.setQueryData<InfiniteData<AppwriteResponse<MessageData>>>(
+          queryKey,
+          (old) => {
+            if (!old) return old;
 
-          const newPages = old.pages.map((page) => ({
-            ...page,
-            rows: page.rows.filter((msg) => msg.$id !== payload.$id),
-            total: page.total - 1,
-          }));
+            const newPages = old.pages.map((page) => ({
+              ...page,
+              rows: page.rows.filter((msg) => msg.$id !== payload.$id),
+              total: page.total - 1,
+            }));
 
-          return { ...old, pages: newPages };
-        });
+            return { ...old, pages: newPages };
+          },
+        );
       }
     }).then((sub) => {
       if (cancelled) {

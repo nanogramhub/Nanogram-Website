@@ -1,3 +1,9 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { AppwriteException } from "appwrite";
+import { useState } from "react";
+import { toast } from "sonner";
+import z from "zod";
+
 import OAuthButtons from "@/components/auth/oauth-button";
 import SignupForm from "@/components/forms/signup-form";
 import { Button } from "@/components/ui/button";
@@ -12,11 +18,6 @@ import { Separator } from "@/components/ui/separator";
 import { signUpUser } from "@/lib/auth";
 import type { SignupFormValues } from "@/lib/validation";
 import { useAuthStore } from "@/store/use-auth-store";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { AppwriteException } from "appwrite";
-import { useState } from "react";
-import { toast } from "sonner";
-import z from "zod";
 
 const loginRedirectSchema = z.object({
   redirectTo: z.string().optional(),

@@ -1,3 +1,6 @@
+import { Link } from "@tanstack/react-router";
+import { Binary, CakeSlice } from "lucide-react";
+
 import {
   HoverCard,
   HoverCardContent,
@@ -5,10 +8,9 @@ import {
 } from "@/components/ui/hover-card";
 import { formatDateTime } from "@/lib/utils";
 import type { User } from "@/types/schema";
-import { Link } from "@tanstack/react-router";
-import { Binary, CakeSlice } from "lucide-react";
-import { Button } from "../ui/button";
+
 import UserAvatar from "../shared/profile/user-avatar";
+import { Button } from "../ui/button";
 
 const PostCreator = ({
   creator,

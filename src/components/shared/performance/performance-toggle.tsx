@@ -1,13 +1,14 @@
 import { Gauge, Leaf } from "lucide-react";
-import { usePerformance } from "@/hooks/use-performance";
 
-import { Toggle } from "../../ui/toggle";
-import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { usePerformance } from "@/hooks/use-performance";
+import { cn } from "@/lib/utils";
+
+import { Toggle } from "../../ui/toggle";
 
 export function PerformanceToggle({ className }: { className?: string }) {
   const { performance, setPerformance } = usePerformance();

@@ -1,3 +1,8 @@
+import { Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { AppwriteException } from "appwrite";
+import { ArrowLeft } from "lucide-react";
+
 import { SidebarLeft } from "@/components/shared/sidebar";
 import { ModeToggle } from "@/components/shared/theme/mode-toggle";
 import { Button } from "@/components/ui/button";
@@ -11,10 +16,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePageName } from "@/hooks/use-page-name";
 import { ensureAuth } from "@/lib/auth";
 import { useAuthStore } from "@/store/use-auth-store";
-import { Link, useRouter } from "@tanstack/react-router";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { AppwriteException } from "appwrite";
-import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/_privateLayout")({
   component: RouteComponent,

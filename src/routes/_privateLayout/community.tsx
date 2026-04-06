@@ -1,10 +1,11 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import { PostCard, PostCardSkeleton } from "@/components/posts/post-card";
 import { useGetPosts } from "@/hooks/queries/use-posts";
 import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
 import { postsQueries } from "@/lib/query/query-options";
 import { range } from "@/lib/utils";
 import { queryClient } from "@/router";
-import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_privateLayout/community")({
   component: RouteComponent,

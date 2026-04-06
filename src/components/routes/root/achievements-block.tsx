@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { motion, useAnimation, type Variants } from "framer-motion";
-import { Users, Cake, Cog, GraduationCap, type LucideIcon } from "lucide-react";
+import { Cake, Cog, GraduationCap, type LucideIcon,Users } from "lucide-react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 const Achievements = () => {

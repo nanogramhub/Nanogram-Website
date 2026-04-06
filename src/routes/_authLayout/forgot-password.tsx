@@ -1,3 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import ForgotPasswordForm from "@/components/forms/forgot-password";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,9 +13,6 @@ import {
 } from "@/components/ui/card";
 import { useSendResetLinkMutation } from "@/hooks/mutations/use-auth";
 import type { ForgotPasswordFormValues } from "@/lib/validation";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authLayout/forgot-password")({
   component: RouteComponent,

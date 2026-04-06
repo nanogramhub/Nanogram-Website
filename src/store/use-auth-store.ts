@@ -1,7 +1,8 @@
 import { create } from "zustand";
+
+import { UserNotFoundException } from "@/exceptions";
 import { api } from "@/lib/appwrite/api";
 import type { SigninFormValues } from "@/lib/validation";
-import { UserNotFoundException } from "@/exceptions";
 import type { CurrentUser } from "@/types/api";
 
 interface AuthStore {
@@ -21,7 +22,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   getCurrentUser: async () => {
     try {
-      const authUser = await api.auth.getCurrentSession();
+      const authUser = await api.auth.getCurrentUserAccount();
       const isAdmin = authUser.labels.includes("admin");
       const user = await api.users.getUserByAccountId(authUser.$id);
       if (!user) {

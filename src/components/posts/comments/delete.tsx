@@ -1,8 +1,9 @@
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { useDeleteComment } from "@/hooks/mutations/use-comments";
 import { useAuthStore } from "@/store/use-auth-store";
 import type { CommentData } from "@/types/api";
-import { toast } from "sonner";
 
 export const DeleteComment = ({ comment }: { comment: CommentData }) => {
   const currentUser = useAuthStore((state) => state.currentUser);

@@ -1,13 +1,13 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue,clsx } from "clsx";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const range = (start: number, end?: number, step = 1) => {
-  let output: number[] = [];
+  const output: number[] = [];
 
   if (typeof end === "undefined") {
     end = start;
@@ -99,6 +99,23 @@ export function generateRandomString(length: number = 8) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
+}
+
+/**
+ * Converts a string into a URL-friendly slug.
+ * @param title - The string to slugify.
+ * @returns The slugified string.
+ */
+export function slugify(title: string): string {
+  return title
+    .normalize("NFKD") // split accented chars
+    .replace(/[\u0300-\u036f]/g, "") // remove diacritics
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "") // remove invalid chars
+    .replace(/\s+/g, "-") // collapse whitespace to dash
+    .replace(/-+/g, "-") // collapse multiple dashes
+    .replace(/^-+|-+$/g, ""); // trim leading/trailing dash
 }
 
 /**

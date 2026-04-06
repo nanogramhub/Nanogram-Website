@@ -3,6 +3,9 @@ export const queryKeys = {
     checkUsernameAvailability: ["auth", "username"],
     resetPassword: ["auth", "reset-password"],
     sendResetLink: ["auth", "send-reset-link"],
+    getAllIdentities: ["auth", "identities"],
+    getAllSessions: ["auth", "sessions"],
+    deleteSession: ["auth", "delete-session"],
   },
   nanogram: {
     getTestimonials: ["nanogram", "testimonial"],
@@ -24,6 +27,7 @@ export const queryKeys = {
     getRecentPosts: ["posts", "recent"],
     getPostById: ["posts", "id"],
     getPostsByUserId: ["posts", "user-id"],
+    getLikedPosts: ["users", "liked-posts"],
     createPost: ["posts", "create"],
     updatePost: ["posts", "update"],
     updateLikes: ["posts", "likes"],
@@ -49,7 +53,6 @@ export const queryKeys = {
   newsletters: {
     getNewsletters: ["newsletters"],
   },
-  // Message query and mutation keys
   messages: {
     getMessages: ["messages"],
     getContacts: ["messages", "contacts"],

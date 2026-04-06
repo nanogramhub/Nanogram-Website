@@ -1,14 +1,19 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
-import { ThemeProvider } from "@/components/shared/theme/theme-provider";
-import { PerformanceProvider } from "@/components/shared/performance/performance-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/sonner";
 import { AppwriteException } from "appwrite";
+import { useState } from "react";
+
+import { PerformanceProvider } from "@/components/shared/performance/performance-provider";
+import UserProfileDialog from "@/components/shared/profile/user-profile-dialog";
+import { ThemeProvider } from "@/components/shared/theme/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ProfileContextProvider } from "@/context/profile-context";
 import { ensureAuth } from "@/lib/auth";
 
 const RootLayout = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <PerformanceProvider
@@ -16,9 +21,12 @@ const RootLayout = () => {
         storageKey="nanogram-performance"
       >
         <TooltipProvider delay={100}>
-          <div className="bg-background text-foreground">
-            <Outlet />
-          </div>
+          <ProfileContextProvider value={{ open, setOpen }}>
+            <div className="bg-background text-foreground">
+              <Outlet />
+            </div>
+          </ProfileContextProvider>
+          <UserProfileDialog open={open} setOpen={setOpen} />
           <TanStackRouterDevtools position="bottom-right" />
         </TooltipProvider>
         <Toaster />

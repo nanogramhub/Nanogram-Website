@@ -1,8 +1,10 @@
-import type { PostCardData, PostCardMinimal } from "@/types/api";
 import { Link } from "@tanstack/react-router";
-import PostStats from "./post-stats";
-import UserAvatar from "../shared/profile/user-avatar";
+
+import type { PostCardData, PostCardMinimal } from "@/types/api";
 import type { Post } from "@/types/schema";
+
+import UserAvatar from "../shared/profile/user-avatar";
+import PostStats from "./post-stats";
 
 interface GridPostsFullProps {
   posts: PostCardData[];

@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+
 import { newslettersQueries } from "@/lib/query/query-options";
 
 export const useNewsletters = ({

@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { SendHorizontal } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { EmojiPickerPopover } from "@/components/shared/default/emoji-picker";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { EmojiPickerPopover } from "@/components/shared/default/emoji-picker";
 import { useCreateComment } from "@/hooks/mutations/use-comments";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/use-auth-store";
 
@@ -23,7 +24,7 @@ export function CommentTextarea({ postId }: CommentTextareaProps) {
     try {
       await createComment({ content, postId, userId: currentUser.$id });
       setContent("");
-    } catch (error) {
+    } catch {
       toast.error("Failed to post comment");
     }
   };

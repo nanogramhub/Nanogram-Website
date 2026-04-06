@@ -1,3 +1,5 @@
+import { useInView } from "react-intersection-observer";
+
 import {
   Carousel,
   CarouselContent,
@@ -7,7 +9,6 @@ import {
 } from "@/components/ui/carousel";
 import { useGetEvents } from "@/hooks/queries/use-events";
 import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
-import { useInView } from "react-intersection-observer";
 
 const EventGallery = () => {
   const { ref: containerRef, inView } = useInView({ triggerOnce: true });

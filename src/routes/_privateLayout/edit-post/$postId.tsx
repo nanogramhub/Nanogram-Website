@@ -1,3 +1,7 @@
+import { useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
+
 import PostForm from "@/components/forms/post-form";
 import { Button } from "@/components/ui/button";
 import { useUpdatePost } from "@/hooks/mutations/use-posts";
@@ -5,9 +9,6 @@ import { useGetPostById } from "@/hooks/queries/use-posts";
 import { postsQueries } from "@/lib/query/query-options";
 import type { PostFormValues } from "@/lib/validation";
 import { queryClient } from "@/router";
-import { useNavigate, useRouter } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_privateLayout/edit-post/$postId")({
   component: RouteComponent,
@@ -63,7 +64,7 @@ function RouteComponent() {
 
   return (
     <div className="max-w-4xl mx-auto w-full">
-      <PostForm action="Update" post={sanitizedPost} onSubmit={handleSubmit} />
+      <PostForm post={sanitizedPost} onSubmit={handleSubmit} />
       <div className="flex items-center justify-end gap-4 mt-4">
         <Button
           type="button"

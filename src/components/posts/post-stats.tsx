@@ -1,15 +1,16 @@
-import { Like, Liked, Save, Saved } from "../icons";
-import { useAuthStore } from "@/store/use-auth-store";
+import { Bookmark, Heart, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { User } from "@/types/schema";
-import { CardFooter } from "../ui/card";
-import { Button } from "../ui/button";
-import type { PostCardData } from "@/types/api";
+
 import { useUpdateLikes } from "@/hooks/mutations/use-posts";
 import { useSavePost, useUnSavePost } from "@/hooks/mutations/use-saves";
+import { useAuthStore } from "@/store/use-auth-store";
+import type { PostCardData } from "@/types/api";
+import type { User } from "@/types/schema";
+
+import { Button } from "../ui/button";
+import { CardFooter } from "../ui/card";
 import Comments from "./dialogs/comments";
 import ShareDialog from "./dialogs/share";
-import { MessageCircle } from "lucide-react";
 
 interface PostStatsProps {
   post: Pick<PostCardData, "$id" | "likes" | "save" | "caption">;
@@ -124,9 +125,9 @@ const PostStats = ({
                 disabled={updateLikes.isPending}
               >
                 {liked ? (
-                  <Liked className="size-6" />
+                  <Heart className="size-6 fill-red-500 text-red-500" />
                 ) : (
-                  <Like className="size-5" />
+                  <Heart className="size-6" />
                 )}
               </Button>
               <p className="mt-0.5 text-xs">{likedCount}</p>
@@ -136,11 +137,17 @@ const PostStats = ({
             <div className="flex items-center gap-1">
               <Comments
                 postId={post.$id}
-                trigger={<MessageCircle className="size-5" />}
+                trigger={<MessageCircle className="size-6" />}
               />
             </div>
           )}
-          {showShare && <ShareDialog url={shareUrl} postId={post.$id} title={post.caption} />}
+          {showShare && (
+            <ShareDialog
+              url={shareUrl}
+              postId={post.$id}
+              title={post.caption}
+            />
+          )}
         </div>
 
         {showSave && (
@@ -151,9 +158,9 @@ const PostStats = ({
             disabled={savePost.isPending || unSavePost.isPending}
           >
             {saved ? (
-              <Saved className="text-primary size-5" />
+              <Bookmark className="text-primary size-6 fill-primary" />
             ) : (
-              <Save className="size-5" />
+              <Bookmark className="size-6" />
             )}
           </Button>
         )}

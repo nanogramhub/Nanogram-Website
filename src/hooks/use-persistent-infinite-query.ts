@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
 import type {
   InfiniteData,
   UseInfiniteQueryResult,
 } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+
 import type { AppwriteResponse } from "@/types/schema";
 
 export function usePersistentInfiniteQuery<T>(

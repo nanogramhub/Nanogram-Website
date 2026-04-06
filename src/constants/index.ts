@@ -1,15 +1,17 @@
 import {
+  Album,
+  Calendar,
+  Compass,
+  FileText,
+  Heart,
   House,
   Info,
-  Calendar,
-  Users,
-  FileText,
-  Compass,
-  Album,
-  SquarePlus,
-  Play,
   MessageCircleMore,
+  Play,
+  SquarePlus,
+  Users,
 } from "lucide-react";
+
 import type { NavigationItems } from "@/types";
 
 export const webappUrl = import.meta.env.VITE_WEBAPP_URL;
@@ -26,14 +28,12 @@ export const sidebarItems: NavigationItems = [
   { to: "/community", icon: Play, label: "FYP" },
   { to: "/explore", icon: Compass, label: "Explore" },
   { to: "/all-users", icon: Users, label: "People" },
-  { to: "/saved-posts", icon: Album, label: "Saved" },
+  { to: "/liked-posts", icon: Heart, label: "Liked Posts" },
+  { to: "/saved-posts", icon: Album, label: "Saved Posts" },
   { to: "/create-post", icon: SquarePlus, label: "Create Post" },
   { to: "/messages", icon: MessageCircleMore, label: "Messages" },
+  { to: "/newsletter", icon: FileText, label: "News" },
 ];
-
-// export const adminId = "676ad11a00039ac69abb";
-export const noProfileImage =
-  "https://cloud.appwrite.io/v1/storage/buckets/675d64d90024c9563ca3/files/emptyuser/view?project=675d5bfa000fc9c80137&project=675d5bfa000fc9c80137&mode=admin";
 
 export const images = [
   "/assets/images/home_3.jpg",

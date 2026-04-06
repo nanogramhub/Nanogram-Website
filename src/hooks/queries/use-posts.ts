@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+
 import { postsQueries } from "@/lib/query/query-options";
 import type { PostsFilter } from "@/types/api";
 
@@ -38,4 +39,13 @@ export const useGetPostsByUserId = ({
   return useInfiniteQuery(
     postsQueries.getPostsByUserId({ userId, cursorAfter, limit, enabled }),
   );
+};
+
+export const useGetLikedPosts = (data: {
+  userId: string;
+  enabled: boolean;
+  cursorAfter?: string;
+  limit?: number;
+}) => {
+  return useInfiniteQuery(postsQueries.getLikedPosts(data));
 };

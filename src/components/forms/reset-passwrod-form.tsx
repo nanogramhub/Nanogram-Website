@@ -1,8 +1,10 @@
-import {
-  resetPasswordSchema,
-  type ResetPasswordFormValues,
-} from "@/lib/validation";
 import { useForm } from "@tanstack/react-form";
+
+import {
+  type ResetPasswordFormValues,
+  resetPasswordSchema,
+} from "@/lib/validation";
+
 import {
   Field,
   FieldError,

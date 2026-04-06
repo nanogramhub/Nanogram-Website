@@ -1,9 +1,9 @@
-import Hero from "./hero-section";
-import Gallery from "./gallery-block";
-import Testimonials from "./testimonials-carousel";
-import Initiatives from "./out-Initiatives";
-import Highlights from "./highlights-block";
 import Achievements from "./achievements-block";
+import Gallery from "./gallery-block";
+import Hero from "./hero-section";
+import Highlights from "./highlights-block";
+import Initiatives from "./out-Initiatives";
+import Testimonials from "./testimonials-carousel";
 
 const Home = () => {
   return (

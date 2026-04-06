@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+
 import { usersQueries } from "@/lib/query/query-options";
 
 export const useGetUsers = ({

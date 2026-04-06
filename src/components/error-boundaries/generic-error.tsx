@@ -1,4 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
+
 import { Button } from "../ui/button";
 
 const GenericError = () => {

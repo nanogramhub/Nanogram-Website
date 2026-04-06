@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { type JSX, useEffect, useRef, useState } from "react";
 
-const shuffle = (array: any[]) => {
+const shuffle = (array: { id: number; src: string }[]) => {
   let currentIndex = array.length,
     randomIndex;
 
@@ -55,15 +55,11 @@ const ShuffleGallery = ({ images }: { images: string[] }) => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, []);
+  }, [squareData]);
 
   if (!squares) return null; // Prevent mismatch during initial SSR render
 
-  return (
-    <div className="grid grid-cols-4 gap-1 w-3/4 mx-auto">
-      {squares}
-    </div>
-  );
+  return <div className="grid grid-cols-4 gap-1 w-3/4 mx-auto">{squares}</div>;
 };
 
 export default ShuffleGallery;

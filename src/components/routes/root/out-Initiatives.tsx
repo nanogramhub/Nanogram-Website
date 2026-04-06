@@ -1,11 +1,11 @@
 import {
   ContactRound,
-  Folder,
-  Users,
   Cpu,
+  Folder,
   Lightbulb,
-  SquareTerminal,
   type LucideIcon,
+  SquareTerminal,
+  Users,
 } from "lucide-react";
 
 const initiatives = [

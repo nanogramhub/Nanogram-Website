@@ -1,9 +1,10 @@
+import { useMutation } from "@tanstack/react-query";
+
 import {
+  getDeleteMessageMutationOptions,
   getSendMessageMutationOptions,
   getUpdateMessageMutationOptions,
-  getDeleteMessageMutationOptions,
 } from "@/lib/query/mutation-options";
-import { useMutation } from "@tanstack/react-query";
 
 /** Send a new message */
 export const useSendMessage = () => {

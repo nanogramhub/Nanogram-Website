@@ -1,5 +1,11 @@
 import { useForm } from "@tanstack/react-form";
+
+import { formatFileSize } from "@/lib/utils";
 import { postFormSchema, type PostFormValues } from "@/lib/validation";
+import { useAuthStore } from "@/store/use-auth-store";
+import { type Post } from "@/types/schema";
+
+import ImageUploader from "../shared/default/image-uploader";
 import {
   Field,
   FieldError,
@@ -8,20 +14,15 @@ import {
   FieldSet,
 } from "../ui/field";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 import { Slider } from "../ui/slider";
-import ImageUploader from "../shared/default/image-uploader";
-import { type Post } from "@/types/schema";
-import { useAuthStore } from "@/store/use-auth-store";
-import { formatFileSize } from "@/lib/utils";
+import { Textarea } from "../ui/textarea";
 
 interface PostFormProps {
   post?: Post;
-  action: "Create" | "Update";
   onSubmit: (values: PostFormValues) => void;
 }
 
-const PostForm = ({ post, action, onSubmit }: PostFormProps) => {
+const PostForm = ({ post, onSubmit }: PostFormProps) => {
   const currentUser = useAuthStore((state) => state.currentUser);
 
   const form = useForm({

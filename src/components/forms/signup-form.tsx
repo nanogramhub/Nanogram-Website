@@ -1,16 +1,18 @@
-import { signUpSchema, type SignupFormValues } from "@/lib/validation";
 import { useForm } from "@tanstack/react-form";
+
+import { authQueries } from "@/lib/query/query-options";
+import { type SignupFormValues,signUpSchema } from "@/lib/validation";
+import { queryClient } from "@/router";
+
 import {
-  FieldGroup,
-  FieldSet,
   Field,
-  FieldLabel,
   FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
 } from "../ui/field";
 import { Input } from "../ui/input";
 import { PasswordInput } from "../ui/password-input";
-import { queryClient } from "@/router";
-import { authQueries } from "@/lib/query/query-options";
 
 interface SignupFormProps {
   onSubmit: (data: SignupFormValues) => void;

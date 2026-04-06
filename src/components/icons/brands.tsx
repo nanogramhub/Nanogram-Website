@@ -1,5 +1,5 @@
-import React from "react";
 import type { SVGProps } from "react";
+import React from "react";
 
 export interface IconProps extends SVGProps<SVGSVGElement> {
   color?: string;
@@ -46,6 +46,11 @@ const brandIcons = {
   github: {
     title: "GitHub",
     path: "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12",
+    viewBox: undefined,
+  },
+  google: {
+    title: "Google",
+    path: "M0 0h512v512H0zM256 90c30 82 118 95 171 60h62v48A192 192 0 0190 341c0 53-43 96-96 96V292c30-35 118-48 171-60h62v-48A192 192 0 01256 90zm0 129c-30 82-118 95-171 60h62v48A192 192 0 0190 470c0 53-43 96-96 96V421c30-35 118-48 171-60h62v-48A192 192 0 01256 219zm192-129c-30 82-118 95-171 60h62v48A192 192 0 01346 361c0 53-43 96-96 96V312c30-35 118-48 171-60h62v-48A192 192 0 01448 90zm192 129c-30 82-118 95-171 60h62v48A192 192 0 01448 470c0 53-43 96-96 96V421c30-35 118-48 171-60h62v-48A192 192 0 01512 219z",
     viewBox: undefined,
   },
   facebook: {
@@ -112,6 +117,7 @@ const createBrandIcon = (iconKey: keyof typeof brandIcons) => {
 // Export individual components
 export const Whatsapp = createBrandIcon("whatsapp");
 export const Github = createBrandIcon("github");
+export const Google = createBrandIcon("google");
 export const Facebook = createBrandIcon("facebook");
 export const Twitter = createBrandIcon("twitter");
 export const Instagram = createBrandIcon("instagram");

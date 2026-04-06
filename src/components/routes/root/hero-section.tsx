@@ -1,13 +1,14 @@
-import ParticleRing from "@/components/motion/particle-ring";
-import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Plus } from "lucide-react";
 import { Suspense } from "react";
-import { useGetTeamMembers } from "@/hooks/queries/use-nanogram";
-import { Skeleton } from "@/components/ui/skeleton";
-import { range } from "@/lib/utils";
 import { toast } from "sonner";
+
+import ParticleRing from "@/components/motion/particle-ring";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetTeamMembers } from "@/hooks/queries/use-nanogram";
 import { usePerformance } from "@/hooks/use-performance";
+import { range } from "@/lib/utils";
 
 const Hero = () => {
   const { data: teamMembers, isPending, isError } = useGetTeamMembers();

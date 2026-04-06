@@ -1,11 +1,12 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { format } from "date-fns";
+import { Calendar } from "lucide-react";
+
 import PDFPagePreview from "@/components/shared/news/pdf-page-preview";
 import { useNewsletters } from "@/hooks/queries/use-newsletters";
 import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
 import { newslettersQueries } from "@/lib/query/query-options";
 import { queryClient } from "@/router";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { format } from "date-fns";
-import { Calendar } from "lucide-react";
 
 export const Route = createFileRoute("/_privateLayout/newsletter/")({
   component: RouteComponent,

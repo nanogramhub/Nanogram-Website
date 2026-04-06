@@ -1,9 +1,10 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import PostDetails from "@/components/posts/post-details";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetPostById } from "@/hooks/queries/use-posts";
 import { postsQueries } from "@/lib/query/query-options";
 import { queryClient } from "@/router";
-import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_privateLayout/posts/$postId")({
   component: RouteComponent,

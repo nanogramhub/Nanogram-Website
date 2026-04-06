@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+
 import GridPosts from "@/components/posts/grid-posts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -13,8 +16,6 @@ import { usersQueries } from "@/lib/query/query-options";
 import { formatDateTime, getInitials } from "@/lib/utils";
 import { queryClient } from "@/router";
 import { useAuthStore } from "@/store/use-auth-store";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_privateLayout/u/$userId")({
   component: RouteComponent,
@@ -28,14 +29,14 @@ function RouteComponent() {
   const { userId } = Route.useParams();
   const { data: user } = useQuery(usersQueries.getUserByUsername(userId));
 
-  if (!currentUser || !user) return null;
-
   const getUserPostsResult = useGetPostsByUserId({
-    userId: user.$id,
-    enabled: true,
+    userId: user ? user.$id : "",
+    enabled: !!user?.$id,
   });
   const { items, ref, isFetchingNextPage } =
     usePersistentInfiniteQuery(getUserPostsResult);
+
+  if (!currentUser || !user) return null;
 
   const isOwnProfile = currentUser.$id === user.$id;
 

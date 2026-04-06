@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect, type KeyboardEvent } from "react";
+import type { EmojiClickData } from "emoji-picker-react";
+import { SendHorizonal, X } from "lucide-react";
+import { type KeyboardEvent,useEffect, useRef, useState } from "react";
+
 import { EmojiPickerPopover } from "@/components/shared/default/emoji-picker";
 import { Button } from "@/components/ui/button";
-import { SendHorizonal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { EmojiClickData } from "emoji-picker-react";
+
 import { Textarea } from "../ui/textarea";
 
 interface MessageInputProps {

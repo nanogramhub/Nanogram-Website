@@ -1,9 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 
-import { routeTree } from "./routeTree.gen";
-import NotFound from "./components/error-boundaries/not-found";
 import GenericError from "./components/error-boundaries/generic-error";
+import NotFound from "./components/error-boundaries/not-found";
+import { routeTree } from "./routeTree.gen";
 
 export const queryClient = new QueryClient({
   defaultOptions: {

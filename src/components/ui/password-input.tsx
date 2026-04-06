@@ -1,8 +1,8 @@
-import * as React from "react";
 import { Input as InputPrimitive } from "@base-ui/react/input";
+import { Eye, EyeOff } from "lucide-react";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff } from "lucide-react";
 
 function PasswordInput({
   className,

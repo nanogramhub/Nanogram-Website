@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ContactsSidebar } from "@/components/messages/contacts-sidebar";
 import { MessageCircleMore } from "lucide-react";
+
+import { ContactsSidebar } from "@/components/messages/contacts-sidebar";
 
 export const Route = createFileRoute("/_privateLayout/messages/")({
   component: MessagesLayout,

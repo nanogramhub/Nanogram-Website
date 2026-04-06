@@ -1,11 +1,9 @@
+import { debounce } from "@tanstack/react-pacer";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { debounce } from "@tanstack/react-pacer";
-import SearchInput from "@/components/shared/default/search-input";
-import { useGetPosts } from "@/hooks/queries/use-posts";
-import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
+
 import GridPosts from "@/components/posts/grid-posts";
-import { Spinner } from "@/components/ui/spinner";
+import SearchInput from "@/components/shared/default/search-input";
 import {
   Select,
   SelectContent,
@@ -14,6 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { useGetPosts } from "@/hooks/queries/use-posts";
+import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
 import type { PostsFilter } from "@/types/api";
 
 export const Route = createFileRoute("/_privateLayout/explore")({

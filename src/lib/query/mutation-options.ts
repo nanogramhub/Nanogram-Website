@@ -1,9 +1,26 @@
 import { mutationOptions } from "@tanstack/react-query";
-import { api } from "../appwrite/api";
-import { queryKeys } from "./query-keys";
+
 import { queryClient } from "@/router";
 import { useAuthStore } from "@/store/use-auth-store";
+
+import { api } from "../appwrite/api";
 import { createPost, deletePost, updatePost } from "../posts";
+import { queryKeys } from "./query-keys";
+
+export const getDeleteSessionMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.auth.deleteSession,
+    mutationFn: async ({ sessionId }: { sessionId: string }) => {
+      const response = await api.auth.deleteSession(sessionId);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.auth.getAllSessions,
+      });
+    },
+  });
+};
 
 export const getSendResetLinkMutationOptions = () => {
   return mutationOptions({
@@ -116,6 +133,9 @@ export const getUpdateLikesMutationOptions = () => {
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.posts.getPostsByUserId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.posts.getLikedPosts,
       });
     },
   });
@@ -315,11 +335,6 @@ export const getDeletePostMutationOptions = () => {
   });
 };
 
-// ==================
-// Message Mutation Options
-// ==================
-
-/** Send a new message and invalidate both messages and contacts caches */
 export const getSendMessageMutationOptions = () => {
   return mutationOptions({
     mutationKey: queryKeys.messages.sendMessage,
@@ -351,7 +366,6 @@ export const getSendMessageMutationOptions = () => {
   });
 };
 
-/** Update a message's content or reactions */
 export const getUpdateMessageMutationOptions = () => {
   return mutationOptions({
     mutationKey: queryKeys.messages.updateMessage,
@@ -379,7 +393,6 @@ export const getUpdateMessageMutationOptions = () => {
   });
 };
 
-/** Delete a message by ID */
 export const getDeleteMessageMutationOptions = () => {
   return mutationOptions({
     mutationKey: queryKeys.messages.deleteMessage,

@@ -1,6 +1,7 @@
+import { useInView } from "react-intersection-observer";
+
 import EventCard from "@/components/shared/default/event-card";
 import { useGetUpcomingEvents } from "@/hooks/queries/use-events";
-import { useInView } from "react-intersection-observer";
 
 const Upcoming = () => {
   const { ref: containerRef, inView } = useInView({ triggerOnce: true });

@@ -1,5 +1,6 @@
-import { followsQueries } from "@/lib/query/query-options";
 import { useInfiniteQuery } from "@tanstack/react-query";
+
+import { followsQueries } from "@/lib/query/query-options";
 
 export const useGetFollowers = ({
   userId,

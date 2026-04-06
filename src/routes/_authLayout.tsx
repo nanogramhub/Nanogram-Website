@@ -1,7 +1,8 @@
-import { ensureAuth } from "@/lib/auth";
-import { useAuthStore } from "@/store/use-auth-store";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppwriteException } from "appwrite";
+
+import { ensureAuth } from "@/lib/auth";
+import { useAuthStore } from "@/store/use-auth-store";
 
 export const Route = createFileRoute("/_authLayout")({
   component: RouteComponent,

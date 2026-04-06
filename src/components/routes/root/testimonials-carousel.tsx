@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { useInView } from "react-intersection-observer";
+
 import AnimatedTestimonial from "@/components/motion/animated-testimonial";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useGetTestimonials } from "@/hooks/queries/use-nanogram";
-import { usePerformance } from "@/hooks/use-performance";
+import TestimonialDiv from "@/components/shared/default/testimonial-div";
 import {
   Carousel,
   CarouselContent,
@@ -10,8 +10,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import TestimonialDiv from "@/components/shared/default/testimonial-div";
-import { useInView } from "react-intersection-observer";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetTestimonials } from "@/hooks/queries/use-nanogram";
+import { usePerformance } from "@/hooks/use-performance";
 
 export default function Testimonials() {
   const { performance } = usePerformance();

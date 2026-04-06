@@ -1,11 +1,13 @@
-import { Edit, Ellipsis, Eye, Trash2 } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Button } from "../ui/button";
+import { Edit, Ellipsis, Eye, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
+import { useDeletePost } from "@/hooks/mutations/use-posts";
 import { useAuthStore } from "@/store/use-auth-store";
 import type { Post } from "@/types/schema";
-import { useDeletePost } from "@/hooks/mutations/use-posts";
-import { toast } from "sonner";
+
+import { Button } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const PostActions = ({
   post,

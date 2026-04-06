@@ -1,5 +1,6 @@
-import { commentQueries } from "@/lib/query/query-options";
 import { useInfiniteQuery } from "@tanstack/react-query";
+
+import { commentQueries } from "@/lib/query/query-options";
 
 export const useGetComments = ({
   postId,

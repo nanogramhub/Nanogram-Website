@@ -1,3 +1,5 @@
+import { Link, useLocation } from "@tanstack/react-router";
+
 import { useSidebar } from "@/components/ui/hooks/use-sidebar";
 import {
   SidebarGroup,
@@ -11,7 +13,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { sidebarItems } from "@/constants";
-import { Link, useLocation } from "@tanstack/react-router";
 
 const SidebarMainMenu = () => {
   const { pathname } = useLocation();

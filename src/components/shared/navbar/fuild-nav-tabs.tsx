@@ -1,15 +1,16 @@
+import { Link } from "@tanstack/react-router";
+import { motion, type TargetAndTransition } from "framer-motion";
 import {
+  Children,
+  cloneElement,
+  isValidElement,
   type ReactElement,
   type ReactNode,
   useRef,
   useState,
-  Children,
-  isValidElement,
-  cloneElement,
 } from "react";
-import { motion, type TargetAndTransition } from "framer-motion";
+
 import { cn } from "@/lib/utils";
-import { Link } from "@tanstack/react-router";
 
 export const NavTabs = ({
   children,

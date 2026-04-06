@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Sphere } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useRef } from "react";
+
 import { pointsInner, pointsOuter } from "./utils";
 
 const ParticleRing = () => {

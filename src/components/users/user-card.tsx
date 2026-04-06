@@ -1,10 +1,12 @@
+import { Link } from "@tanstack/react-router";
+
+import { useIsMobile } from "@/hooks/use-is-mobile";
+import { formatRelativeTime } from "@/lib/utils";
 import type { User } from "@/types/schema";
-import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
+
 import UserAvatar from "../shared/profile/user-avatar";
 import { Badge } from "../ui/badge";
-import { formatRelativeTime } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-is-mobile";
-import { Link } from "@tanstack/react-router";
+import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
 
 const UserCard = ({ user }: { user: User }) => {
   const isMobile = useIsMobile();

@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
-import ShiftingCountdown from "@/components/motion/shifting-countdown";
-import Banner from "@/components/motion/event-banner";
 import { CalendarDays, Pin } from "lucide-react";
+
+import Banner from "@/components/motion/event-banner";
+import ShiftingCountdown from "@/components/motion/shifting-countdown";
+import { Button } from "@/components/ui/button";
 import { useGetNextEvent } from "@/hooks/queries/use-events";
-import { formatDateTime } from "@/lib/utils";
 import { usePerformance } from "@/hooks/use-performance";
+import { formatDateTime } from "@/lib/utils";
 
 const NextEvent = () => {
   const { performance } = usePerformance();

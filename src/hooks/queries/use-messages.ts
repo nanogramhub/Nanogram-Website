@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+
 import { messagesQueries } from "@/lib/query/query-options";
 
 /**

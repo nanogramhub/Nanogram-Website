@@ -1,14 +1,16 @@
-import PostCreator from "./post-creator";
-import PostActions from "./post-actions";
-import { formatRelativeTime } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
-import PostStats from "./post-stats";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { linkifyReact } from "../shared/default/linkify-text";
-import { Skeleton } from "../ui/skeleton";
 import { Ellipsis } from "lucide-react";
-import type { PostCardData } from "@/types/api";
 import { useState } from "react";
+
+import { formatRelativeTime } from "@/lib/utils";
+import type { PostCardData } from "@/types/api";
+
+import { linkifyReact } from "../shared/default/linkify-text";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
+import PostActions from "./post-actions";
+import PostCreator from "./post-creator";
+import PostStats from "./post-stats";
 
 interface PostCardProps {
   post: PostCardData;

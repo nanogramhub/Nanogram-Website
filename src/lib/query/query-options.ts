@@ -1,7 +1,9 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
-import { queryKeys } from "./query-keys";
+
 import { api } from "@/lib/appwrite/api";
 import type { PostsFilter } from "@/types/api";
+
+import { queryKeys } from "./query-keys";
 
 export const authQueries = {
   checkUsernameAvailability: (username: string) => {
@@ -9,6 +11,22 @@ export const authQueries = {
       queryKey: [...queryKeys.auth.checkUsernameAvailability, username],
       queryFn: () => api.auth.checkUsernameAvailability(username),
       staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+  },
+  getAllIdentities: ({ enabled }: { enabled: boolean }) => {
+    return queryOptions({
+      queryKey: queryKeys.auth.getAllIdentities,
+      queryFn: () => api.auth.getAllIdentities(),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
+  getAllSessions: ({ enabled }: { enabled: boolean }) => {
+    return queryOptions({
+      queryKey: queryKeys.auth.getAllSessions,
+      queryFn: () => api.auth.getAllSessions(),
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
     });
   },
 };
@@ -278,6 +296,37 @@ export const postsQueries = {
       enabled,
     });
   },
+  getLikedPosts: ({
+    userId,
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    userId: string;
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [
+        ...queryKeys.posts.getLikedPosts,
+        { userId, cursorAfter, limit },
+      ],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.posts.getLikedPosts({
+          userId,
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      enabled,
+    });
+  },
 };
 
 export const commentQueries = {
@@ -413,14 +462,7 @@ export const followsQueries = {
   },
 };
 
-// ==================
-// Message Query Options
-// ==================
 export const messagesQueries = {
-  /**
-   * Infinite query for messages between two users.
-   * Pages load older messages as the user scrolls up.
-   */
   getMessages: ({
     senderId,
     receiverId,
@@ -435,10 +477,7 @@ export const messagesQueries = {
     enabled: boolean;
   }) => {
     return infiniteQueryOptions({
-      queryKey: [
-        ...queryKeys.messages.getMessages,
-        { senderId, receiverId },
-      ],
+      queryKey: [...queryKeys.messages.getMessages, { senderId, receiverId }],
       initialPageParam: cursorAfter,
       queryFn: ({ pageParam }) =>
         api.messages.getMessages({
@@ -451,16 +490,11 @@ export const messagesQueries = {
         lastPage.rows.length === 0
           ? null
           : lastPage.rows[lastPage.rows.length - 1].$id,
-      // Messages are mostly realtime-driven, keep a short stale time
       staleTime: 1000 * 30, // 30 seconds
       enabled,
     });
   },
 
-  /**
-   * Infinite query to fetch messages for contact derivation.
-   * The UI de-duplicates sender/receiver to build a unique contacts list.
-   */
   getContacts: ({
     userId,
     cursorAfter,
@@ -473,10 +507,7 @@ export const messagesQueries = {
     enabled: boolean;
   }) => {
     return infiniteQueryOptions({
-      queryKey: [
-        ...queryKeys.messages.getContacts,
-        { userId },
-      ],
+      queryKey: [...queryKeys.messages.getContacts, { userId }],
       initialPageParam: cursorAfter,
       queryFn: ({ pageParam }) =>
         api.messages.getContacts({

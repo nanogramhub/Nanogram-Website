@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+
 import ShuffleGallery from "@/components/motion/shuffle-gallery";
 import { Button } from "@/components/ui/button";
 import { images } from "@/constants";

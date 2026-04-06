@@ -6,16 +6,19 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { cn } from "@/lib/utils";
 
 const SearchInput = ({
   setSearchQuery,
+  className,
 }: {
   setSearchQuery: (query: string) => void;
+  className?: string;
 }) => {
   const [search, setSearch] = useState("");
 
   return (
-    <InputGroup className="max-w-xs">
+    <InputGroup className={cn("max-w-xs", className)}>
       <InputGroupInput
         placeholder="Search..."
         value={search}

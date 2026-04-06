@@ -1,7 +1,8 @@
 import { useAuthStore } from "@/store/use-auth-store";
 import type { User } from "@/types/schema";
-import type { SignupFormValues } from "../validation";
+
 import { api } from "../appwrite/api";
+import type { SignupFormValues } from "../validation";
 
 let authPromise: Promise<User> | null = null;
 

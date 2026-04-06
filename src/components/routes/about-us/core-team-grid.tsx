@@ -1,8 +1,9 @@
+import { useInView } from "react-intersection-observer";
+
 import GridTeamList from "@/components/shared/default/grid-team-list";
 import { useGetCoreMembers } from "@/hooks/queries/use-nanogram";
 import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
 import type { Nanogram } from "@/types/schema";
-import { useInView } from "react-intersection-observer";
 
 const Team = () => {
   const { ref: containerRef, inView } = useInView({ triggerOnce: true });

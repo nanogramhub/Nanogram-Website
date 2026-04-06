@@ -1,11 +1,9 @@
-import { useGetComments } from "@/hooks/queries/use-comments";
-import { useIsMobile } from "@/hooks/use-is-mobile";
-import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
-import UserAvatar from "@/components/shared/profile/user-avatar";
-import { formatRelativeTime } from "@/lib/utils";
+import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+
+import { CommentTextarea } from "@/components/posts/comments/comment-textarea";
 import CommentLike from "@/components/posts/comments/like";
+import UserAvatar from "@/components/shared/profile/user-avatar";
 import {
   Dialog,
   DialogContent,
@@ -20,9 +18,13 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { CommentTextarea } from "@/components/posts/comments/comment-textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Spinner } from "@/components/ui/spinner";
+import { useGetComments } from "@/hooks/queries/use-comments";
+import { useIsMobile } from "@/hooks/use-is-mobile";
+import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
+import { formatRelativeTime } from "@/lib/utils";
+
 import { DeleteComment } from "../comments/delete";
 
 interface CommentsProps {

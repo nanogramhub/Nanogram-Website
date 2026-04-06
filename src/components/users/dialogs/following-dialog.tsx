@@ -1,3 +1,7 @@
+import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+
+import UserAvatar from "@/components/shared/profile/user-avatar";
 import {
   Dialog,
   DialogContent,
@@ -6,15 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import FollowButton from "../follow-button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
-import { useGetFollowing } from "@/hooks/queries/use-follows";
-import { useState } from "react";
-import type { UserProfileData } from "@/types/api";
-import UserAvatar from "@/components/shared/profile/user-avatar";
 import { Spinner } from "@/components/ui/spinner";
-import { Link } from "@tanstack/react-router";
+import { useGetFollowing } from "@/hooks/queries/use-follows";
+import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
+import type { UserProfileData } from "@/types/api";
+
+import FollowButton from "../follow-button";
 
 function FollowingDialog({ user }: { user: UserProfileData }) {
   const [open, setOpen] = useState(false);

@@ -30,7 +30,7 @@ export type PostCardMinimal = Omit<Post, "creator"> & {
 };
 
 export type SavedPostData = AppwriteDocument & {
-  post: PostCardData;
+  post: PostCardMinimal;
 };
 
 type UserFollower = AppwriteDocument & Pick<User, "$id">;
@@ -57,16 +57,10 @@ export type CommentData = Omit<Comment, "commentor"> & {
   likes: Like[];
 };
 
-// ==================
-// Message Types
-// ==================
-
-/** A message document with expanded sender/receiver user relationships */
 export type MessageData = Omit<Message, "sender" | "receiver"> & {
   sender: AppwriteDocument & Pick<User, "name" | "imageUrl" | "username">;
   receiver: AppwriteDocument & Pick<User, "name" | "imageUrl" | "username">;
 };
 
-/** Lightweight user info used in the contacts sidebar */
 export type ContactUser = AppwriteDocument &
   Pick<User, "name" | "imageUrl" | "username">;

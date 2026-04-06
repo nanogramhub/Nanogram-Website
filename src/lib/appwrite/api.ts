@@ -1,5 +1,19 @@
 import { ID, OAuthProvider } from "appwrite";
-import { account, appwriteConfig, avatars, database, storage } from "./config";
+
+import { webappUrl } from "@/constants";
+import { UserNotFoundException } from "@/exceptions";
+import type {
+  CommentData,
+  CurrentUser,
+  Followers,
+  Following,
+  MessageData,
+  PostCardData,
+  PostCardMinimal,
+  PostsFilter,
+  SavedPostData,
+  UserProfileData,
+} from "@/types/api";
 import type {
   AppwriteResponse,
   Event,
@@ -9,22 +23,10 @@ import type {
   Post,
   User,
 } from "@/types/schema";
+
 import type { SigninFormValues, SignupFormValues } from "../validation";
-import type {
-  CommentData,
-  CurrentUser,
-  Followers,
-  Following,
-  MessageData,
-  PostCardData,
-  PostsFilter,
-  SavedPostData,
-  UserProfileData,
-} from "@/types/api";
+import { account, appwriteConfig, avatars, database, storage } from "./config";
 import { querySelector } from "./queries";
-import { webappUrl } from "@/constants";
-import { UserNotFoundException } from "@/exceptions";
-// import { getUserKarma } from "../utils";
 
 async function getEmailFromIdentifier(identifier: string) {
   if (identifier.includes("@")) {
@@ -108,6 +110,12 @@ export const api = {
       });
     },
 
+    async deleteSession(sessionId: string) {
+      await account.deleteSession({
+        sessionId,
+      });
+    },
+
     async createAccount({
       email,
       password,
@@ -123,9 +131,35 @@ export const api = {
       return response;
     },
 
-    async getCurrentSession() {
+    async getCurrentUserAccount() {
       const response = await account.get();
       return response;
+    },
+
+    async getAllSessions() {
+      return await account.listSessions();
+    },
+
+    async getAllIdentities() {
+      return await account.listIdentities();
+    },
+
+    async updateName(name: string) {
+      return await account.updateName({ name });
+    },
+
+    async updateEmail(email: string, password: string) {
+      return await account.updateEmail({
+        email,
+        password,
+      });
+    },
+
+    async updatePassword(password: string, oldPassword?: string) {
+      return await account.updatePassword({
+        password,
+        ...(oldPassword && { oldPassword }),
+      });
     },
 
     async checkUsernameAvailability(username: string) {
@@ -415,6 +449,19 @@ export const api = {
       return response;
     },
 
+    async getLikedPosts(modifiers: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      const response = await database.listRows<PostCardMinimal>({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.postsTableId,
+        queries: querySelector.posts.getLikedPostsQueries(modifiers),
+      });
+      return response;
+    },
+
     async createPost(
       creator: string,
       caption: string,
@@ -579,14 +626,7 @@ export const api = {
     },
   },
 
-  // ==================
-  // Message Functions
-  // ==================
   messages: {
-    /**
-     * Fetch paginated messages between two users.
-     * Returns messages with expanded sender/receiver user data.
-     */
     async getMessages(modifiers: {
       senderId: string;
       receiverId: string;
@@ -596,15 +636,12 @@ export const api = {
       const response = await database.listRows<MessageData>({
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.messagesTableId,
-        queries: querySelector.messages.getMessagesBetweenUsersQueries(modifiers),
+        queries:
+          querySelector.messages.getMessagesBetweenUsersQueries(modifiers),
       });
       return response;
     },
 
-    /**
-     * Send a new message from sender to receiver.
-     * Content can be text or a nanogram:// post link.
-     */
     async sendMessage({
       senderId,
       receiverId,
@@ -628,10 +665,6 @@ export const api = {
       return response;
     },
 
-    /**
-     * Update a message's content and/or reactions.
-     * Reactions are capped at 2 entries (matching old behavior).
-     */
     async updateMessage({
       messageId,
       content,
@@ -643,8 +676,7 @@ export const api = {
     }) {
       const data: Partial<Pick<Message, "content" | "reactions">> = {};
       if (content !== undefined) data.content = content;
-      if (reactions !== undefined)
-        data.reactions = reactions;
+      if (reactions !== undefined) data.reactions = reactions;
 
       const response = await database.updateRow({
         databaseId: appwriteConfig.databaseId,
@@ -655,7 +687,6 @@ export const api = {
       return response;
     },
 
-    /** Delete a message by ID */
     async deleteMessage(messageId: string) {
       const response = await database.deleteRow({
         databaseId: appwriteConfig.databaseId,
@@ -665,10 +696,6 @@ export const api = {
       return response;
     },
 
-    /**
-     * Fetch recent messages for a user to derive the contacts list.
-     * The UI will de-duplicate sender/receiver to build unique contacts.
-     */
     async getContacts(modifiers: {
       userId: string;
       cursorAfter?: string;

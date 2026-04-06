@@ -1,5 +1,6 @@
-import type { PostsFilter } from "@/types/api";
 import { Query } from "appwrite";
+
+import type { PostsFilter } from "@/types/api";
 
 function getPostFilterQueries(filter: PostsFilter) {
   switch (filter) {
@@ -238,6 +239,22 @@ export const querySelector = {
         Query.limit(limit),
       ];
     },
+    getLikedPostsQueries({
+      userId,
+      cursorAfter,
+      limit = 10,
+    }: {
+      userId: string;
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.select(["*", "creator.name", "creator.imageUrl"]),
+        Query.contains("likes.$id", userId),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
   },
   saves: {
     getSavedPostsQueries({
@@ -297,15 +314,7 @@ export const querySelector = {
     },
   },
 
-  // ==================
-  // Message Queries
-  // ==================
   messages: {
-    /**
-     * Returns queries to fetch messages between two users (bidirectional).
-     * Uses Query.or with two Query.and clauses to cover both directions.
-     * Results are ordered newest-first for reverse-chronological display.
-     */
     getMessagesBetweenUsersQueries({
       senderId,
       receiverId,
@@ -347,14 +356,10 @@ export const querySelector = {
       ];
     },
 
-    /**
-     * Returns queries to fetch the most recent messages involving a user.
-     * Used to derive a contacts list from message history.
-     */
     getContactsQueries({
       userId,
       cursorAfter,
-      limit = 25,
+      limit = 5,
     }: {
       userId: string;
       cursorAfter?: string;

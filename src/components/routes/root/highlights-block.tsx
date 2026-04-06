@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
+
+import { Button } from "@/components/ui/button";
 
 const Highlights = () => {
   return (

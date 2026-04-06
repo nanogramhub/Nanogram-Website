@@ -1,10 +1,11 @@
+import { useMutation } from "@tanstack/react-query";
+
 import {
   getCreatePostMutationOptions,
   getDeletePostMutationOptions,
   getUpdateLikesMutationOptions,
   getUpdatePostMutationOptions,
 } from "@/lib/query/mutation-options";
-import { useMutation } from "@tanstack/react-query";
 
 export const useCreatePost = () => {
   return useMutation(getCreatePostMutationOptions());

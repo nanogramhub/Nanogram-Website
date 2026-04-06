@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
 import {
-  motion,
   AnimatePresence,
-  useAnimation,
+  motion,
   type PanInfo,
+  useAnimation,
 } from "framer-motion";
+import { useCallback,useEffect, useRef, useState } from "react";
+
 import type { Testimonial } from "@/types/components";
 
 export default function AnimatedTestimonial({ testimonials }: { testimonials: Testimonial[] }) {

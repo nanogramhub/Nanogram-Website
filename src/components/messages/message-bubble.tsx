@@ -1,10 +1,8 @@
+import type { EmojiClickData } from "emoji-picker-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { cn, formatDateTime } from "@/lib/utils";
-import type { MessageData } from "@/types/api";
-import { useAuthStore } from "@/store/use-auth-store";
-import { useUpdateMessage, useDeleteMessage } from "@/hooks/mutations/use-messages";
-import { EmbeddedPostCard, extractPostId } from "./embedded-post-card";
+
 import { ReactionSelector } from "@/components/shared/default/emoji-picker";
 import {
   Tooltip,
@@ -12,8 +10,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Pencil, Trash2 } from "lucide-react";
-import type { EmojiClickData } from "emoji-picker-react";
+import {
+  useDeleteMessage,
+  useUpdateMessage,
+} from "@/hooks/mutations/use-messages";
+import { cn, formatDateTime } from "@/lib/utils";
+import { useAuthStore } from "@/store/use-auth-store";
+import type { MessageData } from "@/types/api";
+
+import { EmbeddedPostCard, extractPostId } from "./embedded-post-card";
 
 interface MessageBubbleProps {
   message: MessageData;
@@ -43,7 +48,7 @@ export const MessageBubble = ({ message, onEditStart }: MessageBubbleProps) => {
   const postId = extractPostId(message.content);
 
   /** Toggle a reaction emoji on this message */
-  const handleReaction = (emojiData: any) => {
+  const handleReaction = (emojiData: EmojiClickData) => {
     let emojiStr = "";
     if (typeof emojiData === "string") {
       emojiStr = emojiData;
@@ -70,9 +75,11 @@ export const MessageBubble = ({ message, onEditStart }: MessageBubbleProps) => {
       },
       {
         onError: (err: any) => {
-          toast.error("Failed to update reaction: " + (err?.message || "Unknown error"));
+          toast.error(
+            "Failed to update reaction: " + (err?.message || "Unknown error"),
+          );
         },
-      }
+      },
     );
   };
 
@@ -180,9 +187,7 @@ export const MessageBubble = ({ message, onEditStart }: MessageBubbleProps) => {
           {message.reactions.map((emoji, index) => (
             <button
               key={`${emoji}-${index}`}
-              onClick={() =>
-                handleReaction({ emoji } as EmojiClickData)
-              }
+              onClick={() => handleReaction({ emoji } as EmojiClickData)}
               className="text-sm bg-secondary/50 hover:bg-secondary/80 rounded-full px-1.5 py-0.5 transition-colors cursor-pointer border border-border/20"
               title="Click to toggle reaction"
             >

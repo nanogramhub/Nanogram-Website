@@ -1,5 +1,6 @@
-import { kebabCasetoTitleCase } from "@/lib/utils";
 import { useLocation } from "@tanstack/react-router";
+
+import { kebabCasetoTitleCase } from "@/lib/utils";
 
 export function usePageName() {
   const location = useLocation();

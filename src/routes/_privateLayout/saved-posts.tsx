@@ -1,9 +1,10 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import GridPosts from "@/components/posts/grid-posts";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetSavedPosts } from "@/hooks/queries/use-saves";
 import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
 import { useAuthStore } from "@/store/use-auth-store";
-import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_privateLayout/saved-posts")({
   component: RouteComponent,

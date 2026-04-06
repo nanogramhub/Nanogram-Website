@@ -1,6 +1,7 @@
-import { useGetPostById } from "@/hooks/queries/use-posts";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@tanstack/react-router";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetPostById } from "@/hooks/queries/use-posts";
 
 /**
  * Regex to detect nanogram:// protocol links in message content.

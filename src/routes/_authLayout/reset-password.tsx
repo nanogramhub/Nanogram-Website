@@ -1,3 +1,12 @@
+import {
+  createFileRoute,
+  Link,
+  SearchParamError,
+  useNavigate,
+} from "@tanstack/react-router";
+import { toast } from "sonner";
+import z from "zod";
+
 import ResetPasswordForm from "@/components/forms/reset-passwrod-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,14 +21,6 @@ import { useResetPasswordMutation } from "@/hooks/mutations/use-auth";
 import { usersQueries } from "@/lib/query/query-options";
 import type { ResetPasswordFormValues } from "@/lib/validation";
 import { queryClient } from "@/router";
-import {
-  createFileRoute,
-  Link,
-  SearchParamError,
-  useNavigate,
-} from "@tanstack/react-router";
-import { toast } from "sonner";
-import z from "zod";
 
 const resetPasswordSearchParamsSchema = z.object({
   userId: z.string(),

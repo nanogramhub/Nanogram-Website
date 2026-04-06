@@ -1,5 +1,7 @@
 import type { RealtimeSubscription } from "appwrite";
-import type { MessageData, ContactUser } from "@/types/api";
+
+import type { ContactUser,MessageData } from "@/types/api";
+
 import { appwriteConfig, realtime } from "./config";
 
 // Global failure counter to "give up" on repeated WS issues

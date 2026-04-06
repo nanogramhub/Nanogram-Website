@@ -1,3 +1,7 @@
+import { debounce } from "@tanstack/react-pacer";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+
 import SearchInput from "@/components/shared/default/search-input";
 import { Spinner } from "@/components/ui/spinner";
 import UserCard from "@/components/users/user-card";
@@ -5,9 +9,6 @@ import { useGetUsers } from "@/hooks/queries/use-users";
 import { usePersistentInfiniteQuery } from "@/hooks/use-persistent-infinite-query";
 import { usersQueries } from "@/lib/query/query-options";
 import { queryClient } from "@/router";
-import { debounce } from "@tanstack/react-pacer";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 
 export const Route = createFileRoute("/_privateLayout/all-users")({
   component: RouteComponent,

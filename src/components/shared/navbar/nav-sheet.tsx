@@ -1,3 +1,6 @@
+import { Link } from "@tanstack/react-router";
+import { Menu } from "lucide-react";
+
 import {
   Sheet,
   SheetContent,
@@ -8,8 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { navbarItems } from "@/constants";
-import { Link } from "@tanstack/react-router";
-import { Menu } from "lucide-react";
+
 import { ModeToggle } from "../theme/mode-toggle";
 
 const NavSheet = ({ className }: { className?: string }) => {

@@ -15,6 +15,7 @@ import { Route as DefaultLayoutRouteImport } from './routes/_defaultLayout'
 import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
 import { Route as DefaultLayoutIndexRouteImport } from './routes/_defaultLayout/index'
 import { Route as PrivateLayoutSavedPostsRouteImport } from './routes/_privateLayout/saved-posts'
+import { Route as PrivateLayoutLikedPostsRouteImport } from './routes/_privateLayout/liked-posts'
 import { Route as PrivateLayoutExploreRouteImport } from './routes/_privateLayout/explore'
 import { Route as PrivateLayoutCreatePostRouteImport } from './routes/_privateLayout/create-post'
 import { Route as PrivateLayoutCommunityRouteImport } from './routes/_privateLayout/community'
@@ -59,6 +60,11 @@ const DefaultLayoutIndexRoute = DefaultLayoutIndexRouteImport.update({
 const PrivateLayoutSavedPostsRoute = PrivateLayoutSavedPostsRouteImport.update({
   id: '/saved-posts',
   path: '/saved-posts',
+  getParentRoute: () => PrivateLayoutRoute,
+} as any)
+const PrivateLayoutLikedPostsRoute = PrivateLayoutLikedPostsRouteImport.update({
+  id: '/liked-posts',
+  path: '/liked-posts',
   getParentRoute: () => PrivateLayoutRoute,
 } as any)
 const PrivateLayoutExploreRoute = PrivateLayoutExploreRouteImport.update({
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/community': typeof PrivateLayoutCommunityRoute
   '/create-post': typeof PrivateLayoutCreatePostRoute
   '/explore': typeof PrivateLayoutExploreRoute
+  '/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/community': typeof PrivateLayoutCommunityRoute
   '/create-post': typeof PrivateLayoutCreatePostRoute
   '/explore': typeof PrivateLayoutExploreRoute
+  '/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/_privateLayout/community': typeof PrivateLayoutCommunityRoute
   '/_privateLayout/create-post': typeof PrivateLayoutCreatePostRoute
   '/_privateLayout/explore': typeof PrivateLayoutExploreRoute
+  '/_privateLayout/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/_privateLayout/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
   '/_privateLayout/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/create-post'
     | '/explore'
+    | '/liked-posts'
     | '/saved-posts'
     | '/edit-post/$postId'
     | '/messages/$userId'
@@ -271,6 +281,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/create-post'
     | '/explore'
+    | '/liked-posts'
     | '/saved-posts'
     | '/edit-post/$postId'
     | '/messages/$userId'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/_privateLayout/community'
     | '/_privateLayout/create-post'
     | '/_privateLayout/explore'
+    | '/_privateLayout/liked-posts'
     | '/_privateLayout/saved-posts'
     | '/_defaultLayout/'
     | '/_privateLayout/edit-post/$postId'
@@ -356,6 +368,13 @@ declare module '@tanstack/react-router' {
       path: '/saved-posts'
       fullPath: '/saved-posts'
       preLoaderRoute: typeof PrivateLayoutSavedPostsRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
+    '/_privateLayout/liked-posts': {
+      id: '/_privateLayout/liked-posts'
+      path: '/liked-posts'
+      fullPath: '/liked-posts'
+      preLoaderRoute: typeof PrivateLayoutLikedPostsRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
     '/_privateLayout/explore': {
@@ -528,6 +547,7 @@ interface PrivateLayoutRouteChildren {
   PrivateLayoutCommunityRoute: typeof PrivateLayoutCommunityRoute
   PrivateLayoutCreatePostRoute: typeof PrivateLayoutCreatePostRoute
   PrivateLayoutExploreRoute: typeof PrivateLayoutExploreRoute
+  PrivateLayoutLikedPostsRoute: typeof PrivateLayoutLikedPostsRoute
   PrivateLayoutSavedPostsRoute: typeof PrivateLayoutSavedPostsRoute
   PrivateLayoutEditPostPostIdRoute: typeof PrivateLayoutEditPostPostIdRoute
   PrivateLayoutMessagesUserIdRoute: typeof PrivateLayoutMessagesUserIdRoute
@@ -543,6 +563,7 @@ const PrivateLayoutRouteChildren: PrivateLayoutRouteChildren = {
   PrivateLayoutCommunityRoute: PrivateLayoutCommunityRoute,
   PrivateLayoutCreatePostRoute: PrivateLayoutCreatePostRoute,
   PrivateLayoutExploreRoute: PrivateLayoutExploreRoute,
+  PrivateLayoutLikedPostsRoute: PrivateLayoutLikedPostsRoute,
   PrivateLayoutSavedPostsRoute: PrivateLayoutSavedPostsRoute,
   PrivateLayoutEditPostPostIdRoute: PrivateLayoutEditPostPostIdRoute,
   PrivateLayoutMessagesUserIdRoute: PrivateLayoutMessagesUserIdRoute,

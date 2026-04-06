@@ -1,10 +1,11 @@
-import PDFViewer from "@/components/shared/news/pdf-viewer";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
+import { ArrowLeft, TriangleAlert } from "lucide-react";
+
+import PDFViewer from "@/components/shared/news/pdf-viewer";
 import { useNewsletterById } from "@/hooks/queries/use-newsletters";
-import { queryClient } from "@/router";
 import { newslettersQueries } from "@/lib/query/query-options";
+import { queryClient } from "@/router";
 
 export const Route = createFileRoute("/_privateLayout/newsletter/$newsId")({
   component: RouteComponent,
@@ -34,20 +35,7 @@ function RouteComponent() {
     return (
       <div className="flex flex-col gap-6 p-12 max-w-7xl mx-auto h-[80vh] justify-center items-center text-center">
         <div className="p-4 bg-error/10 rounded-full text-error mb-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-12 w-12"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
+          <TriangleAlert className="size-12" />
         </div>
         <h2 className="text-3xl font-bold">Newsletter not found</h2>
         <p className="text-muted-foreground max-w-md">

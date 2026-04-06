@@ -1,4 +1,10 @@
 import { useForm } from "@tanstack/react-form";
+
+import {
+  type ForgotPasswordFormValues,
+  forgotPasswordSchema,
+} from "@/lib/validation";
+
 import {
   Field,
   FieldError,
@@ -6,10 +12,6 @@ import {
   FieldLabel,
   FieldSet,
 } from "../ui/field";
-import {
-  forgotPasswordSchema,
-  type ForgotPasswordFormValues,
-} from "@/lib/validation";
 import { Input } from "../ui/input";
 
 interface ForgotPasswordFormProps {

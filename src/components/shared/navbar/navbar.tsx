@@ -1,19 +1,24 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { NavTab, NavTabs } from "./fuild-nav-tabs";
+
+import { Button } from "@/components/ui/button";
 import { navbarItems } from "@/constants";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { ModeToggle } from "../theme/mode-toggle";
-import NavSheet from "./nav-sheet";
-import { PerformanceToggle } from "../performance/performance-toggle";
+import { useProfile } from "@/hooks/use-profile";
 import { useAuthStore } from "@/store/use-auth-store";
-import { Button } from "@/components/ui/button";
+
+import { PerformanceToggle } from "../performance/performance-toggle";
 import UserAvatar from "../profile/user-avatar";
+import { ModeToggle } from "../theme/mode-toggle";
+import { NavTab, NavTabs } from "./fuild-nav-tabs";
+import NavSheet from "./nav-sheet";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
+  const { open, setOpen } = useProfile();
+
   const currentUser = useAuthStore((s) => s.currentUser);
-  const logout = useAuthStore((s) => s.logout);
+
   return (
     <div className="bg-primary py-2 px-3">
       <div className="flex relative justify-between">
@@ -45,13 +50,12 @@ const Navbar = () => {
               <PerformanceToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
               <ModeToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
               {currentUser ? (
-                <>
-                  <Button onClick={logout}>Logout</Button>
+                <Button size="icon-lg" onClick={() => setOpen(!open)}>
                   <UserAvatar
                     name={currentUser.name}
                     imageUrl={currentUser.imageUrl}
                   />
-                </>
+                </Button>
               ) : (
                 <Button
                   nativeButton={false}

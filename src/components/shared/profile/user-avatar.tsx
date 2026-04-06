@@ -1,7 +1,8 @@
+import type { AvatarRootProps } from "@base-ui/react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import type { User } from "@/types/schema";
-import type { AvatarRootProps } from "@base-ui/react";
 
 type UserAvatarProps = AvatarRootProps &
   Pick<User, "name" | "imageUrl"> & {

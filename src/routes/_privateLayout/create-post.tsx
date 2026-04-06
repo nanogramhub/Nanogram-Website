@@ -1,13 +1,14 @@
-import PostForm from "@/components/forms/post-form";
-import { type PostFormValues } from "@/lib/validation";
-import { useCreatePost } from "@/hooks/mutations/use-posts";
 import {
   createFileRoute,
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
 import { toast } from "sonner";
+
+import PostForm from "@/components/forms/post-form";
 import { Button } from "@/components/ui/button";
+import { useCreatePost } from "@/hooks/mutations/use-posts";
+import { type PostFormValues } from "@/lib/validation";
 
 export const Route = createFileRoute("/_privateLayout/create-post")({
   component: RouteComponent,
@@ -45,7 +46,7 @@ function RouteComponent() {
 
   return (
     <div className="max-w-4xl mx-auto w-full">
-      <PostForm action="Create" onSubmit={handleSubmit} />
+      <PostForm onSubmit={handleSubmit} />
       <div className="flex items-center justify-end gap-4 mt-4">
         <Button
           type="button"

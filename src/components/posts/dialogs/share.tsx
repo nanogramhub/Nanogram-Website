@@ -1,31 +1,41 @@
-import { useState, useMemo } from "react";
-import { Link, Copy, Check, Share2, MessageCircleMore, Search } from "lucide-react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-} from "../../ui/dialog";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+  Check,
+  Copy,
+  Link,
+  MessageCircleMore,
+  Search,
+  Share2,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+
+import { useSendMessage } from "@/hooks/mutations/use-messages";
+import { useGetContacts } from "@/hooks/queries/use-messages";
+import { useClipboard } from "@/hooks/use-copy";
+import { getInitials } from "@/lib/utils";
+import { useAuthStore } from "@/store/use-auth-store";
+import type { ContactUser } from "@/types/api";
+
 import {
-  Whatsapp,
-  Twitter,
   Facebook,
   Linkedin,
   Mail,
-  Telegram,
   Reddit,
+  Telegram,
+  Twitter,
+  Whatsapp,
 } from "../../icons/brands";
-import { toast } from "sonner";
-import { useAuthStore } from "@/store/use-auth-store";
-import { useSendMessage } from "@/hooks/mutations/use-messages";
-import { useGetContacts } from "@/hooks/queries/use-messages";
-import { getInitials } from "@/lib/utils";
-import type { ContactUser } from "@/types/api";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Button } from "../../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../ui/dialog";
+import { Input } from "../../ui/input";
 
 interface ShareDialogProps {
   url: string;
@@ -40,11 +50,11 @@ const ShareDialog = ({
   postId,
   title = "Check out this post on Nanogram!",
 }: ShareDialogProps) => {
-  const [copied, setCopied] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [sentTo, setSentTo] = useState<Set<string>>(new Set());
   const currentUser = useAuthStore((state) => state.currentUser);
   const sendMessage = useSendMessage();
+  const { copy, copied } = useClipboard({ resetAfter: 2000 });
 
   // Fetch contacts for the "Send to Message" section
   const contactsQuery = useGetContacts({
@@ -110,17 +120,6 @@ const ShareDialog = ({
     url: url,
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      toast.success("Link copied to clipboard!");
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      toast.error("Failed to copy link");
-    }
-  };
-
   const shareToPlatform = (platform: string) => {
     let shareUrl = "";
     const encodedUrl = encodeURIComponent(url);
@@ -175,7 +174,7 @@ const ShareDialog = ({
         className="rounded-full"
         render={(props) => (
           <Button {...props} variant="ghost" size="icon">
-            <Share2 className="w-5 h-5" />
+            <Share2 className="size-6" />
           </Button>
         )}
       ></DialogTrigger>
@@ -230,9 +229,7 @@ const ShareDialog = ({
                       <div className="flex items-center gap-2 min-w-0">
                         <Avatar size="sm">
                           <AvatarImage
-                            src={
-                              contact.imageUrl || "/assets/icons/user.svg"
-                            }
+                            src={contact.imageUrl || "/assets/icons/user.svg"}
                             alt={contact.name}
                           />
                           <AvatarFallback>
@@ -250,7 +247,9 @@ const ShareDialog = ({
                       </div>
 
                       <Button
-                        variant={sentTo.has(contact.$id) ? "default" : "secondary"}
+                        variant={
+                          sentTo.has(contact.$id) ? "default" : "secondary"
+                        }
                         size="sm"
                         className="shrink-0 h-7 text-xs px-3"
                         disabled={
@@ -290,7 +289,7 @@ const ShareDialog = ({
               </div>
               <Button
                 size="icon"
-                onClick={handleCopy}
+                onClick={() => copy(url)}
                 className="shrink-0 transition-all duration-300 active:scale-90"
                 variant={copied ? "default" : "secondary"}
               >

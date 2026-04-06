@@ -1,10 +1,11 @@
-import { useState } from "react";
 import EmojiPicker, {
   type EmojiClickData,
   EmojiStyle,
   Theme,
 } from "emoji-picker-react";
 import { Laugh } from "lucide-react";
+import { useState } from "react";
+
 import {
   Popover,
   PopoverContent,

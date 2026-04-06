@@ -1,11 +1,12 @@
-import type { PostCardData } from "@/types/api";
-import PostCreator from "./post-creator";
-import PostActions from "./post-actions";
-import { formatRelativeTime } from "@/lib/utils";
-import PostStats from "./post-stats";
-import { Card, CardContent } from "../ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { formatRelativeTime } from "@/lib/utils";
+import type { PostCardData } from "@/types/api";
+
 import { linkifyReact } from "../shared/default/linkify-text";
+import { Card, CardContent } from "../ui/card";
+import PostActions from "./post-actions";
+import PostCreator from "./post-creator";
+import PostStats from "./post-stats";
 
 const PostDetails = ({ post }: { post: PostCardData }) => {
   return (

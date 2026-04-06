@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+
 import { eventsQueries } from "@/lib/query/query-options";
 
 export function useGetEvents({

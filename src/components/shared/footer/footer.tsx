@@ -1,6 +1,7 @@
-import React from "react";
-import { Github, Instagram, Linkedin, Mail } from "@/components/icons/brands";
 import { Link } from "@tanstack/react-router";
+import React from "react";
+
+import { Github, Instagram, Linkedin, Mail } from "@/components/icons/brands";
 
 const FooterLink = ({
   to,
