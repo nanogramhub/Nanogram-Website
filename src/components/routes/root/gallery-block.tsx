@@ -8,7 +8,7 @@ import { usePerformance } from "@/hooks/use-performance";
 const Gallery = () => {
   const { performance } = usePerformance();
   return (
-    <div className="w-full flex md:flex-row flex-col gap-5 md:px-20 px-4 py-10 pt-20 max-w-2xl lg:max-w-7xl mx-auto">
+    <div className="w-full flex md:flex-row flex-col items-center justify-center gap-5 md:px-20 px-10 py-10 pt-20 max-w-2xl lg:max-w-7xl mx-auto">
       <div className="w-full h-full">
         {performance ? (
           <div className="grid grid-cols-4 gap-1 w-3/4 mx-auto">

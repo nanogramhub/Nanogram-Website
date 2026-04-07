@@ -6,7 +6,15 @@ import { useAuthStore } from "@/store/use-auth-store";
 import { api } from "../appwrite/api";
 import { createPost, deletePost, updatePost } from "../posts";
 import { queryKeys } from "./query-keys";
+import {
+  deleteAvatar,
+  updateAvatar,
+  updateEmail,
+  updateName,
+  updateUsername,
+} from "../auth";
 
+// AUTH AND USER INFO MUTATION
 export const getDeleteSessionMutationOptions = () => {
   return mutationOptions({
     mutationKey: queryKeys.auth.deleteSession,
@@ -17,6 +25,202 @@ export const getDeleteSessionMutationOptions = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.auth.getAllSessions,
+      });
+    },
+  });
+};
+
+export const getDeleteIdentityMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.auth.deleteIdentity,
+    mutationFn: async ({ identityId }: { identityId: string }) => {
+      const response = await api.auth.deleteIdentity(identityId);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.auth.getAllIdentities,
+      });
+    },
+  });
+};
+
+export const getUpdateAvatarMutationOptions = () => {
+  const currentUser = useAuthStore.getState().currentUser;
+  return mutationOptions({
+    mutationKey: queryKeys.users.updateAvatar,
+    mutationFn: async ({ avatar }: { avatar: File }) => {
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+      const response = await updateAvatar({
+        userId: currentUser.$id,
+        avatar,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByAccountId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByUsername,
+      });
+      useAuthStore.getState().getCurrentUser();
+    },
+  });
+};
+
+export const getDeleteAvatarMutationOptions = () => {
+  const currentUser = useAuthStore.getState().currentUser;
+  return mutationOptions({
+    mutationKey: queryKeys.users.deleteAvatar,
+    mutationFn: async () => {
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+      const response = await deleteAvatar(currentUser);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByAccountId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByUsername,
+      });
+      useAuthStore.getState().getCurrentUser();
+    },
+  });
+};
+
+export const getUpdateNameMutationOptions = () => {
+  const currentUser = useAuthStore.getState().currentUser;
+  return mutationOptions({
+    mutationKey: queryKeys.auth.updateName,
+    mutationFn: async ({ name }: { name: string }) => {
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+      const response = await updateName({
+        userId: currentUser.$id,
+        name,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByAccountId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByUsername,
+      });
+      useAuthStore.getState().getCurrentUser();
+    },
+  });
+};
+
+export const getUpdateUsernameMutationOptions = () => {
+  const currentUser = useAuthStore.getState().currentUser;
+  return mutationOptions({
+    mutationKey: queryKeys.users.updateUsername,
+    mutationFn: async ({ username }: { username: string }) => {
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+      const response = await updateUsername({
+        userId: currentUser.$id,
+        username,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByAccountId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByUsername,
+      });
+      useAuthStore.getState().getCurrentUser();
+    },
+  });
+};
+
+export const getUpdateBioMutationOptions = () => {
+  const currentUser = useAuthStore.getState().currentUser;
+  return mutationOptions({
+    mutationKey: queryKeys.users.updateBio,
+    mutationFn: async ({ bio }: { bio: string }) => {
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+      const response = await api.users.updateUser(currentUser.$id, { bio });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByAccountId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByUsername,
+      });
+      useAuthStore.getState().getCurrentUser();
+    },
+  });
+};
+
+export const getUpdateEmailMutationOptions = () => {
+  const currentUser = useAuthStore.getState().currentUser;
+  return mutationOptions({
+    mutationKey: queryKeys.auth.updateEmail,
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+      const response = await updateEmail({
+        userId: currentUser.$id,
+        email,
+        password,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByAccountId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByUsername,
+      });
+      useAuthStore.getState().getCurrentUser();
+    },
+  });
+};
+
+export const getUpdatePasswordMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.auth.updatePassword,
+    mutationFn: async ({
+      password,
+      oldPassword,
+    }: {
+      password: string;
+      oldPassword?: string;
+    }) => {
+      const response = await api.auth.updatePassword(password, oldPassword);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByAccountId,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.getUserByUsername,
       });
     },
   });
@@ -50,6 +254,7 @@ export const getResetPasswordMutationOptions = () => {
   });
 };
 
+// FOLLOWS MUTATION
 export const getFollowUserMutationOptions = () => {
   return mutationOptions({
     mutationKey: queryKeys.follows.followUser,
@@ -111,6 +316,7 @@ export const getUnfollowUserMutationOptions = () => {
   });
 };
 
+// POSTS MUTATION
 export const getUpdateLikesMutationOptions = () => {
   return mutationOptions({
     mutationKey: queryKeys.posts.updateLikes,
@@ -335,6 +541,7 @@ export const getDeletePostMutationOptions = () => {
   });
 };
 
+// MESSAGES MUTATION
 export const getSendMessageMutationOptions = () => {
   return mutationOptions({
     mutationKey: queryKeys.messages.sendMessage,

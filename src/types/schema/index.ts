@@ -107,7 +107,7 @@ export type User = AppwriteDocument & {
   accountId: string;
   email: string;
   bio?: string;
-  imageId?: string;
+  imageId: string | null;
   imageUrl: string;
   admin: boolean;
   karma: number;

@@ -130,3 +130,51 @@ export const eventFormSchema = z.object({
   location: z.string().min(1, "Location is required"),
   image: z.any().nullable(),
 });
+
+export const updateEmailSchema = z.object({
+  email: z.email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
+
+export type UpdateEmailFormValues = z.infer<typeof updateEmailSchema>;
+
+export const updatePasswordSchema = z
+  .object({
+    oldPassword: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters" }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters" })
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, {
+        message:
+          "Password must contain at least one letter, one number, and one special character",
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
+
+export const updateNameSchema = z.object({
+  name: z.string().min(2, "Display name must be at least 2 characters"),
+});
+
+export const updateUsernameSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters" })
+    .regex(/^[a-z0-9_]+$/, {
+      message:
+        "Username can only contain lowercase letters, numbers, and underscores.",
+    }),
+});
+
+export const updateBioSchema = z.object({
+  bio: z.string().max(150, "Bio is too long"),
+});

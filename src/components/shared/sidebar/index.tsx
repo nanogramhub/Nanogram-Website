@@ -8,6 +8,7 @@ import {
 
 import SidebarHead from "./sidebar-head";
 import SidebarMainMenu from "./sidebar-main-menu";
+import NavUser from "./nav-user";
 
 export function SidebarLeft({
   ...props
@@ -20,7 +21,9 @@ export function SidebarLeft({
       <SidebarContent>
         <SidebarMainMenu />
       </SidebarContent>
-      <SidebarFooter>{/* <NavUser /> */}</SidebarFooter>
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

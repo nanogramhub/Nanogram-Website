@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { ThemeProviderContextProvider } from "@/context/theme-context";
 import type { Theme } from "@/types";
+import { useStickyState } from "@/hooks/useStickyState";
+
+import { useAuthStore } from "@/store/use-auth-store";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -14,9 +17,14 @@ export function ThemeProvider({
   defaultTheme = "system",
   storageKey = "vite-ui-theme",
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
-  );
+  const [theme, setTheme] = useStickyState<Theme>(defaultTheme, storageKey);
+  const cloudTheme = useAuthStore((s) => s.prefs.theme);
+
+  useEffect(() => {
+    if (cloudTheme && cloudTheme !== theme) {
+      setTheme(cloudTheme as Theme);
+    }
+  }, [cloudTheme]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -38,10 +46,7 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
-    },
+    setTheme,
   };
 
   return (

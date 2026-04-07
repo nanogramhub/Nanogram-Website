@@ -38,7 +38,7 @@ const SocialMediaLink = ({
 
 const Footer = () => {
   return (
-    <footer className=" px-6 py-10 md:px-8">
+    <footer className="px-4 py-10 lg:px-8">
       <div>
         <div className="mx-auto flex flex-col gap-12">
           <div className="flex flex-col items-center gap-8 md:justify-between md:flex-row">
@@ -63,13 +63,13 @@ const Footer = () => {
               </SocialMediaLink>
             </ul>
           </div>
-          <div className="flex flex-col items-center gap-8 md:justify-between md:flex-row">
-            <p className="w-auto text-sm lg:text-left text-base-content-black/70 sm:text-justify">
+          <div className="flex flex-col items-center md:justify-between md:flex-row md:gap-0 gap-8">
+            <p className="w-auto text-sm text-left text-muted-foreground">
               Dept. of Electronics and Communication Engineering
               <br />
               Dr. Ambedkar Institute of Technology, Bengaluru
             </p>
-            <p className="w-auto text-sm lg:text-right text-base-content-black/70 sm:text-justify">
+            <p className="w-auto text-sm text-right text-muted-foreground">
               © Nanogram - The Tech Hub 2026, All Rights Reserved
               <br />
               Made with ❤️ by Pramoda S R - Viceroy, 2024, Nanogram

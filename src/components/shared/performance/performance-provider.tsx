@@ -1,33 +1,40 @@
-import { useState } from "react";
+import { useEffect } from "react";
 
 import { PerformanceProviderContextProvider } from "@/context/performance-context";
+import { useStickyState } from "@/hooks/useStickyState";
+import { useAuthStore } from "@/store/use-auth-store";
 
 type PerformanceProviderProps = {
-    children: React.ReactNode;
-    defaultPreference?: boolean;
-    storageKey?: string;
+  children: React.ReactNode;
+  defaultPreference?: boolean;
+  storageKey?: string;
 };
 
 export function PerformanceProvider({
-    children,
-    defaultPreference = false,
-    storageKey = "nanogram-performance",
+  children,
+  defaultPreference = false,
+  storageKey = "nanogram-performance",
 }: PerformanceProviderProps) {
-    const [performance, setPerformance] = useState<boolean>(
-        () => (localStorage.getItem(storageKey) === "true") || defaultPreference,
-    );
+  const [performance, setPerformance] = useStickyState<boolean>(
+    defaultPreference,
+    storageKey,
+  );
+  const cloudPerf = useAuthStore((s) => s.prefs.performance);
 
-    const value = {
-        performance,
-        setPerformance: (performance: boolean) => {
-            localStorage.setItem(storageKey, performance.toString());
-            setPerformance(performance);
-        },
-    };
+  useEffect(() => {
+    if (cloudPerf !== undefined && cloudPerf !== performance) {
+      setPerformance(cloudPerf);
+    }
+  }, [cloudPerf]);
 
-    return (
-        <PerformanceProviderContextProvider value={value}>
-            {children}
-        </PerformanceProviderContextProvider>
-    );
+  const value = {
+    performance,
+    setPerformance,
+  };
+
+  return (
+    <PerformanceProviderContextProvider value={value}>
+      {children}
+    </PerformanceProviderContextProvider>
+  );
 }

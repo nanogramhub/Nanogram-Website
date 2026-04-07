@@ -45,7 +45,7 @@ const Initiatives = () => {
         </p>
       </div>
 
-      <div className="w-full grid grid-cols-2 md:grid-cols-6 gap-y-12 gap-x-2 px-6 pt-16 justify-items-center">
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-12 gap-x-2 px-6 pt-16 justify-items-center">
         {initiatives.map((initiative, index) => (
           <KeyInitiativeItem key={index} {...initiative} />
         ))}

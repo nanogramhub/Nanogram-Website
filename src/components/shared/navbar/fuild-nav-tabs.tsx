@@ -113,7 +113,9 @@ export const NavTab = ({
         className,
       )}
     >
-      <Link to={to}>{children}</Link>
+      <Link to={to} className="whitespace-nowrap">
+        {children}
+      </Link>
     </li>
   );
 };

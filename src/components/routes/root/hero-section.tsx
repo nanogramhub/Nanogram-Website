@@ -70,7 +70,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-fit flex md:flex-row flex-col gap-5 md:justify-start justify-center items-center overflow-hidden py-6 md:px-20 px-0">
+      <div className="w-full h-fit flex lg:flex-row flex-col gap-5 md:justify-start justify-center items-center overflow-hidden py-6 md:px-20 px-0">
         <div className="flex -space-x-6">
           {isPending
             ? range(5).map((index: number) => (

@@ -184,7 +184,7 @@ const ImageUploader = ({
   };
 
   return (
-    <div className={cn("w-full max-w-full mx-auto", className)}>
+    <div className={cn("w-full max-w-full mx-auto overflow-hidden", className)}>
       {cropping ? (
         <div
           className={cn(
@@ -213,19 +213,19 @@ const ImageUploader = ({
               onChange={(c) => setCrop(c)}
               onComplete={(c) => setCompletedCrop(c)}
               aspect={cropAspectRatio}
-              className="max-h-[60vh] sm:max-h-[70vh]"
+              className="max-h-[50vh] sm:max-h-[60vh]"
             >
               <img
                 ref={imgRef}
                 src={fileUrl}
                 alt="Crop preview"
                 onLoad={onImageLoad}
-                className="max-w-full max-h-[60vh] sm:max-h-[70vh] w-auto h-auto object-contain"
+                className="max-w-full max-h-[50vh] sm:max-h-[60vh] w-auto h-auto object-contain"
               />
             </ReactCrop>
           </div>
 
-          <div className="flex w-full gap-3">
+          <div className="flex w-full gap-3 mt-2">
             <Button
               variant="outline"
               onClick={cancelCrop}
@@ -242,7 +242,7 @@ const ImageUploader = ({
         <div
           {...getRootProps()}
           className={cn(
-            "relative flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-6 transition-colors cursor-pointer min-h-[200px]",
+            "relative flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl p-4 transition-colors cursor-pointer min-h-[160px]",
             isDragActive && "border-primary bg-primary/5",
             fileUrl && "border-solid",
             dropzoneClassName,
@@ -253,16 +253,16 @@ const ImageUploader = ({
           {fileUrl ? (
             <div
               className={cn(
-                "relative w-full flex flex-col items-center gap-4",
+                "relative w-full h-full flex flex-col items-center justify-center gap-3 overflow-hidden",
                 imageContainerClassName,
               )}
             >
-              <div className={cn("relative group", imageStyles)}>
+              <div className={cn("relative group shrink-0", imageStyles)}>
                 <img
                   src={fileUrl}
                   alt="Preview"
                   className={cn(
-                    "max-h-[300px] sm:max-h-[400px] w-auto h-auto object-contain",
+                    "max-h-[140px] sm:max-h-[200px] w-auto h-auto object-contain transition-transform group-hover:scale-105",
                     imageClassName,
                   )}
                 />
@@ -272,6 +272,7 @@ const ImageUploader = ({
                       type="button"
                       variant="secondary"
                       size="sm"
+                      className="h-8 px-3 text-xs"
                       onClick={(e) => {
                         e.stopPropagation();
                         setCropping(true);
@@ -291,20 +292,20 @@ const ImageUploader = ({
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <RefreshCw className="w-3 h-3" />
-                <span>Click or drag to replace image</span>
+              <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full border border-border/50">
+                <RefreshCw className="w-3 h-3 animate-pulse" />
+                <span className="truncate max-w-[150px]">Click or drag to replace</span>
               </div>
             </div>
           ) : (
             <div className="flex flex-col items-center text-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <Upload className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Upload className="w-5 h-5 text-primary" />
               </div>
               <div className="space-y-1">
-                <p className="font-medium">Upload Image</p>
-                <p className="text-xs text-muted-foreground">
-                  Drag and drop or click to browse
+                <p className="font-medium text-sm">Upload Image</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
+                  PNG, JPG or WEBP
                 </p>
               </div>
             </div>

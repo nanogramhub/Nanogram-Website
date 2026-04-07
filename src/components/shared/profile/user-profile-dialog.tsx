@@ -1,4 +1,4 @@
-import { Lock, LogOut, User } from "lucide-react";
+import { Lock, LogOut, Settings, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +17,9 @@ import UserProfile from "./user-profile";
 import UserPassword from "./user-password";
 import UserSessions from "./user-sessions";
 import DeleteAccount from "./delete-account";
+import UserPrefs from "./user-prefs";
 import { useIsMobile } from "@/hooks/use-is-mobile";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface UserProfileProps {
   open: boolean;
@@ -29,10 +31,16 @@ const UserProfileDialog = ({ open, setOpen }: UserProfileProps) => {
   const logout = useAuthStore((s) => s.logout);
   const isMobile = useIsMobile();
 
+  function handleLogout() {
+    logout();
+    setOpen(false);
+    // TODO: redirect to login if private routes
+  }
+
   if (!currentUser) return null;
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="overflow-hidden w-full lg:min-w-3xl lg:h-[75vh]">
+      <DialogContent className="overflow-hidden w-full lg:min-w-3xl h-[75vh]">
         <Tabs
           defaultValue="profile"
           orientation={isMobile ? "horizontal" : "vertical"}
@@ -47,11 +55,15 @@ const UserProfileDialog = ({ open, setOpen }: UserProfileProps) => {
               <Lock />
               Security
             </TabsTrigger>
+            <TabsTrigger value="prefs">
+              <Settings />
+              Preferences
+            </TabsTrigger>
           </TabsList>
           <Separator orientation="vertical" className="hidden lg:block" />
           <Separator orientation="horizontal" className="lg:hidden" />
 
-          <div className="flex-1 min-w-0 overflow-y-auto">
+          <div className="flex-1 min-w-0">
             <TabsContent value="profile">
               <DialogHeader>
                 <DialogTitle>Profile</DialogTitle>
@@ -60,19 +72,21 @@ const UserProfileDialog = ({ open, setOpen }: UserProfileProps) => {
                 </DialogDescription>
               </DialogHeader>
               <Separator />
-              <UserProfile />
-              <Separator />
-              <UserIdentities open={open} />
-              <Separator />
-              <div className="py-2">
-                <Button
-                  variant="destructive"
-                  className="ml-auto lg:ml-0 gap-1.5 shrink-0"
-                  onClick={logout}
-                >
-                  <LogOut /> Logout
-                </Button>
-              </div>
+              <ScrollArea className="md:h-[65vh] h-[57vh]">
+                <UserProfile />
+                <Separator />
+                <UserIdentities open={open} />
+                <Separator />
+                <div className="py-2">
+                  <Button
+                    variant="destructive"
+                    className="ml-auto lg:ml-0 gap-1.5 shrink-0"
+                    onClick={handleLogout}
+                  >
+                    <LogOut /> Logout
+                  </Button>
+                </div>
+              </ScrollArea>
             </TabsContent>
 
             <TabsContent value="security">
@@ -83,11 +97,24 @@ const UserProfileDialog = ({ open, setOpen }: UserProfileProps) => {
                 </DialogDescription>
               </DialogHeader>
               <Separator />
-              <UserPassword />
+              <ScrollArea className="md:h-[65vh] h-[57vh]">
+                <UserPassword />
+                <Separator />
+                <UserSessions open={open} />
+                <Separator />
+                <DeleteAccount />
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="prefs">
+              <DialogHeader className="py-2">
+                <DialogTitle>Preferences</DialogTitle>
+                <DialogDescription className="wrap-break-word">
+                  Make changes to your preferences here.
+                </DialogDescription>
+              </DialogHeader>
               <Separator />
-              <UserSessions open={open} />
-              <Separator />
-              <DeleteAccount />
+              <UserPrefs />
             </TabsContent>
           </div>
         </Tabs>

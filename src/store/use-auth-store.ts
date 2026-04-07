@@ -8,7 +8,9 @@ import type { CurrentUser } from "@/types/api";
 interface AuthStore {
   currentUser: CurrentUser | null;
   isAdmin: boolean;
+  prefs: Record<string, any>;
   setCurrentUser: (user: CurrentUser | null) => void;
+  setPrefs: (prefs: Record<string, any>) => void;
   getCurrentUser: () => Promise<CurrentUser>;
   login: (data: SigninFormValues) => Promise<CurrentUser>;
   logout: () => Promise<void>;
@@ -17,8 +19,10 @@ interface AuthStore {
 export const useAuthStore = create<AuthStore>((set, get) => ({
   currentUser: null,
   isAdmin: false,
+  prefs: {},
 
   setCurrentUser: (user) => set({ currentUser: user }),
+  setPrefs: (prefs) => set({ prefs }),
 
   getCurrentUser: async () => {
     try {
@@ -31,10 +35,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         );
       }
 
-      set({ currentUser: user, isAdmin });
+      const prefs = await api.auth.getPrefs();
+      set({ currentUser: user, isAdmin, prefs });
       return user;
     } catch (error) {
-      set({ currentUser: null, isAdmin: false });
+      set({ currentUser: null, isAdmin: false, prefs: {} });
       throw error;
     }
   },

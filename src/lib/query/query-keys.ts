@@ -6,6 +6,10 @@ export const queryKeys = {
     getAllIdentities: ["auth", "identities"],
     getAllSessions: ["auth", "sessions"],
     deleteSession: ["auth", "delete-session"],
+    deleteIdentity: ["auth", "delete-identity"],
+    updateName: ["auth", "update-name"],
+    updateEmail: ["auth", "update-email"],
+    updatePassword: ["auth", "update-password"],
   },
   nanogram: {
     getTestimonials: ["nanogram", "testimonial"],
@@ -22,6 +26,10 @@ export const queryKeys = {
     getUsers: ["users"],
     getUserByUsername: ["users", "username"],
     getUserByAccountId: ["users", "account-id"],
+    updateUsername: ["auth", "update-username"],
+    updateBio: ["auth", "update-bio"],
+    updateAvatar: ["auth", "update-avatar"],
+    deleteAvatar: ["auth", "delete-avatar"],
   },
   posts: {
     getRecentPosts: ["posts", "recent"],

@@ -144,6 +144,10 @@ export const api = {
       return await account.listIdentities();
     },
 
+    async deleteIdentity(identityId: string) {
+      return await account.deleteIdentity({ identityId });
+    },
+
     async updateName(name: string) {
       return await account.updateName({ name });
     },
@@ -160,6 +164,14 @@ export const api = {
         password,
         ...(oldPassword && { oldPassword }),
       });
+    },
+
+    async updatePrefs(prefs: Record<string, unknown>) {
+      return await account.updatePrefs({ prefs });
+    },
+
+    async getPrefs() {
+      return await account.getPrefs();
     },
 
     async checkUsernameAvailability(username: string) {
@@ -288,7 +300,11 @@ export const api = {
 
   users: {
     async createuser(
-      data: SignupFormValues & { accountId: string; imageUrl: string },
+      data: SignupFormValues & {
+        accountId: string;
+        imageUrl: string;
+        imageId: string | null;
+      },
     ) {
       const user = await database.createRow<User>({
         databaseId: appwriteConfig.databaseId,
@@ -340,6 +356,30 @@ export const api = {
         databaseId: appwriteConfig.databaseId,
         tableId: appwriteConfig.usersTableId,
         rowId: id,
+      });
+      return response;
+    },
+
+    async updateUser(
+      userId: string,
+      data: Partial<
+        Pick<
+          User,
+          | "name"
+          | "username"
+          | "email"
+          | "bio"
+          | "imageId"
+          | "imageUrl"
+          | "admin"
+        >
+      >,
+    ) {
+      const response = await database.updateRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.usersTableId,
+        rowId: userId,
+        data,
       });
       return response;
     },
