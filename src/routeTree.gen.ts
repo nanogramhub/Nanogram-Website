@@ -13,6 +13,7 @@ import { Route as TestRouteImport } from './routes/test'
 import { Route as PrivateLayoutRouteImport } from './routes/_privateLayout'
 import { Route as DefaultLayoutRouteImport } from './routes/_defaultLayout'
 import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
+import { Route as AdminLayoutRouteImport } from './routes/_adminLayout'
 import { Route as DefaultLayoutIndexRouteImport } from './routes/_defaultLayout/index'
 import { Route as PrivateLayoutSavedPostsRouteImport } from './routes/_privateLayout/saved-posts'
 import { Route as PrivateLayoutLikedPostsRouteImport } from './routes/_privateLayout/liked-posts'
@@ -29,11 +30,13 @@ import { Route as AuthLayoutLoginRouteImport } from './routes/_authLayout/login'
 import { Route as AuthLayoutForgotPasswordRouteImport } from './routes/_authLayout/forgot-password'
 import { Route as PrivateLayoutNewsletterIndexRouteImport } from './routes/_privateLayout/newsletter/index'
 import { Route as PrivateLayoutMessagesIndexRouteImport } from './routes/_privateLayout/messages/index'
+import { Route as AdminLayoutAdminIndexRouteImport } from './routes/_adminLayout/admin/index'
 import { Route as PrivateLayoutUUserIdRouteImport } from './routes/_privateLayout/u/$userId'
 import { Route as PrivateLayoutPostsPostIdRouteImport } from './routes/_privateLayout/posts/$postId'
 import { Route as PrivateLayoutNewsletterNewsIdRouteImport } from './routes/_privateLayout/newsletter/$newsId'
 import { Route as PrivateLayoutMessagesUserIdRouteImport } from './routes/_privateLayout/messages/$userId'
 import { Route as PrivateLayoutEditPostPostIdRouteImport } from './routes/_privateLayout/edit-post/$postId'
+import { Route as AdminLayoutAdminAboutUsRouteImport } from './routes/_adminLayout/admin/about-us'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -50,6 +53,10 @@ const DefaultLayoutRoute = DefaultLayoutRouteImport.update({
 } as any)
 const AuthLayoutRoute = AuthLayoutRouteImport.update({
   id: '/_authLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLayoutRoute = AdminLayoutRouteImport.update({
+  id: '/_adminLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DefaultLayoutIndexRoute = DefaultLayoutIndexRouteImport.update({
@@ -135,6 +142,11 @@ const PrivateLayoutMessagesIndexRoute =
     path: '/messages/',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
+const AdminLayoutAdminIndexRoute = AdminLayoutAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AdminLayoutRoute,
+} as any)
 const PrivateLayoutUUserIdRoute = PrivateLayoutUUserIdRouteImport.update({
   id: '/u/$userId',
   path: '/u/$userId',
@@ -164,6 +176,11 @@ const PrivateLayoutEditPostPostIdRoute =
     path: '/edit-post/$postId',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
+const AdminLayoutAdminAboutUsRoute = AdminLayoutAdminAboutUsRouteImport.update({
+  id: '/admin/about-us',
+  path: '/admin/about-us',
+  getParentRoute: () => AdminLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof DefaultLayoutIndexRoute
@@ -181,11 +198,13 @@ export interface FileRoutesByFullPath {
   '/explore': typeof PrivateLayoutExploreRoute
   '/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
+  '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/u/$userId': typeof PrivateLayoutUUserIdRoute
+  '/admin/': typeof AdminLayoutAdminIndexRoute
   '/messages/': typeof PrivateLayoutMessagesIndexRoute
   '/newsletter/': typeof PrivateLayoutNewsletterIndexRoute
 }
@@ -205,16 +224,19 @@ export interface FileRoutesByTo {
   '/explore': typeof PrivateLayoutExploreRoute
   '/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
+  '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
   '/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/u/$userId': typeof PrivateLayoutUUserIdRoute
+  '/admin': typeof AdminLayoutAdminIndexRoute
   '/messages': typeof PrivateLayoutMessagesIndexRoute
   '/newsletter': typeof PrivateLayoutNewsletterIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_adminLayout': typeof AdminLayoutRouteWithChildren
   '/_authLayout': typeof AuthLayoutRouteWithChildren
   '/_defaultLayout': typeof DefaultLayoutRouteWithChildren
   '/_privateLayout': typeof PrivateLayoutRouteWithChildren
@@ -233,11 +255,13 @@ export interface FileRoutesById {
   '/_privateLayout/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/_privateLayout/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
+  '/_adminLayout/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/_privateLayout/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/_privateLayout/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/_privateLayout/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
   '/_privateLayout/posts/$postId': typeof PrivateLayoutPostsPostIdRoute
   '/_privateLayout/u/$userId': typeof PrivateLayoutUUserIdRoute
+  '/_adminLayout/admin/': typeof AdminLayoutAdminIndexRoute
   '/_privateLayout/messages/': typeof PrivateLayoutMessagesIndexRoute
   '/_privateLayout/newsletter/': typeof PrivateLayoutNewsletterIndexRoute
 }
@@ -259,11 +283,13 @@ export interface FileRouteTypes {
     | '/explore'
     | '/liked-posts'
     | '/saved-posts'
+    | '/admin/about-us'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
     | '/posts/$postId'
     | '/u/$userId'
+    | '/admin/'
     | '/messages/'
     | '/newsletter/'
   fileRoutesByTo: FileRoutesByTo
@@ -283,15 +309,18 @@ export interface FileRouteTypes {
     | '/explore'
     | '/liked-posts'
     | '/saved-posts'
+    | '/admin/about-us'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
     | '/posts/$postId'
     | '/u/$userId'
+    | '/admin'
     | '/messages'
     | '/newsletter'
   id:
     | '__root__'
+    | '/_adminLayout'
     | '/_authLayout'
     | '/_defaultLayout'
     | '/_privateLayout'
@@ -310,16 +339,19 @@ export interface FileRouteTypes {
     | '/_privateLayout/liked-posts'
     | '/_privateLayout/saved-posts'
     | '/_defaultLayout/'
+    | '/_adminLayout/admin/about-us'
     | '/_privateLayout/edit-post/$postId'
     | '/_privateLayout/messages/$userId'
     | '/_privateLayout/newsletter/$newsId'
     | '/_privateLayout/posts/$postId'
     | '/_privateLayout/u/$userId'
+    | '/_adminLayout/admin/'
     | '/_privateLayout/messages/'
     | '/_privateLayout/newsletter/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AdminLayoutRoute: typeof AdminLayoutRouteWithChildren
   AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
   DefaultLayoutRoute: typeof DefaultLayoutRouteWithChildren
   PrivateLayoutRoute: typeof PrivateLayoutRouteWithChildren
@@ -354,6 +386,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_adminLayout': {
+      id: '/_adminLayout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AdminLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_defaultLayout/': {
@@ -468,6 +507,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateLayoutMessagesIndexRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
+    '/_adminLayout/admin/': {
+      id: '/_adminLayout/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminLayoutAdminIndexRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
     '/_privateLayout/u/$userId': {
       id: '/_privateLayout/u/$userId'
       path: '/u/$userId'
@@ -503,8 +549,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateLayoutEditPostPostIdRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
+    '/_adminLayout/admin/about-us': {
+      id: '/_adminLayout/admin/about-us'
+      path: '/admin/about-us'
+      fullPath: '/admin/about-us'
+      preLoaderRoute: typeof AdminLayoutAdminAboutUsRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
   }
 }
+
+interface AdminLayoutRouteChildren {
+  AdminLayoutAdminAboutUsRoute: typeof AdminLayoutAdminAboutUsRoute
+  AdminLayoutAdminIndexRoute: typeof AdminLayoutAdminIndexRoute
+}
+
+const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
+  AdminLayoutAdminAboutUsRoute: AdminLayoutAdminAboutUsRoute,
+  AdminLayoutAdminIndexRoute: AdminLayoutAdminIndexRoute,
+}
+
+const AdminLayoutRouteWithChildren = AdminLayoutRoute._addFileChildren(
+  AdminLayoutRouteChildren,
+)
 
 interface AuthLayoutRouteChildren {
   AuthLayoutForgotPasswordRoute: typeof AuthLayoutForgotPasswordRoute
@@ -579,6 +646,7 @@ const PrivateLayoutRouteWithChildren = PrivateLayoutRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  AdminLayoutRoute: AdminLayoutRouteWithChildren,
   AuthLayoutRoute: AuthLayoutRouteWithChildren,
   DefaultLayoutRoute: DefaultLayoutRouteWithChildren,
   PrivateLayoutRoute: PrivateLayoutRouteWithChildren,

@@ -2,6 +2,20 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import { nanogramQueries } from "@/lib/query/query-options";
 
+export function useGetAllTeamMembers({
+  cursorAfter,
+  limit,
+  enabled,
+}: {
+  cursorAfter?: string;
+  limit?: number;
+  enabled: boolean;
+}) {
+  return useInfiniteQuery(
+    nanogramQueries.getAllTeamMembers({ cursorAfter, limit, enabled }),
+  );
+}
+
 export function useGetTeamMembers() {
   return useQuery(nanogramQueries.getTeamMembers());
 }

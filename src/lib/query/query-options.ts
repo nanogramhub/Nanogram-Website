@@ -40,6 +40,31 @@ export const nanogramQueries = {
       enabled,
     });
   },
+  getAllTeamMembers: ({
+    cursorAfter,
+    limit,
+    enabled,
+  }: {
+    cursorAfter?: string;
+    limit?: number;
+    enabled: boolean;
+  }) => {
+    return infiniteQueryOptions({
+      queryKey: [...queryKeys.nanogram.getAllTeamMembers, cursorAfter],
+      initialPageParam: cursorAfter,
+      queryFn: ({ pageParam }) =>
+        api.public.nanogram.getAllTeamMembers({
+          cursorAfter: pageParam,
+          limit,
+        }),
+      getNextPageParam: (lastPage) =>
+        lastPage.rows.length === 0
+          ? null
+          : lastPage.rows[lastPage.rows.length - 1].$id,
+      staleTime: 1000 * 60 * 30, // 30 minutes
+      enabled,
+    });
+  },
   getTeamMembers: () => {
     return queryOptions({
       queryKey: queryKeys.nanogram.getCoreMembers,

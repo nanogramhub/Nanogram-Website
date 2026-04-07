@@ -216,6 +216,24 @@ export const api = {
         return response;
       },
 
+      async getAllTeamMembers({
+        cursorAfter,
+        limit = 9,
+      }: {
+        cursorAfter?: string;
+        limit?: number;
+      }): Promise<AppwriteResponse<Nanogram>> {
+        const response = await database.listRows<Nanogram>({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.nanogramsTableId,
+          queries: querySelector.nanogram.getAllTeamMemberQueries({
+            cursorAfter,
+            limit,
+          }),
+        });
+        return response;
+      },
+
       async getCoreMembers({
         cursorAfter,
         limit = 9,

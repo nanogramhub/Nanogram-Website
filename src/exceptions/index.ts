@@ -5,4 +5,11 @@ class UserNotFoundException extends Error {
   }
 }
 
-export { UserNotFoundException };
+class UnauthorizedException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UnauthorizedException";
+  }
+}
+
+export { UnauthorizedException, UserNotFoundException };

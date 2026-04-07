@@ -1,4 +1,4 @@
-import { type ClassValue,clsx } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
@@ -116,6 +116,29 @@ export function slugify(title: string): string {
     .replace(/\s+/g, "-") // collapse whitespace to dash
     .replace(/-+/g, "-") // collapse multiple dashes
     .replace(/^-+|-+$/g, ""); // trim leading/trailing dash
+}
+
+/**
+ * Converts a camelCase, PascalCase, snake_case, or mixed string
+ * into a human-readable Title Case string.
+ *
+ * Examples:
+ *  - "camelCaseString"   -> "Camel Case String"
+ *  - "PascalCase"        -> "Pascal Case"
+ *  - "snake_case_value"  -> "Snake Case Value"
+ *  - "mixed-Format_str"  -> "Mixed Format Str"
+ *
+ * @param str - Input string in camelCase, PascalCase, snake_case, or mixed format
+ * @returns A Title Case formatted string with words separated by spaces
+ */
+export function camelCaseToTitleCase(str: string): string {
+  return str
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2")
+    .replace(/[^a-zA-Z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 /**

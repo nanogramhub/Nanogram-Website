@@ -12,6 +12,7 @@ export const queryKeys = {
     updatePassword: ["auth", "update-password"],
   },
   nanogram: {
+    getAllTeamMembers: ["nanogram", "team-members"],
     getTestimonials: ["nanogram", "testimonial"],
     getCoreMembers: ["nanogram", "core"],
     getAluminiMembers: ["nanogram", "alumini"],

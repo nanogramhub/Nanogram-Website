@@ -35,6 +35,19 @@ export const querySelector = {
     },
   },
   nanogram: {
+    getAllTeamMemberQueries({
+      cursorAfter,
+      limit = 8,
+    }: {
+      cursorAfter?: string;
+      limit?: number;
+    }) {
+      return [
+        Query.orderAsc("priority"),
+        ...querySelector.general.addCursorIfPresent(cursorAfter),
+        Query.limit(limit),
+      ];
+    },
     getTestimonialQueries() {
       return [
         Query.isNotNull("content"),

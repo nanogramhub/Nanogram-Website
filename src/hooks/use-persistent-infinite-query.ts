@@ -16,6 +16,7 @@ export function usePersistentInfiniteQuery<T>(
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     infiniteQueryResult;
   const [items, setItems] = useState<T[]>([]);
+  const [total, setTotal] = useState<number | undefined>(undefined);
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -28,8 +29,9 @@ export function usePersistentInfiniteQuery<T>(
     if (data?.pages) {
       const allItems = data.pages.flatMap((page) => page.rows);
       setItems(allItems);
+      setTotal(data.pages[0].total);
     }
   }, [data]);
 
-  return { items, ref, isFetchingNextPage, hasNextPage };
+  return { items, ref, isFetchingNextPage, hasNextPage, fetchNextPage, total };
 }
