@@ -4,6 +4,7 @@ import EditEventDialog from "@/components/routes/admin/events/edit-event-dialog"
 import ViewEventDialog from "@/components/routes/admin/events/preview-event";
 import EventTable from "@/components/routes/admin/events/table";
 import AdminPagination from "@/components/routes/admin/pagination";
+import { Separator } from "@/components/ui/separator";
 import { useGetEvents } from "@/hooks/queries/use-events";
 import { usePaginatedInfinitePagination } from "@/hooks/use-paginated-infinite-query";
 import type { Event } from "@/types/schema";
@@ -60,6 +61,7 @@ function RouteComponent() {
           pageSize={pageSize}
         />
       </EventDialogContextProvider>
+      <Separator className="my-2" />
       <AdminPagination
         currentPage={currentPage}
         prevPage={prevPage}

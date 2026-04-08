@@ -22,6 +22,7 @@ import {
 // import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
 import { toast } from "sonner";
 import { useDeleteEvent } from "@/hooks/mutations/use-events";
+import { Badge } from "@/components/ui/badge";
 
 const EventActions = ({ event }: { event: Event }) => {
   const { setEvent, setEditOpen, setPreviewOpen } = useEventDialog();
@@ -96,6 +97,7 @@ const EventTableHeader = () => {
         <TableHead>Sl. No</TableHead>
         <TableHead>Image</TableHead>
         <TableHead>Date</TableHead>
+        <TableHead>Status</TableHead>
         <TableHead>Title</TableHead>
         <TableHead>Subtitle</TableHead>
         <TableHead>Location</TableHead>
@@ -171,6 +173,13 @@ const EventTableBody = ({
             <img src={item.imageUrl} className="w-10 h-10 object-cover" />
           </TableCell>
           <TableCell>{formatDateTime(item.date, "PPPp")}</TableCell>
+          <TableCell>
+            {item.completed ? (
+              <Badge variant="secondary">Completed</Badge>
+            ) : (
+              <Badge variant="secondary">Ongoing</Badge>
+            )}
+          </TableCell>
           <TableCell>{item.title}</TableCell>
           <TableCell>{item.subtitle}</TableCell>
           <TableCell>{item.location}</TableCell>
@@ -178,7 +187,7 @@ const EventTableBody = ({
           <TableCell>{truncate(item.content, 30).truncated}</TableCell>
           <TableCell>{formatDateTime(item.$createdAt, "PPPp")}</TableCell>
           <TableCell>{formatDateTime(item.$updatedAt, "PPPp")}</TableCell>
-          <TableCell>{item.registration}</TableCell>
+          <TableCell>{item.completed ? "- completed -" : item.registration}</TableCell>
         </TableRow>
       ))}
     </TableBody>

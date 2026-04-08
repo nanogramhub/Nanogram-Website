@@ -5,6 +5,7 @@ import ViewMemberDialog from "@/components/routes/admin/about-us/preview-member"
 import AboutUsTable from "@/components/routes/admin/about-us/table";
 import AdminPagination from "@/components/routes/admin/pagination";
 import SearchInput from "@/components/shared/default/search-input";
+import { Separator } from "@/components/ui/separator";
 import { useGetAllTeamMembers } from "@/hooks/queries/use-nanogram";
 import { usePaginatedInfinitePagination } from "@/hooks/use-paginated-infinite-query";
 import { nanogramQueries } from "@/lib/query/query-options";
@@ -81,6 +82,7 @@ function RouteComponent() {
           pageSize={pageSize}
         />
       </MemberDialogContextProvider>
+      <Separator className="my-2" />
       <AdminPagination
         currentPage={currentPage}
         prevPage={prevPage}
