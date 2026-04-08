@@ -1,4 +1,4 @@
-import MemberForm from "@/components/forms/member-form";
+import NewsletterForm from "@/components/forms/newsletter-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,34 +10,34 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useUpdateMember } from "@/hooks/mutations/use-nanogram";
-import type { MemberFormValues } from "@/lib/validation";
-import type { Nanogram } from "@/types/schema";
+import { useUpdateNewsletter } from "@/hooks/mutations/use-newsletter";
+import type { NewsLetterFormValues } from "@/lib/validation";
+import type { Newsletter } from "@/types/schema";
 import { toast } from "sonner";
 
-const EditMemberDialog = ({
-  member,
+const EditNewsletterDialog = ({
+  newsletter,
   open,
   setOpen,
 }: {
-  member: Nanogram | null;
+  newsletter: Newsletter | null;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
-  const updateMember = useUpdateMember();
+  const updateNewsletter = useUpdateNewsletter();
 
-  function handleSubmit(values: MemberFormValues) {
-    if (!member) return;
-    updateMember.mutate(
+  function handleSubmit(values: NewsLetterFormValues) {
+    if (!newsletter) return;
+    updateNewsletter.mutate(
       {
         ...values,
-        $id: member.$id,
-        avatarId: member.avatarId,
+        $id: newsletter.$id,
+        fileId: newsletter.fileId,
       },
       {
         onSuccess: () => {
           setOpen(false);
-          toast.success("Member updated successfully");
+          toast.success("Newsletter updated successfully");
         },
         onError: (error) => {
           toast.error(error.message);
@@ -45,26 +45,26 @@ const EditMemberDialog = ({
       },
     );
   }
-  if (!member) return null;
+  if (!newsletter) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Member Actions</DialogTitle>
+          <DialogTitle>Newsletter Actions</DialogTitle>
           <DialogDescription>
-            Manage {member.name}'s information.
+            Manage this {newsletter.title}'s information.
           </DialogDescription>
           <ScrollArea className="max-h-[calc(100vh-120px)]">
-            <MemberForm member={member} onSubmit={handleSubmit} />
+            <NewsletterForm newsletter={newsletter} onSubmit={handleSubmit} />
             <DialogFooter>
               <DialogClose>Cancel</DialogClose>
               <Button
                 type="submit"
-                form="member-form"
-                disabled={updateMember.isPending}
+                form="newsletter-form"
+                disabled={updateNewsletter.isPending}
               >
-                Update
+                {updateNewsletter.isPending ? "Updating..." : "Update"}
               </Button>
             </DialogFooter>
           </ScrollArea>
@@ -74,4 +74,4 @@ const EditMemberDialog = ({
   );
 };
 
-export default EditMemberDialog;
+export default EditNewsletterDialog;

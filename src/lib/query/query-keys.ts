@@ -67,6 +67,9 @@ export const queryKeys = {
   },
   newsletters: {
     getNewsletters: ["newsletters"],
+    createNewsletter: ["newsletters", "create"],
+    updateNewsletter: ["newsletters", "update"],
+    deleteNewsletter: ["newsletters", "delete"],
   },
   messages: {
     getMessages: ["messages"],

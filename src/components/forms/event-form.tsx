@@ -1,7 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 
 import { eventFormSchema, type EventFormValues } from "@/lib/validation";
-import { useAuthStore } from "@/store/use-auth-store";
 import { type Event } from "@/types/schema";
 
 import ImageUploader from "../shared/default/image-uploader";
@@ -23,8 +22,6 @@ interface EventFormProps {
 }
 
 const EventForm = ({ event, onSubmit }: EventFormProps) => {
-  const currentUser = useAuthStore((state) => state.currentUser);
-
   const form = useForm({
     defaultValues: {
       title: event?.title || "",
@@ -44,8 +41,6 @@ const EventForm = ({ event, onSubmit }: EventFormProps) => {
       onSubmit(value);
     },
   });
-
-  if (!currentUser) return null;
 
   return (
     <form

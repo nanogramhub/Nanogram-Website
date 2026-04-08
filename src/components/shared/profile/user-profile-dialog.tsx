@@ -20,6 +20,7 @@ import DeleteAccount from "./delete-account";
 import UserPrefs from "./user-prefs";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from "@tanstack/react-router";
 
 interface UserProfileProps {
   open: boolean;
@@ -28,6 +29,7 @@ interface UserProfileProps {
 
 const UserProfileDialog = ({ open, setOpen }: UserProfileProps) => {
   const currentUser = useAuthStore((s) => s.currentUser);
+  const isAdmin = useAuthStore((s) => s.isAdmin);
   const logout = useAuthStore((s) => s.logout);
   const isMobile = useIsMobile();
 
@@ -77,7 +79,7 @@ const UserProfileDialog = ({ open, setOpen }: UserProfileProps) => {
                 <Separator />
                 <UserIdentities open={open} />
                 <Separator />
-                <div className="py-2">
+                <div className="py-2 flex gap-2">
                   <Button
                     variant="destructive"
                     className="ml-auto lg:ml-0 gap-1.5 shrink-0"
@@ -85,6 +87,16 @@ const UserProfileDialog = ({ open, setOpen }: UserProfileProps) => {
                   >
                     <LogOut /> Logout
                   </Button>
+                  {isAdmin && (
+                    <Button
+                      variant="link"
+                      render={(props) => (
+                        <Link to="/admin" {...props}>
+                          Admin
+                        </Link>
+                      )}
+                    />
+                  )}
                 </div>
               </ScrollArea>
             </TabsContent>

@@ -53,7 +53,7 @@ const EditEventDialog = ({
         <DialogHeader>
           <DialogTitle>Event Actions</DialogTitle>
           <DialogDescription>
-            Manage this {event.title}'s information.
+            Manage {event.title}'s information.
           </DialogDescription>
           <ScrollArea className="max-h-[calc(100vh-120px)]">
             <EventForm event={event} onSubmit={handleSubmit} />

@@ -1,7 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 
 import { memberFormSchema, type MemberFormValues } from "@/lib/validation";
-import { useAuthStore } from "@/store/use-auth-store";
 import { type Nanogram } from "@/types/schema";
 
 import ImageUploader from "../shared/default/image-uploader";
@@ -22,8 +21,6 @@ interface MemberFormProps {
 }
 
 const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
-  const currentUser = useAuthStore((state) => state.currentUser);
-
   const form = useForm({
     defaultValues: {
       name: member?.name || "",
@@ -43,8 +40,6 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
       onSubmit(value);
     },
   });
-
-  if (!currentUser) return null;
 
   return (
     <form

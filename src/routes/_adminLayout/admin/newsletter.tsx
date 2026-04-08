@@ -1,23 +1,23 @@
-import AddEventButton from "@/components/routes/admin/events/add-event-button";
-import { EventDialogContextProvider } from "@/components/routes/admin/events/context/event-dialog-context";
-import EditEventDialog from "@/components/routes/admin/events/edit-event-dialog";
-import ViewEventDialog from "@/components/routes/admin/events/preview-event";
-import EventTable from "@/components/routes/admin/events/table";
+import AddNewsletterButton from "@/components/routes/admin/newsletter/add-newsletter";
+import { NewsletterDialogContextProvider } from "@/components/routes/admin/newsletter/context/newsletter-dialog-context";
+import EditNewsletterDialog from "@/components/routes/admin/newsletter/edit-newsletter-dialog";
+import ViewNewsletterDialog from "@/components/routes/admin/newsletter/preview-newsletter";
+import NewsletterTable from "@/components/routes/admin/newsletter/table";
 import AdminPagination from "@/components/routes/admin/pagination";
 import { Separator } from "@/components/ui/separator";
-import { useGetEvents } from "@/hooks/queries/use-events";
+import { useNewsletters } from "@/hooks/queries/use-newsletters";
 import { usePaginatedInfinitePagination } from "@/hooks/use-paginated-infinite-query";
-import { eventsQueries } from "@/lib/query/query-options";
+import { newslettersQueries } from "@/lib/query/query-options";
 import { queryClient } from "@/router";
-import type { Event } from "@/types/schema";
+import type { Newsletter } from "@/types/schema";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_adminLayout/admin/events")({
+export const Route = createFileRoute("/_adminLayout/admin/newsletter")({
   component: RouteComponent,
   loader: () => {
     queryClient.prefetchInfiniteQuery(
-      eventsQueries.getEvents({
+      newslettersQueries.getNewsletters({
         enabled: true,
         limit: 8,
       }),
@@ -29,9 +29,8 @@ function RouteComponent() {
   const [pageSize, setPageSize] = useState(8);
   const [editOpen, setEditOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [event, setEvent] = useState<Event | null>(null);
-
-  const teamResult = useGetEvents({
+  const [newsletter, setNewsletter] = useState<Newsletter | null>(null);
+  const newsletterResult = useNewsletters({
     enabled: true,
     limit: pageSize,
   });
@@ -43,34 +42,35 @@ function RouteComponent() {
     currentPage,
     total,
     isFetchingNextPage,
-  } = usePaginatedInfinitePagination(teamResult, pageSize);
+  } = usePaginatedInfinitePagination(newsletterResult, pageSize);
+
   return (
     <div className="lg:px-10 px-2">
       <div className="flex justify-between items-end-safe mb-2">
         <h2>
-          All Events
+          All Members
           <span className="text-xs text-muted-foreground ml-2">[{total}]</span>
         </h2>
         <div className="flex gap-2">
-          <AddEventButton />
+          <AddNewsletterButton />
         </div>
       </div>
-      <EventDialogContextProvider
+      <NewsletterDialogContextProvider
         value={{
           editOpen,
           setEditOpen,
           previewOpen,
           setPreviewOpen,
-          event,
-          setEvent,
+          newsletter,
+          setNewsletter,
         }}
       >
-        <EventTable
+        <NewsletterTable
           items={items}
           isFetchingNextPage={isFetchingNextPage}
           pageSize={pageSize}
         />
-      </EventDialogContextProvider>
+      </NewsletterDialogContextProvider>
       <Separator className="my-2" />
       <AdminPagination
         currentPage={currentPage}
@@ -80,11 +80,15 @@ function RouteComponent() {
         pageSize={pageSize}
         setPageSize={setPageSize}
       />
-      <EditEventDialog open={editOpen} setOpen={setEditOpen} event={event} />
-      <ViewEventDialog
+      <EditNewsletterDialog
+        open={editOpen}
+        setOpen={setEditOpen}
+        newsletter={newsletter}
+      />
+      <ViewNewsletterDialog
         open={previewOpen}
         setOpen={setPreviewOpen}
-        event={event}
+        newsletter={newsletter}
       />
     </div>
   );

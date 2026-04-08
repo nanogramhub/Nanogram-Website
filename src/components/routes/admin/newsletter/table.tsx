@@ -7,11 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDateTime, range, truncate } from "@/lib/utils";
-import type { Event } from "@/types/schema";
+import { formatDateTime, range } from "@/lib/utils";
+import type { Newsletter } from "@/types/schema";
 import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEventDialog } from "./context/use-admin-events";
+import { useNewsletterDialog } from "./context/use-admin-newsletter";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,22 +21,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 // import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
 import { toast } from "sonner";
-import { useDeleteEvent } from "@/hooks/mutations/use-events";
-import { Badge } from "@/components/ui/badge";
+import { useDeleteNewsletter } from "@/hooks/mutations/use-newsletter";
 
-const EventActions = ({ event }: { event: Event }) => {
-  const { setEvent, setEditOpen, setPreviewOpen } = useEventDialog();
-  const deleteEvent = useDeleteEvent();
+const NewsletterActions = ({ newsletter }: { newsletter: Newsletter }) => {
+  const { setNewsletter, setEditOpen, setPreviewOpen } = useNewsletterDialog();
+  const deleteEvent = useDeleteNewsletter();
 
   function handleDelete() {
     deleteEvent.mutate(
       {
-        id: event.$id,
-        imageId: event.imageId,
+        id: newsletter.$id,
+        fileId: newsletter.fileId,
       },
       {
         onSuccess: () => {
-          toast.success("Event deleted successfully");
+          toast.success("Newsletter deleted successfully");
         },
         onError: (error) => {
           toast.error(error.message);
@@ -61,7 +60,7 @@ const EventActions = ({ event }: { event: Event }) => {
           <DropdownMenuItem
             disabled={isDisabled}
             onClick={() => {
-              setEvent(event);
+              setNewsletter(newsletter);
               setEditOpen(true);
             }}
           >
@@ -70,7 +69,7 @@ const EventActions = ({ event }: { event: Event }) => {
           <DropdownMenuItem
             disabled={isDisabled}
             onClick={() => {
-              setEvent(event);
+              setNewsletter(newsletter);
               setPreviewOpen(true);
             }}
           >
@@ -89,29 +88,22 @@ const EventActions = ({ event }: { event: Event }) => {
   );
 };
 
-const EventTableHeader = () => {
+const NewsletterTableHeader = () => {
   return (
     <TableHeader>
       <TableRow>
         <TableHead> </TableHead>
         <TableHead>Sl. No</TableHead>
-        <TableHead>Image</TableHead>
-        <TableHead>Date</TableHead>
-        <TableHead>Status</TableHead>
+        <TableHead>File</TableHead>
         <TableHead>Title</TableHead>
-        <TableHead>Subtitle</TableHead>
-        <TableHead>Location</TableHead>
-        <TableHead>Description</TableHead>
-        <TableHead>Content</TableHead>
         <TableHead>Created At</TableHead>
         <TableHead>Updated At</TableHead>
-        <TableHead>Registration</TableHead>
       </TableRow>
     </TableHeader>
   );
 };
 
-const EventTableSkeleton = ({ pageSize }: { pageSize: number }) => {
+const NewsletterTableSkeleton = ({ pageSize }: { pageSize: number }) => {
   return (
     <TableBody>
       {range(pageSize).map((i) => (
@@ -123,27 +115,6 @@ const EventTableSkeleton = ({ pageSize }: { pageSize: number }) => {
             <Skeleton className="h-4 w-4" />
           </TableCell>
           <TableCell>
-            <Skeleton className="h-10 w-10" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-10" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-10" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-10" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-10" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-10" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-10" />
-          </TableCell>
-          <TableCell>
             <Skeleton className="h-4 w-10" />
           </TableCell>
           <TableCell>
@@ -161,66 +132,53 @@ const EventTableSkeleton = ({ pageSize }: { pageSize: number }) => {
   );
 };
 
-const EventTableBody = ({
+const NewsletterTableBody = ({
   items,
   pageSize,
   isFetchingNextPage,
 }: {
-  items: Event[];
+  items: Newsletter[];
   pageSize: number;
   isFetchingNextPage: boolean;
 }) => {
   if (isFetchingNextPage) {
-    return <EventTableSkeleton pageSize={pageSize} />;
+    return <NewsletterTableSkeleton pageSize={pageSize} />;
   }
   return (
     <TableBody>
       {items.map((item, index) => (
         <TableRow key={item.$id}>
           <TableCell>
-            <EventActions event={item} />
+            <NewsletterActions newsletter={item} />
           </TableCell>
           <TableCell>{index + 1}</TableCell>
           <TableCell>
-            <img src={item.imageUrl} className="w-10 h-10 object-cover" />
-          </TableCell>
-          <TableCell>{formatDateTime(item.date, "PPPp")}</TableCell>
-          <TableCell>
-            {item.completed ? (
-              <Badge variant="secondary">Completed</Badge>
-            ) : (
-              <Badge variant="secondary">Ongoing</Badge>
-            )}
+            <a href={item.fileUrl} target="_blank" className="underline">
+              {item.title}
+            </a>
           </TableCell>
           <TableCell>{item.title}</TableCell>
-          <TableCell>{item.subtitle}</TableCell>
-          <TableCell>{item.location}</TableCell>
-          <TableCell>{truncate(item.description, 30).truncated}</TableCell>
-          <TableCell>{truncate(item.content, 30).truncated}</TableCell>
           <TableCell>{formatDateTime(item.$createdAt, "PPPp")}</TableCell>
           <TableCell>{formatDateTime(item.$updatedAt, "PPPp")}</TableCell>
-          <TableCell>
-            {item.completed ? "- completed -" : item.registration}
-          </TableCell>
         </TableRow>
       ))}
     </TableBody>
   );
 };
 
-const EventTable = ({
+const NewsletterTable = ({
   items,
   pageSize,
   isFetchingNextPage,
 }: {
-  items: Event[];
+  items: Newsletter[];
   pageSize: number;
   isFetchingNextPage: boolean;
 }) => {
   return (
     <Table scrollarea="lg:w-[calc(100vw-80px)] w-[calc(100vw-16px)]">
-      <EventTableHeader />
-      <EventTableBody
+      <NewsletterTableHeader />
+      <NewsletterTableBody
         items={items}
         pageSize={pageSize}
         isFetchingNextPage={isFetchingNextPage}
@@ -229,4 +187,4 @@ const EventTable = ({
   );
 };
 
-export default EventTable;
+export default NewsletterTable;

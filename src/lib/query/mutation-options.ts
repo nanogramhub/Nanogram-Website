@@ -13,14 +13,21 @@ import {
   updateName,
   updateUsername,
 } from "../auth";
-import type { EventFormValues, MemberFormValues } from "../validation";
+import type {
+  EventFormValues,
+  MemberFormValues,
+  NewsLetterFormValues,
+} from "../validation";
 import {
   createEvent,
   createMember,
+  createNewsletter,
   deleteEvent,
   deleteMember,
+  deleteNewsletter,
   updateEvent,
   updateMember,
+  updateNewsletter,
 } from "../public";
 
 // AUTH AND USER INFO MUTATION
@@ -760,6 +767,54 @@ export const getDeleteEventMutationOptions = () => {
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.events.getNextEvent,
+      });
+    },
+  });
+};
+
+// NEWSLETTER MUTATION
+export const getCreateNewsletterMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.newsletters.createNewsletter,
+    mutationFn: async (data: NewsLetterFormValues) => {
+      const response = await createNewsletter(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.newsletters.getNewsletters,
+      });
+    },
+  });
+};
+
+export const getUpdateNewsletterMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.newsletters.updateNewsletter,
+    mutationFn: async (
+      data: NewsLetterFormValues & { $id: string; fileId?: string },
+    ) => {
+      const response = await updateNewsletter(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.newsletters.getNewsletters,
+      });
+    },
+  });
+};
+
+export const getDeleteNewsletterMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.newsletters.deleteNewsletter,
+    mutationFn: async (data: { id: string; fileId?: string }) => {
+      const response = await deleteNewsletter(data.id, data.fileId);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.newsletters.getNewsletters,
       });
     },
   });

@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestRouteImport } from './routes/test'
 import { Route as PrivateLayoutRouteImport } from './routes/_privateLayout'
 import { Route as DefaultLayoutRouteImport } from './routes/_defaultLayout'
 import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
@@ -36,14 +35,10 @@ import { Route as PrivateLayoutPostsPostIdRouteImport } from './routes/_privateL
 import { Route as PrivateLayoutNewsletterNewsIdRouteImport } from './routes/_privateLayout/newsletter/$newsId'
 import { Route as PrivateLayoutMessagesUserIdRouteImport } from './routes/_privateLayout/messages/$userId'
 import { Route as PrivateLayoutEditPostPostIdRouteImport } from './routes/_privateLayout/edit-post/$postId'
+import { Route as AdminLayoutAdminNewsletterRouteImport } from './routes/_adminLayout/admin/newsletter'
 import { Route as AdminLayoutAdminEventsRouteImport } from './routes/_adminLayout/admin/events'
 import { Route as AdminLayoutAdminAboutUsRouteImport } from './routes/_adminLayout/admin/about-us'
 
-const TestRoute = TestRouteImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivateLayoutRoute = PrivateLayoutRouteImport.update({
   id: '/_privateLayout',
   getParentRoute: () => rootRouteImport,
@@ -177,6 +172,12 @@ const PrivateLayoutEditPostPostIdRoute =
     path: '/edit-post/$postId',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
+const AdminLayoutAdminNewsletterRoute =
+  AdminLayoutAdminNewsletterRouteImport.update({
+    id: '/admin/newsletter',
+    path: '/admin/newsletter',
+    getParentRoute: () => AdminLayoutRoute,
+  } as any)
 const AdminLayoutAdminEventsRoute = AdminLayoutAdminEventsRouteImport.update({
   id: '/admin/events',
   path: '/admin/events',
@@ -190,7 +191,6 @@ const AdminLayoutAdminAboutUsRoute = AdminLayoutAdminAboutUsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof DefaultLayoutIndexRoute
-  '/test': typeof TestRoute
   '/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/login': typeof AuthLayoutLoginRoute
   '/reset-password': typeof AuthLayoutResetPasswordRoute
@@ -206,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/admin/events': typeof AdminLayoutAdminEventsRoute
+  '/admin/newsletter': typeof AdminLayoutAdminNewsletterRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -217,7 +218,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof DefaultLayoutIndexRoute
-  '/test': typeof TestRoute
   '/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/login': typeof AuthLayoutLoginRoute
   '/reset-password': typeof AuthLayoutResetPasswordRoute
@@ -233,6 +233,7 @@ export interface FileRoutesByTo {
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/admin/events': typeof AdminLayoutAdminEventsRoute
+  '/admin/newsletter': typeof AdminLayoutAdminNewsletterRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -248,7 +249,6 @@ export interface FileRoutesById {
   '/_authLayout': typeof AuthLayoutRouteWithChildren
   '/_defaultLayout': typeof DefaultLayoutRouteWithChildren
   '/_privateLayout': typeof PrivateLayoutRouteWithChildren
-  '/test': typeof TestRoute
   '/_authLayout/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/_authLayout/login': typeof AuthLayoutLoginRoute
   '/_authLayout/reset-password': typeof AuthLayoutResetPasswordRoute
@@ -265,6 +265,7 @@ export interface FileRoutesById {
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
   '/_adminLayout/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/_adminLayout/admin/events': typeof AdminLayoutAdminEventsRoute
+  '/_adminLayout/admin/newsletter': typeof AdminLayoutAdminNewsletterRoute
   '/_privateLayout/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/_privateLayout/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/_privateLayout/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -278,7 +279,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/test'
     | '/forgot-password'
     | '/login'
     | '/reset-password'
@@ -294,6 +294,7 @@ export interface FileRouteTypes {
     | '/saved-posts'
     | '/admin/about-us'
     | '/admin/events'
+    | '/admin/newsletter'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
@@ -305,7 +306,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/test'
     | '/forgot-password'
     | '/login'
     | '/reset-password'
@@ -321,6 +321,7 @@ export interface FileRouteTypes {
     | '/saved-posts'
     | '/admin/about-us'
     | '/admin/events'
+    | '/admin/newsletter'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
@@ -335,7 +336,6 @@ export interface FileRouteTypes {
     | '/_authLayout'
     | '/_defaultLayout'
     | '/_privateLayout'
-    | '/test'
     | '/_authLayout/forgot-password'
     | '/_authLayout/login'
     | '/_authLayout/reset-password'
@@ -352,6 +352,7 @@ export interface FileRouteTypes {
     | '/_defaultLayout/'
     | '/_adminLayout/admin/about-us'
     | '/_adminLayout/admin/events'
+    | '/_adminLayout/admin/newsletter'
     | '/_privateLayout/edit-post/$postId'
     | '/_privateLayout/messages/$userId'
     | '/_privateLayout/newsletter/$newsId'
@@ -367,18 +368,10 @@ export interface RootRouteChildren {
   AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
   DefaultLayoutRoute: typeof DefaultLayoutRouteWithChildren
   PrivateLayoutRoute: typeof PrivateLayoutRouteWithChildren
-  TestRoute: typeof TestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test': {
-      id: '/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_privateLayout': {
       id: '/_privateLayout'
       path: ''
@@ -561,6 +554,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateLayoutEditPostPostIdRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
+    '/_adminLayout/admin/newsletter': {
+      id: '/_adminLayout/admin/newsletter'
+      path: '/admin/newsletter'
+      fullPath: '/admin/newsletter'
+      preLoaderRoute: typeof AdminLayoutAdminNewsletterRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
     '/_adminLayout/admin/events': {
       id: '/_adminLayout/admin/events'
       path: '/admin/events'
@@ -581,12 +581,14 @@ declare module '@tanstack/react-router' {
 interface AdminLayoutRouteChildren {
   AdminLayoutAdminAboutUsRoute: typeof AdminLayoutAdminAboutUsRoute
   AdminLayoutAdminEventsRoute: typeof AdminLayoutAdminEventsRoute
+  AdminLayoutAdminNewsletterRoute: typeof AdminLayoutAdminNewsletterRoute
   AdminLayoutAdminIndexRoute: typeof AdminLayoutAdminIndexRoute
 }
 
 const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutAdminAboutUsRoute: AdminLayoutAdminAboutUsRoute,
   AdminLayoutAdminEventsRoute: AdminLayoutAdminEventsRoute,
+  AdminLayoutAdminNewsletterRoute: AdminLayoutAdminNewsletterRoute,
   AdminLayoutAdminIndexRoute: AdminLayoutAdminIndexRoute,
 }
 
@@ -671,7 +673,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLayoutRoute: AuthLayoutRouteWithChildren,
   DefaultLayoutRoute: DefaultLayoutRouteWithChildren,
   PrivateLayoutRoute: PrivateLayoutRouteWithChildren,
-  TestRoute: TestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

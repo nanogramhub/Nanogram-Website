@@ -1,6 +1,10 @@
 import type { Models } from "appwrite";
 import { api } from "../appwrite/api";
-import type { EventFormValues, MemberFormValues } from "../validation";
+import type {
+  EventFormValues,
+  MemberFormValues,
+  NewsLetterFormValues,
+} from "../validation";
 
 function isFile(value: unknown): value is File {
   return value instanceof File;
@@ -168,6 +172,73 @@ export async function deleteEvent(id: string, imageId?: string) {
     }
   } catch (error) {
     console.error("Error deleting event:", error);
+    throw error;
+  }
+}
+
+export async function createNewsletter(data: NewsLetterFormValues) {
+  if (data.file && isFile(data.file)) {
+    const file = await api.storage.uploadFile(data.file);
+    try {
+      const newsletter = await api.newsletters.createNewsletter({
+        title: data.title,
+        fileId: file.$id,
+        fileUrl: api.storage.getFileUrl(file.$id),
+      });
+      return newsletter;
+    } catch (error) {
+      console.error("Error creating newsletter:", error);
+      await api.storage.deleteFile(file.$id);
+      throw error;
+    }
+  }
+  throw new Error("File is required");
+}
+
+export async function updateNewsletter(
+  data: NewsLetterFormValues & { $id: string; fileId?: string },
+) {
+  const isNewFile = data.file && isFile(data.file);
+  if (isNewFile && !data.fileId) {
+    throw new Error("File ID is required");
+  }
+  let storageResponse: Models.File | undefined;
+  try {
+    if (data.file && isFile(data.file)) {
+      storageResponse = await api.storage.uploadFile(data.file);
+    }
+    const updateData: Parameters<typeof api.newsletters.updateNewsletter>[1] = {
+      title: data.title,
+      ...(storageResponse && {
+        fileId: storageResponse.$id,
+        fileUrl: api.storage.getFileUrl(storageResponse.$id),
+      }),
+    };
+    const newsletter = await api.newsletters.updateNewsletter(
+      data.$id,
+      updateData,
+    );
+    if (storageResponse && data.fileId) {
+      await api.storage.deleteFile(data.fileId);
+    }
+    return newsletter;
+  } catch (error) {
+    console.error("Error updating newsletter:", error);
+    if (storageResponse) {
+      await api.storage.deleteFile(storageResponse.$id);
+    }
+    throw error;
+  }
+}
+
+export async function deleteNewsletter(id: string, fileId?: string) {
+  try {
+    await api.newsletters.deleteNewsletter(id);
+    if (fileId) {
+      await api.storage.deleteFile(fileId);
+    }
+  } catch (error) {
+    console.error("Error deleting newsletter:", error);
     throw error;
   }
 }

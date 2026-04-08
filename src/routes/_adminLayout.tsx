@@ -76,7 +76,7 @@ function RouteComponent() {
           </Button>
         </div>
       </header>
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 h-dvh flex-col">
         <Outlet />
       </div>
     </>

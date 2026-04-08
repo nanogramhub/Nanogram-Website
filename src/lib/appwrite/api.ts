@@ -356,7 +356,10 @@ export const api = {
         });
       },
 
-      async updateEvent(rowId: string, data: Partial<Omit<Event, keyof AppwriteDocument>>) {
+      async updateEvent(
+        rowId: string,
+        data: Partial<Omit<Event, keyof AppwriteDocument>>,
+      ) {
         return await database.updateRow({
           databaseId: appwriteConfig.databaseId,
           tableId: appwriteConfig.eventsTableId,
@@ -740,6 +743,38 @@ export const api = {
         rowId: id,
       });
       return response;
+    },
+
+    async createNewsletter(
+      data: Partial<Omit<Newsletter, keyof AppwriteDocument>>,
+    ) {
+      const response = await database.createRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.newsTableId,
+        rowId: ID.unique(),
+        data,
+      });
+      return response;
+    },
+
+    async updateNewsletter(
+      rowId: string,
+      data: Partial<Omit<Newsletter, keyof AppwriteDocument>>,
+    ) {
+      return await database.updateRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.newsTableId,
+        rowId,
+        data,
+      });
+    },
+
+    async deleteNewsletter(rowId: string) {
+      return await database.deleteRow({
+        databaseId: appwriteConfig.databaseId,
+        tableId: appwriteConfig.newsTableId,
+        rowId,
+      });
     },
   },
 
