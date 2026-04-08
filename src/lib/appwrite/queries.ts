@@ -38,15 +38,21 @@ export const querySelector = {
     getAllTeamMemberQueries({
       cursorAfter,
       limit = 8,
+      search,
     }: {
       cursorAfter?: string;
       limit?: number;
+      search?: string;
     }) {
-      return [
+      const queries = [
         Query.orderAsc("priority"),
         ...querySelector.general.addCursorIfPresent(cursorAfter),
         Query.limit(limit),
       ];
+      if (search) {
+        queries.push(Query.search("name", search));
+      }
+      return queries;
     },
     getTestimonialQueries() {
       return [

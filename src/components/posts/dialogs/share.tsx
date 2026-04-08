@@ -18,15 +18,15 @@ import type { ContactUser } from "@/types/api";
 
 import {
   Facebook,
-  Linkedin,
+  LinkedIn,
   Mail,
   Reddit,
   Telegram,
-  Twitter,
+  X,
   Whatsapp,
-} from "../../icons/brands";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { Button } from "../../ui/button";
+} from "@/components/icons/brands";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -325,7 +325,7 @@ const ShareDialog = ({
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground transition-colors duration-300 shadow-sm group-hover:shadow-foreground/20">
-                  <Twitter className="w-5 h-5 text-foreground group-hover:text-background transition-colors duration-300" />
+                  <X className="w-5 h-5 text-foreground group-hover:text-background transition-colors duration-300" />
                 </div>
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   Twitter
@@ -349,7 +349,7 @@ const ShareDialog = ({
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-12 h-12 rounded-2xl bg-[#0A66C2]/10 flex items-center justify-center group-hover:bg-[#0A66C2] transition-colors duration-300 shadow-sm group-hover:shadow-[#0A66C2]/20">
-                  <Linkedin className="w-5 h-5 text-[#0A66C2] group-hover:text-white transition-colors duration-300" />
+                  <LinkedIn className="w-5 h-5 text-[#0A66C2] group-hover:text-white transition-colors duration-300" />
                 </div>
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   LinkedIn

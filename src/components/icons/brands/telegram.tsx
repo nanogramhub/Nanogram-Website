@@ -1,0 +1,32 @@
+import { cn } from "@/lib/utils";
+import type { SVGProps } from "react";
+
+const Telegram = ({ className, ...props }: SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 256 256"
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMidYMid"
+    className={cn("size-4", className)}
+    {...props}
+  >
+    <g strokeWidth={0} />
+    <g strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M128 0C57.307 0 0 57.307 0 128s57.307 128 128 128 128-57.307 128-128S198.693 0 128 0"
+      fill="#40b3e0"
+    />
+    <path
+      d="M190.283 73.63 167.42 188.899s-3.197 7.994-11.99 4.157l-52.758-40.448-19.184-9.272-32.294-10.872s-4.956-1.758-5.436-5.595 5.596-5.915 5.596-5.915l128.376-50.36s10.552-4.636 10.552 3.038"
+      fill="#fff"
+    />
+    <path
+      d="M98.618 187.604s-1.54-.145-3.46-6.22c-1.917-6.075-11.67-38.05-11.67-38.05l77.538-49.24s4.477-2.718 4.317 0c0 0 .799.48-1.6 2.718-2.397 2.239-60.91 54.836-60.91 54.836"
+      fill="#d2e5f1"
+    />
+    <path
+      d="m122.902 168.115-20.868 19.026s-1.632 1.238-3.416.462l3.996-35.34"
+      fill="#b5cfe4"
+    />
+  </svg>
+);
+export default Telegram;

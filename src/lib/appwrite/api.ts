@@ -15,6 +15,7 @@ import type {
   UserProfileData,
 } from "@/types/api";
 import type {
+  AppwriteDocument,
   AppwriteResponse,
   Event,
   Message,
@@ -218,10 +219,12 @@ export const api = {
 
       async getAllTeamMembers({
         cursorAfter,
-        limit = 9,
+        limit,
+        search,
       }: {
         cursorAfter?: string;
         limit?: number;
+        search?: string;
       }): Promise<AppwriteResponse<Nanogram>> {
         const response = await database.listRows<Nanogram>({
           databaseId: appwriteConfig.databaseId,
@@ -229,6 +232,7 @@ export const api = {
           queries: querySelector.nanogram.getAllTeamMemberQueries({
             cursorAfter,
             limit,
+            search,
           }),
         });
         return response;
@@ -268,6 +272,35 @@ export const api = {
           }),
         });
         return response;
+      },
+
+      async createMember(data: Omit<Nanogram, keyof AppwriteDocument>) {
+        return await database.createRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.nanogramsTableId,
+          rowId: ID.unique(),
+          data,
+        });
+      },
+
+      async updateMember(
+        rowId: string,
+        data: Partial<Omit<Nanogram, keyof AppwriteDocument>>,
+      ) {
+        return await database.updateRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.nanogramsTableId,
+          rowId,
+          data,
+        });
+      },
+
+      async deleteMember(rowId: string) {
+        return await database.deleteRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.nanogramsTableId,
+          rowId,
+        });
       },
     },
 

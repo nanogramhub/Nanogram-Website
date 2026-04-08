@@ -43,19 +43,25 @@ export const nanogramQueries = {
   getAllTeamMembers: ({
     cursorAfter,
     limit,
+    search,
     enabled,
   }: {
     cursorAfter?: string;
     limit?: number;
+    search?: string;
     enabled: boolean;
   }) => {
     return infiniteQueryOptions({
-      queryKey: [...queryKeys.nanogram.getAllTeamMembers, cursorAfter],
+      queryKey: [
+        ...queryKeys.nanogram.getAllTeamMembers,
+        { cursorAfter, limit, search },
+      ],
       initialPageParam: cursorAfter,
       queryFn: ({ pageParam }) =>
         api.public.nanogram.getAllTeamMembers({
           cursorAfter: pageParam,
           limit,
+          search,
         }),
       getNextPageParam: (lastPage) =>
         lastPage.rows.length === 0

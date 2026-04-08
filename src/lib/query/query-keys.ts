@@ -16,6 +16,9 @@ export const queryKeys = {
     getTestimonials: ["nanogram", "testimonial"],
     getCoreMembers: ["nanogram", "core"],
     getAluminiMembers: ["nanogram", "alumini"],
+    createMember: ["nanogram", "create"],
+    updateMember: ["nanogram", "update"],
+    deleteMember: ["nanogram", "delete"],
   },
   events: {
     getEvents: ["events"],

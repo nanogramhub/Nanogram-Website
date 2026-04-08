@@ -1,8 +1,7 @@
 import { api } from "@/lib/appwrite/api";
 
 import { Button } from "../ui/button";
-import { Google } from "../icons/google";
-import { Github } from "../icons/github";
+import {GitHub, Google} from "@/components/icons/brands"
 
 interface OAuthButtonProps {
   loading: boolean;
@@ -29,7 +28,7 @@ const OAuthButtons = ({ loading, redirect = "/" }: OAuthButtonProps) => {
         disabled={loading}
         onClick={() => api.auth.loginWithGithub(redirect)}
       >
-        <Github className="fill-white" />
+        <GitHub className="fill-white" />
         Continue with GitHub
       </Button>
     </div>

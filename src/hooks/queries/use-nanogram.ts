@@ -5,14 +5,16 @@ import { nanogramQueries } from "@/lib/query/query-options";
 export function useGetAllTeamMembers({
   cursorAfter,
   limit,
+  search,
   enabled,
 }: {
   cursorAfter?: string;
   limit?: number;
+  search?: string;
   enabled: boolean;
 }) {
   return useInfiniteQuery(
-    nanogramQueries.getAllTeamMembers({ cursorAfter, limit, enabled }),
+    nanogramQueries.getAllTeamMembers({ cursorAfter, limit, search, enabled }),
   );
 }
 

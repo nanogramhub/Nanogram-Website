@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import React from "react";
 
-import { Github, Instagram, Linkedin, Mail } from "@/components/icons/brands";
+import { GitHub, Instagram, LinkedIn, Mail } from "@/components/icons/brands";
 
 const FooterLink = ({
   to,
@@ -50,7 +50,7 @@ const Footer = () => {
             </ul>
             <ul className="flex items-center gap-8">
               <SocialMediaLink href="https://www.linkedin.com/company/nanogramhub/">
-                <Linkedin />
+                <LinkedIn />
               </SocialMediaLink>
               <SocialMediaLink href="https://www.instagram.com/nanogram_drait">
                 <Instagram />
@@ -59,7 +59,7 @@ const Footer = () => {
                 <Mail />
               </SocialMediaLink>
               <SocialMediaLink href="https://github.com/nanogramhub">
-                <Github />
+                <GitHub />
               </SocialMediaLink>
             </ul>
           </div>

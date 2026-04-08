@@ -13,6 +13,8 @@ import {
   updateName,
   updateUsername,
 } from "../auth";
+import type { MemberFormValues } from "../validation";
+import { createMember, deleteMember, updateMember } from "../public";
 
 // AUTH AND USER INFO MUTATION
 export const getDeleteSessionMutationOptions = () => {
@@ -610,6 +612,73 @@ export const getDeleteMessageMutationOptions = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.messages.getMessages,
+      });
+    },
+  });
+};
+
+// PUBLIC MUTATIONS
+
+export const getCreateMemberMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.nanogram.createMember,
+    mutationFn: async (data: MemberFormValues) => {
+      const response = createMember(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getCoreMembers,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getAluminiMembers,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getAllTeamMembers,
+      });
+    },
+  });
+};
+
+export const getUpdateMemberMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.nanogram.updateMember,
+    mutationFn: async (
+      data: MemberFormValues & { $id: string; avatarId?: string },
+    ) => {
+      const response = updateMember(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getCoreMembers,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getAluminiMembers,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getAllTeamMembers,
+      });
+    },
+  });
+};
+
+export const getDeleteMemberMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.nanogram.deleteMember,
+    mutationFn: async (data: { id: string; imageId: string }) => {
+      const response = await deleteMember(data.id, data.imageId);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getCoreMembers,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getAluminiMembers,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.nanogram.getAllTeamMembers,
       });
     },
   });

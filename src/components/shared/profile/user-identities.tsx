@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Edit2, Mail } from "lucide-react";
 import { toast } from "sonner";
 
-import { Github } from "@/components/icons/github";
-import { Google } from "@/components/icons/google";
+import { GitHub, Google } from "@/components/icons/brands";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -144,7 +143,7 @@ const Identity = ({
       return (
         <div className="flex w-full items-center gap-3 rounded-md text-sm p-3 bg-background border">
           <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full">
-            <Github className="h-5 w-5" />
+            <GitHub className="h-5 w-5" />
           </div>
           <div className="flex flex-col">
             <span className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -186,7 +185,7 @@ const ConnectButton = ({ provider }: { provider: Provider }) => {
           onClick={handleConnect}
           className="flex w-full items-center gap-3 rounded-md border border-zinc-800 bg-zinc-900 p-3 text-sm font-medium text-white transition-all hover:bg-zinc-800 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
         >
-          <Github className="h-5 w-5" />
+          <GitHub className="h-5 w-5" />
           Connect GitHub Account
         </button>
       );

@@ -7,6 +7,7 @@ import { usePerformance } from "@/hooks/use-performance";
 import { useTheme } from "@/hooks/use-theme";
 import { api } from "@/lib/appwrite/api";
 import { useAuthStore } from "@/store/use-auth-store";
+import { SegmentedTabs } from "@/components/ui/segmented-tabs";
 
 const PrefItem = ({
   icon: Icon,
@@ -68,41 +69,16 @@ const UserPrefs = () => {
         title="Theme Mode"
         description="Choose between light, dark, or system theme"
       >
-        <div className="flex bg-muted p-1 rounded-lg gap-1 ring-1 ring-border">
-          <button
-            onClick={() => handleThemeChange("light")}
-            disabled={isLoading}
-            className={`p-1.5 rounded-md transition-all ${
-              theme === "light"
-                ? "bg-background shadow-sm text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Sun className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => handleThemeChange("dark")}
-            disabled={isLoading}
-            className={`p-1.5 rounded-md transition-all ${
-              theme === "dark"
-                ? "bg-background shadow-sm text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Moon className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => handleThemeChange("system")}
-            disabled={isLoading}
-            className={`p-1.5 rounded-md transition-all ${
-              theme === "system"
-                ? "bg-background shadow-sm text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Monitor className="h-4 w-4" />
-          </button>
-        </div>
+        <SegmentedTabs
+          value={theme}
+          disabled={isLoading}
+          onValueChange={handleThemeChange}
+          options={[
+            { value: "light", icon: Sun },
+            { value: "dark", icon: Moon },
+            { value: "system", icon: Monitor },
+          ]}
+        />
       </PrefItem>
 
       <PrefItem
