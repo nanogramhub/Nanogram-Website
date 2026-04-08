@@ -1,6 +1,5 @@
 import "@/styles/waterfall.css";
 
-import { useInView } from "react-intersection-observer";
 import Masonry from "react-masonry-css";
 
 import MouseImageTrail from "@/components/motion/mouse-image-trail";
@@ -9,9 +8,7 @@ import { images as galleryImages } from "@/constants";
 import { useIsMouseAvailable } from "@/hooks/use-is-mouse-available";
 
 const GalleryPage = () => {
-  // TODO: cloudinary integration
   const isMouseAvailable = useIsMouseAvailable();
-  const { ref, inView } = useInView();
   const images = [] as any[];
   const loading = false;
 
@@ -65,7 +62,7 @@ const GalleryPage = () => {
             {!loading && <Spinner />}
           </div>
         )}
-        <div ref={ref}>
+        <div>
           {loading && (
             <div className="flex w-full justify-center my-10">
               <Spinner />
