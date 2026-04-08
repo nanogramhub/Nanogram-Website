@@ -1,8 +1,8 @@
 import { useForm } from "@tanstack/react-form";
 
-import { memberFormSchema, type MemberFormValues } from "@/lib/validation";
+import { eventFormSchema, type EventFormValues } from "@/lib/validation";
 import { useAuthStore } from "@/store/use-auth-store";
-import { type Nanogram } from "@/types/schema";
+import { type Event } from "@/types/schema";
 
 import ImageUploader from "../shared/default/image-uploader";
 import {
@@ -14,30 +14,31 @@ import {
 } from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { SegmentedTabs } from "../ui/segmented-tabs";
+import { DateTimePicker } from "../ui/datetime-picker";
+import { Switch } from "../ui/switch";
 
-interface MemberFormProps {
-  member?: Nanogram;
-  onSubmit: (values: MemberFormValues) => void;
+interface EventFormProps {
+  event?: Event;
+  onSubmit: (values: EventFormValues) => void;
 }
 
-const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
+const EventForm = ({ event, onSubmit }: EventFormProps) => {
   const currentUser = useAuthStore((state) => state.currentUser);
 
   const form = useForm({
     defaultValues: {
-      name: member?.name || "",
-      role: member?.role || "",
-      core: member?.core ?? true,
-      priority: member?.priority || 0,
-      content: member?.content ? member.content : undefined,
-      avatar: member?.avatarUrl ? member.avatarUrl : undefined,
-      linkedin: member?.linkedin ? member.linkedin : undefined,
-      github: member?.github ? member.github : undefined,
-      instagram: member?.instagram ? member.instagram : undefined,
-    } as MemberFormValues,
+      title: event?.title || "",
+      subtitle: event?.subtitle || "",
+      description: event?.description || "",
+      content: event?.content || "",
+      completed: event?.completed || false,
+      date: event?.date || new Date().toISOString(),
+      location: event?.location || "",
+      registration: event?.registration ? event.registration : undefined,
+      image: event?.imageUrl || "",
+    } as EventFormValues,
     validators: {
-      onChange: memberFormSchema,
+      onChange: eventFormSchema,
     },
     onSubmit: ({ value }) => {
       onSubmit(value);
@@ -48,7 +49,7 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
 
   return (
     <form
-      id="member-form"
+      id="event-form"
       className="flex flex-col gap-3 w-full mx-auto text-justify py-5"
       onSubmit={(e) => {
         e.preventDefault();
@@ -59,19 +60,19 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
       <FieldSet>
         <FieldGroup>
           <form.Field
-            name="avatar"
+            name="image"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="avatar">Select Avatar</FieldLabel>
+                  <FieldLabel htmlFor="image">Select Image</FieldLabel>
                   <ImageUploader
                     onFileChange={(file) => field.handleChange(file)}
-                    initialFileUrl={member?.avatarUrl || ""}
+                    initialFileUrl={event?.imageUrl || ""}
                     enableImageCropping={true}
-                    cropAspectRatio={4 / 5}
+                    cropAspectRatio={16 / 9}
                     className="bg-card max-w-full"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -80,20 +81,20 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
             }}
           />
           <form.Field
-            name="name"
+            name="title"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <FieldLabel htmlFor="title">Title</FieldLabel>
                   <Input
                     id={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter member name"
+                    placeholder="Event title"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -101,20 +102,20 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
             }}
           />
           <form.Field
-            name="role"
+            name="subtitle"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="role">Role</FieldLabel>
+                  <FieldLabel htmlFor="subtitle">Subtitle</FieldLabel>
                   <Input
                     id={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter member role"
+                    placeholder="Event type"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -122,44 +123,20 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
             }}
           />
           <form.Field
-            name="core"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched &&
-                field.state.meta.errors.length > 0;
-              return (
-                <Field data-invalid={isInvalid} className="w-fit">
-                  <FieldLabel htmlFor="core">Status</FieldLabel>
-                  <SegmentedTabs
-                    id={field.name}
-                    options={[
-                      { value: false, label: "Alumini" },
-                      { value: true, label: "Core" },
-                    ]}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onValueChange={field.handleChange}
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          />
-          <form.Field
-            name="priority"
+            name="description"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="priority">Priority</FieldLabel>
+                  <FieldLabel htmlFor="description">Description</FieldLabel>
                   <Input
                     id={field.name}
-                    type="number"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(Number(e.target.value))}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Event description"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -185,7 +162,7 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Member Testimonial"
+                    placeholder="Explain the event"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -193,25 +170,18 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
             }}
           />
           <form.Field
-            name="linkedin"
+            name="completed"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="linkedin">
-                    LinkedIn{" "}
-                    <span className="text-muted-foreground text-xs">
-                      (optional)
-                    </span>
-                  </FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor="completed">Completed</FieldLabel>
+                  <Switch
                     id={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter member linkedin url"
+                    checked={field.state.value}
+                    onCheckedChange={field.handleChange}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -219,25 +189,23 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
             }}
           />
           <form.Field
-            name="github"
+            name="date"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="github">
-                    GitHub{" "}
-                    <span className="text-muted-foreground text-xs">
-                      (optional)
-                    </span>
-                  </FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor="date">Date & Time</FieldLabel>
+                  <DateTimePicker
                     id={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter member github url"
+                    value={new Date(field.state.value)}
+                    onChange={(e) =>
+                      field.handleChange(
+                        e ? e.toISOString() : new Date().toISOString(),
+                      )
+                    }
+                    placeholder="Event date and time"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -245,25 +213,43 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
             }}
           />
           <form.Field
-            name="instagram"
+            name="location"
             children={(field) => {
               const isInvalid =
                 field.state.meta.isTouched &&
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="instagram">
-                    Instagram{" "}
-                    <span className="text-muted-foreground text-xs">
-                      (optional)
-                    </span>
+                  <FieldLabel htmlFor="location">Location</FieldLabel>
+                  <Input
+                    id={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Event location"
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          />
+          <form.Field
+            name="registration"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched &&
+                field.state.meta.errors.length > 0;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor="registration">
+                    Registration Link
                   </FieldLabel>
                   <Input
                     id={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter member instagram url"
+                    placeholder="Event registration link"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -276,4 +262,4 @@ const MemberForm = ({ member, onSubmit }: MemberFormProps) => {
   );
 };
 
-export default MemberForm;
+export default EventForm;

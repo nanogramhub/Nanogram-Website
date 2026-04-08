@@ -346,6 +346,32 @@ export const api = {
 
         return events;
       },
+
+      async createEvent(data: Omit<Event, keyof AppwriteDocument>) {
+        return await database.createRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.eventsTableId,
+          rowId: ID.unique(),
+          data,
+        });
+      },
+
+      async updateEvent(rowId: string, data: Partial<Omit<Event, keyof AppwriteDocument>>) {
+        return await database.updateRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.eventsTableId,
+          rowId,
+          data,
+        });
+      },
+
+      async deleteEvent(rowId: string) {
+        return await database.deleteRow({
+          databaseId: appwriteConfig.databaseId,
+          tableId: appwriteConfig.eventsTableId,
+          rowId,
+        });
+      },
     },
   },
 

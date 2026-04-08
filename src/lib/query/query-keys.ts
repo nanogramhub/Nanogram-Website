@@ -25,6 +25,9 @@ export const queryKeys = {
     getNextEvent: ["events", "next"],
     getLatestCompletedEvent: ["events", "latest-completed"],
     getUpcomingEvents: ["events", "upcoming"],
+    createEvent: ["events", "create"],
+    updateEvent: ["events", "update"],
+    deleteEvent: ["events", "delete"],
   },
   users: {
     getUsers: ["users"],

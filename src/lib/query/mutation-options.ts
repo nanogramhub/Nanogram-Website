@@ -13,8 +13,15 @@ import {
   updateName,
   updateUsername,
 } from "../auth";
-import type { MemberFormValues } from "../validation";
-import { createMember, deleteMember, updateMember } from "../public";
+import type { EventFormValues, MemberFormValues } from "../validation";
+import {
+  createEvent,
+  createMember,
+  deleteEvent,
+  deleteMember,
+  updateEvent,
+  updateMember,
+} from "../public";
 
 // AUTH AND USER INFO MUTATION
 export const getDeleteSessionMutationOptions = () => {
@@ -679,6 +686,80 @@ export const getDeleteMemberMutationOptions = () => {
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.nanogram.getAllTeamMembers,
+      });
+    },
+  });
+};
+
+export const getCreateEventMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.events.createEvent,
+    mutationFn: async (data: EventFormValues) => {
+      const response = createEvent(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getUpcomingEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getLatestCompletedEvent,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getNextEvent,
+      });
+    },
+  });
+};
+
+export const getUpdateEventMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.events.updateEvent,
+    mutationFn: async (
+      data: EventFormValues & { $id: string; imageId?: string },
+    ) => {
+      const response = updateEvent(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getUpcomingEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getLatestCompletedEvent,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getNextEvent,
+      });
+    },
+  });
+};
+
+export const getDeleteEventMutationOptions = () => {
+  return mutationOptions({
+    mutationKey: queryKeys.events.deleteEvent,
+    mutationFn: async (data: { id: string; imageId: string }) => {
+      const response = await deleteEvent(data.id, data.imageId);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getUpcomingEvents,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getLatestCompletedEvent,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.events.getNextEvent,
       });
     },
   });

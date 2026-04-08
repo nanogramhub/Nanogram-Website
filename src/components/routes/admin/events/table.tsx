@@ -1,4 +1,3 @@
-import { GitHub, Instagram, LinkedIn } from "@/components/icons/brands";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -8,11 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDateTime, range } from "@/lib/utils";
-import type { Nanogram } from "@/types/schema";
+import { formatDateTime, range, truncate } from "@/lib/utils";
+import type { Event } from "@/types/schema";
 import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMemberDialog } from "./context/use-admin-about-us";
+import { useEventDialog } from "./context/use-admin-events";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,22 +19,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
+// import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
 import { toast } from "sonner";
+import { useDeleteEvent } from "@/hooks/mutations/use-events";
 
-const AboutUsActions = ({ member }: { member: Nanogram }) => {
-  const { setMember, setEditOpen, setPreviewOpen } = useMemberDialog();
-  const deleteMember = useDeleteMember();
+const EventActions = ({ event }: { event: Event }) => {
+  const { setEvent, setEditOpen, setPreviewOpen } = useEventDialog();
+  const deleteEvent = useDeleteEvent();
 
   function handleDelete() {
-    deleteMember.mutate(
+    deleteEvent.mutate(
       {
-        id: member.$id,
-        imageId: member.avatarId,
+        id: event.$id,
+        imageId: event.imageId,
       },
       {
         onSuccess: () => {
-          toast.success("Member deleted successfully");
+          toast.success("Event deleted successfully");
         },
         onError: (error) => {
           toast.error(error.message);
@@ -44,7 +44,7 @@ const AboutUsActions = ({ member }: { member: Nanogram }) => {
     );
   }
 
-  const isDisabled = deleteMember.isPending;
+  const isDisabled = deleteEvent.isPending;
 
   return (
     <DropdownMenu>
@@ -60,7 +60,7 @@ const AboutUsActions = ({ member }: { member: Nanogram }) => {
           <DropdownMenuItem
             disabled={isDisabled}
             onClick={() => {
-              setMember(member);
+              setEvent(event);
               setEditOpen(true);
             }}
           >
@@ -69,7 +69,7 @@ const AboutUsActions = ({ member }: { member: Nanogram }) => {
           <DropdownMenuItem
             disabled={isDisabled}
             onClick={() => {
-              setMember(member);
+              setEvent(event);
               setPreviewOpen(true);
             }}
           >
@@ -88,25 +88,28 @@ const AboutUsActions = ({ member }: { member: Nanogram }) => {
   );
 };
 
-const AboutUsTableHeader = () => {
+const EventTableHeader = () => {
   return (
     <TableHeader>
       <TableRow>
         <TableHead> </TableHead>
         <TableHead>Sl. No</TableHead>
         <TableHead>Image</TableHead>
-        <TableHead>Name</TableHead>
-        <TableHead>Role</TableHead>
-        <TableHead>Status</TableHead>
-        <TableHead>Socials</TableHead>
+        <TableHead>Date</TableHead>
+        <TableHead>Title</TableHead>
+        <TableHead>Subtitle</TableHead>
+        <TableHead>Location</TableHead>
+        <TableHead>Description</TableHead>
+        <TableHead>Content</TableHead>
         <TableHead>Created At</TableHead>
         <TableHead>Updated At</TableHead>
+        <TableHead>Registration</TableHead>
       </TableRow>
     </TableHeader>
   );
 };
 
-const AboutUsTableSkeleton = ({ pageSize }: { pageSize: number }) => {
+const EventTableSkeleton = ({ pageSize }: { pageSize: number }) => {
   return (
     <TableBody>
       {range(pageSize).map((i) => (
@@ -144,75 +147,57 @@ const AboutUsTableSkeleton = ({ pageSize }: { pageSize: number }) => {
   );
 };
 
-const AboutUsTableBody = ({
+const EventTableBody = ({
   items,
   pageSize,
   isFetchingNextPage,
 }: {
-  items: Nanogram[];
+  items: Event[];
   pageSize: number;
   isFetchingNextPage: boolean;
 }) => {
   if (isFetchingNextPage) {
-    return <AboutUsTableSkeleton pageSize={pageSize} />;
+    return <EventTableSkeleton pageSize={pageSize} />;
   }
   return (
     <TableBody>
-      {items.map((item) => (
+      {items.map((item, index) => (
         <TableRow key={item.$id}>
           <TableCell>
-            <AboutUsActions member={item} />
+            <EventActions event={item} />
           </TableCell>
-          <TableCell>{item.priority + 1}</TableCell>
+          <TableCell>{index + 1}</TableCell>
           <TableCell>
-            <img
-              src={item.avatarUrl}
-              className="w-10 h-10 rounded-full object-cover"
-            />
+            <img src={item.imageUrl} className="w-10 h-10 object-cover" />
           </TableCell>
-          <TableCell>{item.name}</TableCell>
-          <TableCell>{item.role}</TableCell>
-          <TableCell>{item.core ? "Core" : "Alumini"}</TableCell>
-          <TableCell>
-            <span className="flex gap-1">
-              {item.github && (
-                <a href={item.github}>
-                  <GitHub className="dark:fill-white" />
-                </a>
-              )}
-              {item.instagram && (
-                <a href={item.instagram}>
-                  <Instagram />
-                </a>
-              )}
-              {item.linkedin && (
-                <a href={item.linkedin}>
-                  <LinkedIn />
-                </a>
-              )}
-            </span>
-          </TableCell>
+          <TableCell>{formatDateTime(item.date, "PPPp")}</TableCell>
+          <TableCell>{item.title}</TableCell>
+          <TableCell>{item.subtitle}</TableCell>
+          <TableCell>{item.location}</TableCell>
+          <TableCell>{truncate(item.description, 30).truncated}</TableCell>
+          <TableCell>{truncate(item.content, 30).truncated}</TableCell>
           <TableCell>{formatDateTime(item.$createdAt, "PPPp")}</TableCell>
           <TableCell>{formatDateTime(item.$updatedAt, "PPPp")}</TableCell>
+          <TableCell>{item.registration}</TableCell>
         </TableRow>
       ))}
     </TableBody>
   );
 };
 
-const AboutUsTable = ({
+const EventTable = ({
   items,
   pageSize,
   isFetchingNextPage,
 }: {
-  items: Nanogram[];
+  items: Event[];
   pageSize: number;
   isFetchingNextPage: boolean;
 }) => {
   return (
-    <Table>
-      <AboutUsTableHeader />
-      <AboutUsTableBody
+    <Table scrollarea="lg:w-[calc(100vw-80px)] w-[calc(100vw-16px)]">
+      <EventTableHeader />
+      <EventTableBody
         items={items}
         pageSize={pageSize}
         isFetchingNextPage={isFetchingNextPage}
@@ -221,4 +206,4 @@ const AboutUsTable = ({
   );
 };
 
-export default AboutUsTable;
+export default EventTable;

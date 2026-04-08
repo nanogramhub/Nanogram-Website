@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { MemberDialogContext } from "./edit-member-context";
+import { MemberDialogContext } from "./member-dialog-context";
 
 export const useMemberDialog = () => {
   const context = useContext(MemberDialogContext);

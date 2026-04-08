@@ -50,7 +50,11 @@ const Navbar = () => {
               <PerformanceToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
               <ModeToggle className="bg-primary aria-pressed:bg-black/20 text-primary-foreground hover:bg-black/20 hover:text-primary-foreground" />
               {currentUser ? (
-                <Button size="icon-lg" onClick={() => setOpen(!open)}>
+                <Button
+                  size="icon-lg"
+                  className="rounded-full"
+                  onClick={() => setOpen(!open)}
+                >
                   <UserAvatar
                     name={currentUser.name}
                     imageUrl={currentUser.imageUrl}

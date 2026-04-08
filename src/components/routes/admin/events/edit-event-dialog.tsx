@@ -1,4 +1,4 @@
-import MemberForm from "@/components/forms/member-form";
+import EventForm from "@/components/forms/event-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,34 +10,34 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useUpdateMember } from "@/hooks/mutations/use-nanogram";
-import type { MemberFormValues } from "@/lib/validation";
-import type { Nanogram } from "@/types/schema";
+import { useUpdateEvent } from "@/hooks/mutations/use-events";
+import type { EventFormValues } from "@/lib/validation";
+import type { Event } from "@/types/schema";
 import { toast } from "sonner";
 
-const EditMemberDialog = ({
-  member,
+const EditEventDialog = ({
+  event,
   open,
   setOpen,
 }: {
-  member: Nanogram | null;
+  event: Event | null;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
-  const updateMember = useUpdateMember();
+  const updateMember = useUpdateEvent();
 
-  function handleSubmit(values: MemberFormValues) {
-    if (!member) return;
+  function handleSubmit(values: EventFormValues) {
+    if (!event) return;
     updateMember.mutate(
       {
         ...values,
-        $id: member.$id,
-        avatarId: member.avatarId,
+        $id: event.$id,
+        imageId: event.imageId,
       },
       {
         onSuccess: () => {
           setOpen(false);
-          toast.success("Member updated successfully");
+          toast.success("Event updated successfully");
         },
         onError: (error) => {
           toast.error(error.message);
@@ -45,26 +45,26 @@ const EditMemberDialog = ({
       },
     );
   }
-  if (!member) return null;
+  if (!event) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Member Actions</DialogTitle>
+          <DialogTitle>Event Actions</DialogTitle>
           <DialogDescription>
-            Manage this {member.name}'s information.
+            Manage this {event.title}'s information.
           </DialogDescription>
           <ScrollArea className="max-h-[calc(100vh-120px)]">
-            <MemberForm member={member} onSubmit={handleSubmit} />
+            <EventForm event={event} onSubmit={handleSubmit} />
             <DialogFooter>
               <DialogClose>Cancel</DialogClose>
               <Button
                 type="submit"
-                form="member-form"
+                form="event-form"
                 disabled={updateMember.isPending}
               >
-                Update
+                {updateMember.isPending ? "Updating..." : "Update"}
               </Button>
             </DialogFooter>
           </ScrollArea>
@@ -74,4 +74,4 @@ const EditMemberDialog = ({
   );
 };
 
-export default EditMemberDialog;
+export default EditEventDialog;

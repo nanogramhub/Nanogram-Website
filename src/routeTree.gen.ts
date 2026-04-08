@@ -36,6 +36,7 @@ import { Route as PrivateLayoutPostsPostIdRouteImport } from './routes/_privateL
 import { Route as PrivateLayoutNewsletterNewsIdRouteImport } from './routes/_privateLayout/newsletter/$newsId'
 import { Route as PrivateLayoutMessagesUserIdRouteImport } from './routes/_privateLayout/messages/$userId'
 import { Route as PrivateLayoutEditPostPostIdRouteImport } from './routes/_privateLayout/edit-post/$postId'
+import { Route as AdminLayoutAdminEventsRouteImport } from './routes/_adminLayout/admin/events'
 import { Route as AdminLayoutAdminAboutUsRouteImport } from './routes/_adminLayout/admin/about-us'
 
 const TestRoute = TestRouteImport.update({
@@ -176,6 +177,11 @@ const PrivateLayoutEditPostPostIdRoute =
     path: '/edit-post/$postId',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
+const AdminLayoutAdminEventsRoute = AdminLayoutAdminEventsRouteImport.update({
+  id: '/admin/events',
+  path: '/admin/events',
+  getParentRoute: () => AdminLayoutRoute,
+} as any)
 const AdminLayoutAdminAboutUsRoute = AdminLayoutAdminAboutUsRouteImport.update({
   id: '/admin/about-us',
   path: '/admin/about-us',
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
+  '/admin/events': typeof AdminLayoutAdminEventsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -225,6 +232,7 @@ export interface FileRoutesByTo {
   '/liked-posts': typeof PrivateLayoutLikedPostsRoute
   '/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
+  '/admin/events': typeof AdminLayoutAdminEventsRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -256,6 +264,7 @@ export interface FileRoutesById {
   '/_privateLayout/saved-posts': typeof PrivateLayoutSavedPostsRoute
   '/_defaultLayout/': typeof DefaultLayoutIndexRoute
   '/_adminLayout/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
+  '/_adminLayout/admin/events': typeof AdminLayoutAdminEventsRoute
   '/_privateLayout/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/_privateLayout/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/_privateLayout/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
     | '/liked-posts'
     | '/saved-posts'
     | '/admin/about-us'
+    | '/admin/events'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/liked-posts'
     | '/saved-posts'
     | '/admin/about-us'
+    | '/admin/events'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/_privateLayout/saved-posts'
     | '/_defaultLayout/'
     | '/_adminLayout/admin/about-us'
+    | '/_adminLayout/admin/events'
     | '/_privateLayout/edit-post/$postId'
     | '/_privateLayout/messages/$userId'
     | '/_privateLayout/newsletter/$newsId'
@@ -549,6 +561,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateLayoutEditPostPostIdRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
+    '/_adminLayout/admin/events': {
+      id: '/_adminLayout/admin/events'
+      path: '/admin/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminLayoutAdminEventsRouteImport
+      parentRoute: typeof AdminLayoutRoute
+    }
     '/_adminLayout/admin/about-us': {
       id: '/_adminLayout/admin/about-us'
       path: '/admin/about-us'
@@ -561,11 +580,13 @@ declare module '@tanstack/react-router' {
 
 interface AdminLayoutRouteChildren {
   AdminLayoutAdminAboutUsRoute: typeof AdminLayoutAdminAboutUsRoute
+  AdminLayoutAdminEventsRoute: typeof AdminLayoutAdminEventsRoute
   AdminLayoutAdminIndexRoute: typeof AdminLayoutAdminIndexRoute
 }
 
 const AdminLayoutRouteChildren: AdminLayoutRouteChildren = {
   AdminLayoutAdminAboutUsRoute: AdminLayoutAdminAboutUsRoute,
+  AdminLayoutAdminEventsRoute: AdminLayoutAdminEventsRoute,
   AdminLayoutAdminIndexRoute: AdminLayoutAdminIndexRoute,
 }
 

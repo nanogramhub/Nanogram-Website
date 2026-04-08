@@ -1,5 +1,5 @@
 import AddMemberButton from "@/components/routes/admin/about-us/add-member-button";
-import { MemberDialogContextProvider } from "@/components/routes/admin/about-us/context/edit-member-context";
+import { MemberDialogContextProvider } from "@/components/routes/admin/about-us/context/member-dialog-context";
 import EditMemberDialog from "@/components/routes/admin/about-us/edit-member-dialog";
 import ViewMemberDialog from "@/components/routes/admin/about-us/preview-member";
 import AboutUsTable from "@/components/routes/admin/about-us/table";
@@ -54,10 +54,10 @@ function RouteComponent() {
   } = usePaginatedInfinitePagination(teamResult, pageSize);
 
   return (
-    <div className="lg:px-10 px-2 py-10">
+    <div className="lg:px-10 px-2">
       <div className="flex justify-between items-end-safe mb-2">
         <h2>
-          All Users
+          All Members
           <span className="text-xs text-muted-foreground ml-2">[{total}]</span>
         </h2>
         <div className="flex gap-2">

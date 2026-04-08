@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Ellipsis } from "lucide-react";
 import { useState } from "react";
 
-import { formatRelativeTime } from "@/lib/utils";
+import { formatRelativeTime, truncate } from "@/lib/utils";
 import type { PostCardData } from "@/types/api";
 
 import { linkifyReact } from "../shared/default/linkify-text";
@@ -23,11 +23,11 @@ export const PostCard = ({ post }: PostCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [expandedTags, setExpandedTags] = useState(false);
 
-  const isLong = post.caption.length > CAPTION_LIMIT;
-  const displayedCaption =
-    isLong && !expanded
-      ? post.caption.slice(0, CAPTION_LIMIT).trimEnd()
-      : post.caption;
+  const { isLong, truncated: displayedCaption } = truncate(
+    post.caption,
+    CAPTION_LIMIT,
+    expanded,
+  );
 
   const hasManyTags = post.tags.length > TAGS_LIMIT;
   const displayedTags =

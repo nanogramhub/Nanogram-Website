@@ -13,9 +13,9 @@ import {
   FieldLabel,
   FieldSet,
 } from "../ui/field";
-import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import { Textarea } from "../ui/textarea";
+import { TagsInput } from "../ui/tags-input";
 
 interface PostFormProps {
   post?: Post;
@@ -85,20 +85,14 @@ const PostForm = ({ post, onSubmit }: PostFormProps) => {
                 field.state.meta.errors.length > 0;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor="tags">Tags (comma separated)</FieldLabel>
-                  <Input
+                  <FieldLabel htmlFor="tags">Tags</FieldLabel>
+                  <TagsInput
                     id={field.name}
                     type="text"
-                    value={field.state.value.join(", ")}
+                    value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(e) =>
-                      field.handleChange(
-                        e.target.value
-                          ? e.target.value.split(",").map((tag) => tag.trim())
-                          : [],
-                      )
-                    }
-                    placeholder="tag1, tag2, tag3"
+                    onChange={field.handleChange}
+                    placeholder="Type a tag and press Enter to add"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>

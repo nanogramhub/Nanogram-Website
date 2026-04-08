@@ -1,3 +1,4 @@
+import EventShowcase from "@/components/shared/default/event-showcase";
 import { useGetLatestCompletedEvent } from "@/hooks/queries/use-events";
 
 const RecentEvent = () => {
@@ -7,24 +8,7 @@ const RecentEvent = () => {
 
   return (
     <section className="max-w-7xl mx-auto w-full flex flex-col gap-10">
-      <div className="w-full flex lg:flex-row flex-col justify-center gap-5 mt-5">
-        <div className="w-full flex justify-between flex-col p-10 gap-10">
-          <div className="flex flex-col w-full gap-5">
-            <h2 className="text-3xl font-bold text-base-content">
-              {event.title}
-            </h2>
-            <p className="text-lg text-base-content/70 p-2">{event.content}</p>
-          </div>
-        </div>
-        <div className="flex-center md:p-0 p-8 w-full">
-          <img
-            src={event.imageUrl || "/assets/images/placeholder.png"}
-            alt="Event Teaser"
-            className="rounded-xl"
-            loading="lazy"
-          />
-        </div>
-      </div>
+      <EventShowcase event={event} />
       <div className="flex md:flex-row flex-col w-full lg:gap-10 gap-2 justify-center">
         <div className="flex w-full justify-end items-end">
           <img

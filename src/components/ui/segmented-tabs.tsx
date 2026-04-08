@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+import { cva } from "class-variance-authority";
 import React from "react";
 
 type BaseValue = string | number | boolean;
@@ -19,6 +21,27 @@ type SegmentedTabsProps<T extends BaseValue> = {
   disabled?: boolean;
 } & React.ComponentProps<"div">;
 
+const segmentVariants = cva(
+  "flex items-center justify-center gap-1 rounded-md transition-all",
+  {
+    variants: {
+      variant: {
+        icon: "p-1.5",
+        text: "px-2 py-1.5",
+        hybrid: "px-2 py-1.5",
+      },
+      isActive: {
+        true: "bg-primary shadow-sm text-primary-foreground",
+        false: "text-muted-foreground hover:text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "hybrid",
+      isActive: false,
+    },
+  },
+);
+
 export function SegmentedTabs<T extends BaseValue>({
   options,
   value,
@@ -31,7 +54,10 @@ export function SegmentedTabs<T extends BaseValue>({
   return (
     <div
       {...divProps}
-      className={`flex bg-muted p-1 rounded-lg gap-1 ring-1 ring-border ${className ?? ""}`}
+      className={cn(
+        "flex w-fit bg-input/20 dark:bg-input/30 p-1 rounded-lg gap-1 border border-input",
+        className,
+      )}
     >
       {options.map((opt) => {
         const Icon = opt.icon;
@@ -46,13 +72,10 @@ export function SegmentedTabs<T extends BaseValue>({
               opt.buttonProps?.onClick?.(e);
               if (!disabled) onValueChange(opt.value);
             }}
-            className={`flex items-center justify-center gap-1 rounded-md transition-all ${
-              variant === "icon" ? "p-1.5" : "px-2 py-1.5"
-            } ${
-              isActive
-                ? "bg-background shadow-sm text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            } ${opt.buttonProps?.className ?? ""}`}
+            className={cn(
+              segmentVariants({ variant, isActive }),
+              opt.buttonProps?.className,
+            )}
             {...opt.buttonProps}
           >
             {(variant === "icon" || variant === "hybrid") && Icon && (

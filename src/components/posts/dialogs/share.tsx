@@ -1,6 +1,7 @@
 import {
   Check,
   Copy,
+  Ellipsis,
   Link,
   MessageCircleMore,
   Search,
@@ -312,9 +313,7 @@ const ShareDialog = ({
                 onClick={() => shareToPlatform("whatsapp")}
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#25D366]/10 flex items-center justify-center group-hover:bg-[#25D366] transition-colors duration-300 shadow-sm group-hover:shadow-[#25D366]/20">
-                  <Whatsapp className="w-6 h-6 text-[#25D366] group-hover:text-white transition-colors duration-300" />
-                </div>
+                <Whatsapp className="w-10 h-10" />
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   WhatsApp
                 </span>
@@ -324,9 +323,7 @@ const ShareDialog = ({
                 onClick={() => shareToPlatform("twitter")}
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground transition-colors duration-300 shadow-sm group-hover:shadow-foreground/20">
-                  <X className="w-5 h-5 text-foreground group-hover:text-background transition-colors duration-300" />
-                </div>
+                <X className="w-10 h-10 fill-foreground" />
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   Twitter
                 </span>
@@ -336,9 +333,7 @@ const ShareDialog = ({
                 onClick={() => shareToPlatform("facebook")}
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#1877F2]/10 flex items-center justify-center group-hover:bg-[#1877F2] transition-colors duration-300 shadow-sm group-hover:shadow-[#1877F2]/20">
-                  <Facebook className="w-6 h-6 text-[#1877F2] group-hover:text-white transition-colors duration-300" />
-                </div>
+                <Facebook className="w-10 h-10" />
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   Facebook
                 </span>
@@ -348,9 +343,7 @@ const ShareDialog = ({
                 onClick={() => shareToPlatform("linkedin")}
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#0A66C2]/10 flex items-center justify-center group-hover:bg-[#0A66C2] transition-colors duration-300 shadow-sm group-hover:shadow-[#0A66C2]/20">
-                  <LinkedIn className="w-5 h-5 text-[#0A66C2] group-hover:text-white transition-colors duration-300" />
-                </div>
+                <LinkedIn className="w-10 h-10" />
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   LinkedIn
                 </span>
@@ -360,9 +353,7 @@ const ShareDialog = ({
                 onClick={() => shareToPlatform("telegram")}
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#0088CC]/10 flex items-center justify-center group-hover:bg-[#0088CC] transition-colors duration-300 shadow-sm group-hover:shadow-[#0088CC]/20">
-                  <Telegram className="w-5 h-5 text-[#0088CC] group-hover:text-white transition-colors duration-300" />
-                </div>
+                <Telegram className="w-10 h-10" />
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   Telegram
                 </span>
@@ -372,9 +363,7 @@ const ShareDialog = ({
                 onClick={() => shareToPlatform("reddit")}
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#FF4500]/10 flex items-center justify-center group-hover:bg-[#FF4500] transition-colors duration-300 shadow-sm group-hover:shadow-[#FF4500]/20">
-                  <Reddit className="w-5 h-5 text-[#FF4500] group-hover:text-white transition-colors duration-300" />
-                </div>
+                <Reddit className="w-10 h-10" />
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   Reddit
                 </span>
@@ -384,9 +373,7 @@ const ShareDialog = ({
                 onClick={() => shareToPlatform("mail")}
                 className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors duration-300 shadow-sm group-hover:shadow-primary/20">
-                  <Mail className="w-5 h-5 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
-                </div>
+                <Mail className="w-10 h-10" />
                 <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                   Email
                 </span>
@@ -397,9 +384,7 @@ const ShareDialog = ({
                   onClick={handleNativeShare}
                   className="flex flex-col items-center gap-2 group transition-all duration-300 hover:-translate-y-1"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-secondary/50 flex items-center justify-center group-hover:bg-secondary transition-colors duration-300 shadow-sm">
-                    <Share2 className="w-5 h-5 text-foreground group-hover:text-foreground transition-colors duration-300" />
-                  </div>
+                  <Ellipsis strokeWidth={1.5} className="size-10" />
                   <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors uppercase tracking-wider">
                     More
                   </span>

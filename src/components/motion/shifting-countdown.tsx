@@ -14,25 +14,31 @@ const ShiftingCountdown = ({
   countdownFrom: Date;
 }) => {
   return (
-    <section className="max-w-7xl mx-auto bg-linear-to-br from-primary to-secondary p-4">
-      <div className="w-full flex justify-center items-center">
-        <h1 className="text-primary-content text-5xl mb-5 font-bold">
-          {title}
-        </h1>
-      </div>
-      <div className="mx-auto flex w-full items-center bg-white">
-        <CountdownItem unit="Day" text="days" countdownFrom={countdownFrom} />
-        <CountdownItem unit="Hour" text="hours" countdownFrom={countdownFrom} />
-        <CountdownItem
-          unit="Minute"
-          text="minutes"
-          countdownFrom={countdownFrom}
-        />
-        <CountdownItem
-          unit="Second"
-          text="seconds"
-          countdownFrom={countdownFrom}
-        />
+    <section className="w-full bg-linear-to-br from-primary to-background p-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="w-full flex justify-center items-center">
+          <h1 className="text-primary-content text-5xl mb-5 font-bold">
+            {title}
+          </h1>
+        </div>
+        <div className="mx-auto flex w-full items-center bg-background">
+          <CountdownItem unit="Day" text="days" countdownFrom={countdownFrom} />
+          <CountdownItem
+            unit="Hour"
+            text="hours"
+            countdownFrom={countdownFrom}
+          />
+          <CountdownItem
+            unit="Minute"
+            text="minutes"
+            countdownFrom={countdownFrom}
+          />
+          <CountdownItem
+            unit="Second"
+            text="seconds"
+            countdownFrom={countdownFrom}
+          />
+        </div>
       </div>
     </section>
   );

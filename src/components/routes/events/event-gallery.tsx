@@ -19,8 +19,8 @@ const EventGallery = () => {
     <section className="max-w-7xl mx-auto py-20" ref={containerRef}>
       <div className="mx-auto w-full max-w-7xl flex flex-col gap-12">
         <div className="w-full flex flex-col gap-6 text-center md:text-left">
-          <h1 className="text-4xl font-semibold">Event Gallery</h1>
-          <p className="font-normal text-base-content-neutral/70">
+          <h1 className="text-3xl font-semibold">Event Gallery</h1>
+          <p className="text-muted-foreground">
             A glimpse into our past events and activities. Experience the
             excitement and innovation at Nanogram - The Tech Hub.
           </p>

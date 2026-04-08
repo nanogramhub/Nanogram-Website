@@ -148,23 +148,32 @@ export const memberFormSchema = z.object({
 
 export type MemberFormValues = z.infer<typeof memberFormSchema>;
 
+export const eventFormSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  subtitle: z.string().min(1, "Subtitle is required"),
+  description: z.string().min(1, "Description is required"),
+  content: z.string().min(1, "Content is required"),
+  completed: z.boolean(),
+  registration: z
+    .url({ message: "Invalid Registration URL" })
+    .or(z.string().min(0))
+    .optional(),
+  date: z.string().min(1, "Date is required"),
+  location: z.string().min(1, "Location is required"),
+  image: z
+    .custom<File | string | null>()
+    .optional()
+    .refine((val) => {
+      if (val instanceof File) {
+        return val.size <= MAX_FILE_SIZE;
+      }
+      return true;
+    }, "File size must be less than 4MB"),
+});
+
+export type EventFormValues = z.infer<typeof eventFormSchema>;
+
 // export const newsLetterFormSchema = z.object({
 //   title: z.string().min(1, "Title is required"),
 //   file: z.any().nullable(),
-// });
-
-// export const eventFormSchema = z.object({
-//   title: z.string().min(1, "Title is required"),
-//   subtitle: z.string().min(1, "Subtitle is required"),
-//   description: z.string().min(1, "Description is required"),
-//   content: z.string().min(1, "Content is required"),
-//   completed: z.boolean(),
-//   registration: z
-//     .string()
-//     .url({ message: "Invalid Registration URL" })
-//     .or(z.string().min(0))
-//     .optional(),
-//   date: z.string().min(1, "Date is required"),
-//   location: z.string().min(1, "Location is required"),
-//   image: z.any().nullable(),
 // });
