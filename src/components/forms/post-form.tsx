@@ -14,8 +14,8 @@ import {
   FieldSet,
 } from "../ui/field";
 import { Slider } from "../ui/slider";
-import { Textarea } from "../ui/textarea";
 import { TagsInput } from "../ui/tags-input";
+import { Textarea } from "../ui/textarea";
 
 interface PostFormProps {
   post?: Post;

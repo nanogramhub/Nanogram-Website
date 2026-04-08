@@ -1,13 +1,15 @@
+import { Link } from "@tanstack/react-router";
+import { ChevronsUpDown } from "lucide-react";
+
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import UserAvatar from "../profile/user-avatar";
-import { useAuthStore } from "@/store/use-auth-store";
-import { ChevronsUpDown } from "lucide-react";
-import { Link } from "@tanstack/react-router";
 import { useProfile } from "@/hooks/use-profile";
+import { useAuthStore } from "@/store/use-auth-store";
+
+import UserAvatar from "../profile/user-avatar";
 
 const NavUser = () => {
   const currentUser = useAuthStore((s) => s.currentUser);

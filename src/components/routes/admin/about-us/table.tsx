@@ -1,4 +1,15 @@
+import { Ellipsis } from "lucide-react";
+import { toast } from "sonner";
+
 import { GitHub, Instagram, LinkedIn } from "@/components/icons/brands";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -8,20 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
 import { formatDateTime, range } from "@/lib/utils";
 import type { Nanogram } from "@/types/schema";
-import { Ellipsis } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { useMemberDialog } from "./context/use-admin-about-us";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
-import { toast } from "sonner";
 
 const AboutUsActions = ({ member }: { member: Nanogram }) => {
   const { setMember, setEditOpen, setPreviewOpen } = useMemberDialog();

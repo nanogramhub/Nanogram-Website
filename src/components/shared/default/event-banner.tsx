@@ -1,7 +1,8 @@
+import { CalendarDays, Pin } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { formatDateTime } from "@/lib/utils";
 import type { Event } from "@/types/schema";
-import { CalendarDays, Pin } from "lucide-react";
 
 const EventBanner = ({ event }: { event: Event }) => {
   return (
@@ -56,7 +57,7 @@ const EventBanner = ({ event }: { event: Event }) => {
             <Button
               nativeButton={false}
               size="lg"
-              className={"w-fit btn btn-primary"}
+              className="w-fit"
               render={(props) => (
                 <a
                   {...props}

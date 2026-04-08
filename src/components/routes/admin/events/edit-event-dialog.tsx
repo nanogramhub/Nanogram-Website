@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 import EventForm from "@/components/forms/event-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +15,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUpdateEvent } from "@/hooks/mutations/use-events";
 import type { EventFormValues } from "@/lib/validation";
 import type { Event } from "@/types/schema";
-import { toast } from "sonner";
 
 const EditEventDialog = ({
   event,

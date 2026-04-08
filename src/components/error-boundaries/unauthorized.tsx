@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { useNavigate, useRouter } from "@tanstack/react-router";
+
+import { Button } from "@/components/ui/button";
 
 const Unauthorized = () => {
   const navigate = useNavigate();

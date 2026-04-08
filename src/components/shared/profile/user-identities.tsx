@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Edit2, Mail } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { GitHub, Google } from "@/components/icons/brands";
@@ -160,11 +160,10 @@ const Identity = ({
 
 const ConnectButton = ({ provider }: { provider: Provider }) => {
   const handleConnect = async () => {
-    const currentPath = window.location.pathname;
     if (provider === "google") {
-      await api.auth.loginWithGoogle(currentPath);
+      await api.auth.loginWithGoogle();
     } else if (provider === "github") {
-      await api.auth.loginWithGithub(currentPath);
+      await api.auth.loginWithGithub();
     }
   };
 

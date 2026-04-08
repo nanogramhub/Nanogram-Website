@@ -1,3 +1,8 @@
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import EventForm from "@/components/forms/event-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,12 +15,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus } from "lucide-react";
-import type { EventFormValues } from "@/lib/validation";
-import { toast } from "sonner";
-import { useState } from "react";
-import EventForm from "@/components/forms/event-form";
 import { useCreateEvent } from "@/hooks/mutations/use-events";
+import type { EventFormValues } from "@/lib/validation";
 
 const AddEventButton = () => {
   const [open, setOpen] = useState(false);

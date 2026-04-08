@@ -1,3 +1,6 @@
+import { Link, useLocation } from "@tanstack/react-router";
+import * as React from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,8 +10,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { camelCaseToTitleCase } from "@/lib/utils";
-import { Link, useLocation } from "@tanstack/react-router";
-import * as React from "react";
 
 const PageBreadcrumb = () => {
   const { pathname } = useLocation();

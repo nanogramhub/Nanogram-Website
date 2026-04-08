@@ -86,7 +86,7 @@ function RouteComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <OAuthButtons loading={loading} redirect={redirectTo} />
+          <OAuthButtons loading={loading} />
 
           {error && (
             <div className="flex text-destructive text-left gap-2">

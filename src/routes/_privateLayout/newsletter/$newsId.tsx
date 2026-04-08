@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { ArrowLeft, TriangleAlert } from "lucide-react";
 
 import PDFViewer from "@/components/shared/news/pdf-viewer";
+import { Button } from "@/components/ui/button";
 import { useNewsletterById } from "@/hooks/queries/use-newsletters";
 import { newslettersQueries } from "@/lib/query/query-options";
 import { queryClient } from "@/router";
@@ -42,13 +43,15 @@ function RouteComponent() {
           The newsletter you are looking for might have been moved or doesn't
           exist anymore.
         </p>
-        <Link
-          to="/newsletter"
-          className="btn btn-outline btn-primary rounded-xl px-8"
-        >
-          <ArrowLeft size={18} />
-          Back to Newsletters
-        </Link>
+        <Button
+          variant="outline"
+          render={(props) => (
+            <Link to="/newsletter" {...props}>
+              <ArrowLeft size={18} />
+              Back to Newsletters
+            </Link>
+          )}
+        />
       </div>
     );
   }

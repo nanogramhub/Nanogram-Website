@@ -35,6 +35,7 @@ import { Route as PrivateLayoutPostsPostIdRouteImport } from './routes/_privateL
 import { Route as PrivateLayoutNewsletterNewsIdRouteImport } from './routes/_privateLayout/newsletter/$newsId'
 import { Route as PrivateLayoutMessagesUserIdRouteImport } from './routes/_privateLayout/messages/$userId'
 import { Route as PrivateLayoutEditPostPostIdRouteImport } from './routes/_privateLayout/edit-post/$postId'
+import { Route as AuthLayoutOauthCallbackRouteImport } from './routes/_authLayout/oauth/callback'
 import { Route as AdminLayoutAdminNewsletterRouteImport } from './routes/_adminLayout/admin/newsletter'
 import { Route as AdminLayoutAdminEventsRouteImport } from './routes/_adminLayout/admin/events'
 import { Route as AdminLayoutAdminAboutUsRouteImport } from './routes/_adminLayout/admin/about-us'
@@ -172,6 +173,11 @@ const PrivateLayoutEditPostPostIdRoute =
     path: '/edit-post/$postId',
     getParentRoute: () => PrivateLayoutRoute,
   } as any)
+const AuthLayoutOauthCallbackRoute = AuthLayoutOauthCallbackRouteImport.update({
+  id: '/oauth/callback',
+  path: '/oauth/callback',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
 const AdminLayoutAdminNewsletterRoute =
   AdminLayoutAdminNewsletterRouteImport.update({
     id: '/admin/newsletter',
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/admin/events': typeof AdminLayoutAdminEventsRoute
   '/admin/newsletter': typeof AdminLayoutAdminNewsletterRoute
+  '/oauth/callback': typeof AuthLayoutOauthCallbackRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByTo {
   '/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/admin/events': typeof AdminLayoutAdminEventsRoute
   '/admin/newsletter': typeof AdminLayoutAdminNewsletterRoute
+  '/oauth/callback': typeof AuthLayoutOauthCallbackRoute
   '/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/_adminLayout/admin/about-us': typeof AdminLayoutAdminAboutUsRoute
   '/_adminLayout/admin/events': typeof AdminLayoutAdminEventsRoute
   '/_adminLayout/admin/newsletter': typeof AdminLayoutAdminNewsletterRoute
+  '/_authLayout/oauth/callback': typeof AuthLayoutOauthCallbackRoute
   '/_privateLayout/edit-post/$postId': typeof PrivateLayoutEditPostPostIdRoute
   '/_privateLayout/messages/$userId': typeof PrivateLayoutMessagesUserIdRoute
   '/_privateLayout/newsletter/$newsId': typeof PrivateLayoutNewsletterNewsIdRoute
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin/about-us'
     | '/admin/events'
     | '/admin/newsletter'
+    | '/oauth/callback'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin/about-us'
     | '/admin/events'
     | '/admin/newsletter'
+    | '/oauth/callback'
     | '/edit-post/$postId'
     | '/messages/$userId'
     | '/newsletter/$newsId'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/_adminLayout/admin/about-us'
     | '/_adminLayout/admin/events'
     | '/_adminLayout/admin/newsletter'
+    | '/_authLayout/oauth/callback'
     | '/_privateLayout/edit-post/$postId'
     | '/_privateLayout/messages/$userId'
     | '/_privateLayout/newsletter/$newsId'
@@ -554,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateLayoutEditPostPostIdRouteImport
       parentRoute: typeof PrivateLayoutRoute
     }
+    '/_authLayout/oauth/callback': {
+      id: '/_authLayout/oauth/callback'
+      path: '/oauth/callback'
+      fullPath: '/oauth/callback'
+      preLoaderRoute: typeof AuthLayoutOauthCallbackRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
     '/_adminLayout/admin/newsletter': {
       id: '/_adminLayout/admin/newsletter'
       path: '/admin/newsletter'
@@ -601,6 +620,7 @@ interface AuthLayoutRouteChildren {
   AuthLayoutLoginRoute: typeof AuthLayoutLoginRoute
   AuthLayoutResetPasswordRoute: typeof AuthLayoutResetPasswordRoute
   AuthLayoutSignupRoute: typeof AuthLayoutSignupRoute
+  AuthLayoutOauthCallbackRoute: typeof AuthLayoutOauthCallbackRoute
 }
 
 const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
@@ -608,6 +628,7 @@ const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
   AuthLayoutLoginRoute: AuthLayoutLoginRoute,
   AuthLayoutResetPasswordRoute: AuthLayoutResetPasswordRoute,
   AuthLayoutSignupRoute: AuthLayoutSignupRoute,
+  AuthLayoutOauthCallbackRoute: AuthLayoutOauthCallbackRoute,
 }
 
 const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(

@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 import NewsletterForm from "@/components/forms/newsletter-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +15,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUpdateNewsletter } from "@/hooks/mutations/use-newsletter";
 import type { NewsLetterFormValues } from "@/lib/validation";
 import type { Newsletter } from "@/types/schema";
-import { toast } from "sonner";
 
 const EditNewsletterDialog = ({
   newsletter,

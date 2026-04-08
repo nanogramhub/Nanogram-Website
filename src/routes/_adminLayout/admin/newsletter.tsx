@@ -1,3 +1,6 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+
 import AddNewsletterButton from "@/components/routes/admin/newsletter/add-newsletter";
 import { NewsletterDialogContextProvider } from "@/components/routes/admin/newsletter/context/newsletter-dialog-context";
 import EditNewsletterDialog from "@/components/routes/admin/newsletter/edit-newsletter-dialog";
@@ -10,8 +13,6 @@ import { usePaginatedInfinitePagination } from "@/hooks/use-paginated-infinite-q
 import { newslettersQueries } from "@/lib/query/query-options";
 import { queryClient } from "@/router";
 import type { Newsletter } from "@/types/schema";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 
 export const Route = createFileRoute("/_adminLayout/admin/newsletter")({
   component: RouteComponent,

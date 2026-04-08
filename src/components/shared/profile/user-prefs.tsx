@@ -1,13 +1,13 @@
-import React, { useState } from "react";
 import { Monitor, Moon, Sun, Zap, ZapOff } from "lucide-react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
+import { SegmentedTabs } from "@/components/ui/segmented-tabs";
 import { Switch } from "@/components/ui/switch";
 import { usePerformance } from "@/hooks/use-performance";
 import { useTheme } from "@/hooks/use-theme";
 import { api } from "@/lib/appwrite/api";
 import { useAuthStore } from "@/store/use-auth-store";
-import { SegmentedTabs } from "@/components/ui/segmented-tabs";
 
 const PrefItem = ({
   icon: Icon,

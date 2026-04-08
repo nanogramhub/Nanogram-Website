@@ -4,7 +4,9 @@ import {
   newsLetterFormSchema,
   type NewsLetterFormValues,
 } from "@/lib/validation";
+import type { Newsletter } from "@/types/schema";
 
+import FileUploader from "../shared/default/file-uploader";
 import {
   Field,
   FieldError,
@@ -12,9 +14,7 @@ import {
   FieldLabel,
   FieldSet,
 } from "../ui/field";
-import type { Newsletter } from "@/types/schema";
 import { Input } from "../ui/input";
-import FileUploader from "../shared/default/file-uploader";
 
 interface NewsletterFormProps {
   newsletter?: Newsletter;

@@ -4,8 +4,6 @@ import { queryClient } from "@/router";
 import { useAuthStore } from "@/store/use-auth-store";
 
 import { api } from "../appwrite/api";
-import { createPost, deletePost, updatePost } from "../posts";
-import { queryKeys } from "./query-keys";
 import {
   deleteAvatar,
   updateAvatar,
@@ -13,11 +11,7 @@ import {
   updateName,
   updateUsername,
 } from "../auth";
-import type {
-  EventFormValues,
-  MemberFormValues,
-  NewsLetterFormValues,
-} from "../validation";
+import { createPost, deletePost, updatePost } from "../posts";
 import {
   createEvent,
   createMember,
@@ -29,6 +23,12 @@ import {
   updateMember,
   updateNewsletter,
 } from "../public";
+import type {
+  EventFormValues,
+  MemberFormValues,
+  NewsLetterFormValues,
+} from "../validation";
+import { queryKeys } from "./query-keys";
 
 // AUTH AND USER INFO MUTATION
 export const getDeleteSessionMutationOptions = () => {

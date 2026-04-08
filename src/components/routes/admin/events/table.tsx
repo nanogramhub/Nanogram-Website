@@ -1,3 +1,16 @@
+import { Ellipsis } from "lucide-react";
+// import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
+import { toast } from "sonner";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -7,22 +20,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDeleteEvent } from "@/hooks/mutations/use-events";
 import { formatDateTime, range, truncate } from "@/lib/utils";
 import type { Event } from "@/types/schema";
-import { Ellipsis } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { useEventDialog } from "./context/use-admin-events";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-// import { useDeleteMember } from "@/hooks/mutations/use-nanogram";
-import { toast } from "sonner";
-import { useDeleteEvent } from "@/hooks/mutations/use-events";
-import { Badge } from "@/components/ui/badge";
 
 const EventActions = ({ event }: { event: Event }) => {
   const { setEvent, setEditOpen, setPreviewOpen } = useEventDialog();

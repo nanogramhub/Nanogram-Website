@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Check, Edit2, Loader2, Trash2, X } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import ImageUploader from "@/components/shared/default/image-uploader";
@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   useDeleteAvatarMutation,
   useUpdateAvatarMutation,
@@ -20,7 +21,6 @@ import {
   useUpdateUsernameMutation,
 } from "@/hooks/mutations/use-auth";
 import { useAuthStore } from "@/store/use-auth-store";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const EditableField = ({
   label,

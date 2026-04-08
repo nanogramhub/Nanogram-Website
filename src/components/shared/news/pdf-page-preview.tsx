@@ -3,6 +3,8 @@ import "react-pdf/dist/Page/TextLayer.css";
 
 import { Document, Page, pdfjs } from "react-pdf";
 
+import { Spinner } from "@/components/ui/spinner";
+
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const PDFPagePreview = ({ width, url }: { width: number; url: string }) => {
@@ -12,7 +14,7 @@ const PDFPagePreview = ({ width, url }: { width: number; url: string }) => {
         file={url}
         loading={
           <div className="w-full flex justify-center items-center py-10 bg-muted/20">
-            <span className="loading loading-spinner text-primary/20"></span>
+            <Spinner />
           </div>
         }
       >

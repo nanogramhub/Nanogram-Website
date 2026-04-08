@@ -6,9 +6,9 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
+import NavUser from "./nav-user";
 import SidebarHead from "./sidebar-head";
 import SidebarMainMenu from "./sidebar-main-menu";
-import NavUser from "./nav-user";
 
 export function SidebarLeft({
   ...props

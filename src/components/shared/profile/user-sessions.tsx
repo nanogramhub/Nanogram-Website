@@ -1,3 +1,7 @@
+import type { Models } from "appwrite";
+import { Monitor, Smartphone, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -5,9 +9,6 @@ import { useDeleteSessionMutation } from "@/hooks/mutations/use-auth";
 import { useGetSessions } from "@/hooks/queries/use-auth";
 import { formatDateTime } from "@/lib/utils";
 import { useAuthStore } from "@/store/use-auth-store";
-import type { Models } from "appwrite";
-import { Monitor, Smartphone, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
 // function to put the current session on the top and sort by date
 const sortSessions = (sessions: Models.SessionList) => {

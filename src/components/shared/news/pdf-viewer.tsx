@@ -12,6 +12,10 @@ import {
 import { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
+
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface PDFViewerProps {
@@ -43,12 +47,9 @@ const PDFViewer = ({ url, title, subtitle, onBack }: PDFViewerProps) => {
       <div className="flex items-center justify-between p-3 px-4 bg-base-100 border-b border-border z-10 sticky top-0 backdrop-blur-md bg-opacity-95">
         <div className="flex items-center gap-3">
           {onBack && (
-            <button
-              onClick={onBack}
-              className="btn btn-ghost btn-sm btn-square rounded-xl"
-            >
+            <Button variant="ghost" size="icon-sm" onClick={onBack}>
               <ArrowLeft size={20} />
-            </button>
+            </Button>
           )}
           <div className="flex flex-col -space-y-0.5">
             <h2 className="font-bold text-sm md:text-base leading-tight truncate max-w-[120px] sm:max-w-[200px] md:max-w-md">
@@ -65,53 +66,61 @@ const PDFViewer = ({ url, title, subtitle, onBack }: PDFViewerProps) => {
         <div className="flex items-center gap-2">
           {/* Pagination Controls */}
           <div className="flex items-center gap-1 bg-base-200 rounded-xl p-0.5">
-            <button
-              onClick={() => changePage(-1)}
+            <Button
+              variant="ghost"
+              size="icon-sm"
               disabled={pageNumber <= 1}
-              className="btn btn-ghost btn-xs sm:btn-sm btn-square disabled:opacity-20"
+              onClick={() => changePage(-1)}
             >
               <ChevronLeft size={18} />
-            </button>
+            </Button>
             <span className="px-1 md:px-2 text-[11px] md:text-sm font-bold min-w-[50px] md:min-w-[70px] text-center">
               {pageNumber} / {numPages || "--"}
             </span>
-            <button
-              onClick={() => changePage(1)}
+            <Button
+              variant="ghost"
+              size="icon-sm"
               disabled={pageNumber >= (numPages || 1)}
-              className="btn btn-ghost btn-xs sm:btn-sm btn-square disabled:opacity-20"
+              onClick={() => changePage(1)}
             >
               <ChevronRight size={18} />
-            </button>
+            </Button>
           </div>
 
-          <div className="divider divider-horizontal mx-0.5 hidden sm:flex"></div>
+          <Separator orientation="vertical" />
 
           <div className="hidden lg:flex items-center gap-1 bg-base-200 rounded-xl p-0.5">
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
-              className="btn btn-ghost btn-sm btn-square"
             >
               <Minimize size={16} />
-            </button>
+            </Button>
             <span className="px-1 text-[11px] font-bold w-10 text-center">
               {Math.round(scale * 100)}%
             </span>
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setScale((s) => Math.min(2, s + 0.1))}
-              className="btn btn-ghost btn-sm btn-square"
             >
               <Maximize size={16} />
-            </button>
+            </Button>
           </div>
 
-          <a
-            href={url}
-            download
-            className="btn btn-primary btn-sm rounded-xl gap-2 md:flex hidden"
-          >
-            <Download size={16} />
-            <span className="text-xs">Download</span>
-          </a>
+          <Button
+            nativeButton={false}
+            variant="default"
+            size="sm"
+            className="hidden md:flex gap-2"
+            render={(props) => (
+              <a href={url} download {...props}>
+                <Download size={16} />
+                <span className="text-xs">Download</span>
+              </a>
+            )}
+          />
         </div>
       </div>
 
@@ -122,7 +131,7 @@ const PDFViewer = ({ url, title, subtitle, onBack }: PDFViewerProps) => {
           onLoadSuccess={onDocumentLoadSuccess}
           loading={
             <div className="flex flex-col items-center gap-4 py-32">
-              <span className="loading loading-ring loading-lg text-primary"></span>
+              <Spinner />
               <p className="text-muted-foreground text-sm animate-pulse tracking-wide font-medium">
                 Preparing views...
               </p>
@@ -134,12 +143,14 @@ const PDFViewer = ({ url, title, subtitle, onBack }: PDFViewerProps) => {
                 <span className="text-2xl">⚠️</span>
               </div>
               <p className="font-bold">Failed to load publication</p>
-              <button
-                className="btn btn-outline btn-error btn-sm rounded-xl"
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-destructive border-destructive hover:bg-destructive/10"
                 onClick={() => window.location.reload()}
               >
                 Try Again
-              </button>
+              </Button>
             </div>
           }
         >
@@ -151,7 +162,7 @@ const PDFViewer = ({ url, title, subtitle, onBack }: PDFViewerProps) => {
             className="shadow-2xl rounded-sm transition-opacity duration-300"
             loading={
               <div className="w-[300px] sm:w-[600px] h-[800px] bg-base-100 flex items-center justify-center rounded-lg shadow-inner">
-                <span className="loading loading-dots text-primary/20"></span>
+                <Spinner />
               </div>
             }
           />
@@ -160,32 +171,38 @@ const PDFViewer = ({ url, title, subtitle, onBack }: PDFViewerProps) => {
 
       {/* Footer / Mobile Controls */}
       <footer className="md:hidden p-3 bg-base-100/90 backdrop-blur-md border-t border-border flex justify-center items-center gap-4">
-        <button
+        <Button
+          variant="ghost"
+          size="icon-xs"
           onClick={() => setScale((s) => Math.max(0.7, s - 0.1))}
-          className="btn btn-ghost btn-xs btn-square"
         >
           <Minimize size={14} />
-        </button>
+        </Button>
         <span className="text-[10px] font-bold text-muted-foreground">
           {Math.round(scale * 100)}%
         </span>
-        <button
+        <Button
+          variant="ghost"
+          size="icon-xs"
           onClick={() => setScale((s) => Math.min(1.5, s + 0.1))}
-          className="btn btn-ghost btn-xs btn-square"
         >
           <Maximize size={14} />
-        </button>
+        </Button>
 
-        <div className="divider divider-horizontal mx-1"></div>
+        <Separator />
 
-        <a
-          href={url}
-          download
-          className="btn btn-primary btn-xs rounded-lg gap-2"
-        >
-          <Download size={14} />
-          <span>Download</span>
-        </a>
+        <Button
+          nativeButton={false}
+          variant="default"
+          size="xs"
+          className="gap-2"
+          render={(props) => (
+            <a href={url} download {...props}>
+              <Download size={14} />
+              <span>Download</span>
+            </a>
+          )}
+        />
       </footer>
     </div>
   );

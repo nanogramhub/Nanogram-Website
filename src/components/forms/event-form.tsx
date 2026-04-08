@@ -4,6 +4,7 @@ import { eventFormSchema, type EventFormValues } from "@/lib/validation";
 import { type Event } from "@/types/schema";
 
 import ImageUploader from "../shared/default/image-uploader";
+import { DateTimePicker } from "../ui/datetime-picker";
 import {
   Field,
   FieldError,
@@ -12,9 +13,8 @@ import {
   FieldSet,
 } from "../ui/field";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { DateTimePicker } from "../ui/datetime-picker";
 import { Switch } from "../ui/switch";
+import { Textarea } from "../ui/textarea";
 
 interface EventFormProps {
   event?: Event;

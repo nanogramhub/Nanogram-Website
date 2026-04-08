@@ -1,14 +1,13 @@
+import {GitHub, Google} from "@/components/icons/brands"
 import { api } from "@/lib/appwrite/api";
 
 import { Button } from "../ui/button";
-import {GitHub, Google} from "@/components/icons/brands"
 
 interface OAuthButtonProps {
   loading: boolean;
-  redirect?: string;
 }
 
-const OAuthButtons = ({ loading, redirect = "/" }: OAuthButtonProps) => {
+const OAuthButtons = ({ loading }: OAuthButtonProps) => {
   return (
     <div className="pb-5 max-w-100 text-center flex flex-wrap justify-around gap-2">
       {/* Google */}
@@ -16,7 +15,7 @@ const OAuthButtons = ({ loading, redirect = "/" }: OAuthButtonProps) => {
         size="lg"
         className="bg-white text-black border-[#e5e5e5] hover:bg-gray-50"
         disabled={loading}
-        onClick={() => api.auth.loginWithGoogle(redirect)}
+        onClick={() => api.auth.loginWithGoogle()}
       >
         <Google />
         Continue with Google
@@ -26,7 +25,7 @@ const OAuthButtons = ({ loading, redirect = "/" }: OAuthButtonProps) => {
         size="lg"
         className="bg-black text-white border-black hover:bg-gray-900"
         disabled={loading}
-        onClick={() => api.auth.loginWithGithub(redirect)}
+        onClick={() => api.auth.loginWithGithub()}
       >
         <GitHub className="fill-white" />
         Continue with GitHub

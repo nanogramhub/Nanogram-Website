@@ -11,12 +11,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { navbarItems } from "@/constants";
-
-import { ModeToggle } from "../theme/mode-toggle";
-import UserAvatar from "../profile/user-avatar";
-import { useAuthStore } from "@/store/use-auth-store";
 import { useProfile } from "@/hooks/use-profile";
+import { useAuthStore } from "@/store/use-auth-store";
+
 import { PerformanceToggle } from "../performance/performance-toggle";
+import UserAvatar from "../profile/user-avatar";
+import { ModeToggle } from "../theme/mode-toggle";
 
 const NavSheet = ({ className }: { className?: string }) => {
   const currentUser = useAuthStore((s) => s.currentUser);

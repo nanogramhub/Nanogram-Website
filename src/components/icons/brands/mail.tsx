@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import type { SVGProps } from "react";
+
+import { cn } from "@/lib/utils";
 
 const Mail = ({ className, ...props }: SVGProps<SVGSVGElement>) => (
   <svg

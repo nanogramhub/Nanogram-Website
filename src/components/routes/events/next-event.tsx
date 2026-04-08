@@ -1,8 +1,8 @@
 import Banner from "@/components/motion/event-banner";
 import ShiftingCountdown from "@/components/motion/shifting-countdown";
+import EventBanner from "@/components/shared/default/event-banner";
 import { useGetNextEvent } from "@/hooks/queries/use-events";
 import { usePerformance } from "@/hooks/use-performance";
-import EventBanner from "@/components/shared/default/event-banner";
 
 const NextEvent = () => {
   const { performance } = usePerformance();

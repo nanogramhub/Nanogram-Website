@@ -1,4 +1,5 @@
 import type { Nanogram } from "@/types/schema";
+
 import TeamMember from "./team-member";
 
 const GridTeamList = ({ teamMembers }: { teamMembers: Nanogram[] }) => {

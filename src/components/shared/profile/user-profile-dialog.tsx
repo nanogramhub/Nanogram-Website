@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Lock, LogOut, Settings, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -8,19 +9,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useAuthStore } from "@/store/use-auth-store";
 
-import UserIdentities from "./user-identities";
-import UserProfile from "./user-profile";
-import UserPassword from "./user-password";
-import UserSessions from "./user-sessions";
 import DeleteAccount from "./delete-account";
+import UserIdentities from "./user-identities";
+import UserPassword from "./user-password";
 import UserPrefs from "./user-prefs";
-import { useIsMobile } from "@/hooks/use-is-mobile";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Link } from "@tanstack/react-router";
+import UserProfile from "./user-profile";
+import UserSessions from "./user-sessions";
 
 interface UserProfileProps {
   open: boolean;

@@ -1,3 +1,7 @@
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import MemberForm from "@/components/forms/member-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,11 +15,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus } from "lucide-react";
 import { useCreateMember } from "@/hooks/mutations/use-nanogram";
 import type { MemberFormValues } from "@/lib/validation";
-import { toast } from "sonner";
-import { useState } from "react";
 
 const AddMemberButton = () => {
   const [open, setOpen] = useState(false);

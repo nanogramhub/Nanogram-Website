@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 import MemberForm from "@/components/forms/member-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +15,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUpdateMember } from "@/hooks/mutations/use-nanogram";
 import type { MemberFormValues } from "@/lib/validation";
 import type { Nanogram } from "@/types/schema";
-import { toast } from "sonner";
 
 const EditMemberDialog = ({
   member,

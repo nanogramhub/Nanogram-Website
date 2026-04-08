@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 
 import { ThemeProviderContextProvider } from "@/context/theme-context";
-import type { Theme } from "@/types";
 import { useStickyState } from "@/hooks/useStickyState";
-
 import { useAuthStore } from "@/store/use-auth-store";
+import type { Theme } from "@/types";
 
 type ThemeProviderProps = {
   children: React.ReactNode;

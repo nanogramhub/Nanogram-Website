@@ -1,3 +1,8 @@
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import NewsletterForm from "@/components/forms/newsletter-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,12 +15,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus } from "lucide-react";
-import type { NewsLetterFormValues } from "@/lib/validation";
-import { toast } from "sonner";
-import { useState } from "react";
-import NewsletterForm from "@/components/forms/newsletter-form";
 import { useCreateNewsletter } from "@/hooks/mutations/use-newsletter";
+import type { NewsLetterFormValues } from "@/lib/validation";
 
 const AddNewsletterButton = () => {
   const [open, setOpen] = useState(false);

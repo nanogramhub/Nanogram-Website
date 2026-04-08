@@ -12,8 +12,8 @@ import {
   FieldSet,
 } from "../ui/field";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 import { SegmentedTabs } from "../ui/segmented-tabs";
+import { Textarea } from "../ui/textarea";
 
 interface MemberFormProps {
   member?: Nanogram;

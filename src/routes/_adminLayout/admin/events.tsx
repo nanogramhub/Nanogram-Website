@@ -1,3 +1,6 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+
 import AddEventButton from "@/components/routes/admin/events/add-event-button";
 import { EventDialogContextProvider } from "@/components/routes/admin/events/context/event-dialog-context";
 import EditEventDialog from "@/components/routes/admin/events/edit-event-dialog";
@@ -10,8 +13,6 @@ import { usePaginatedInfinitePagination } from "@/hooks/use-paginated-infinite-q
 import { eventsQueries } from "@/lib/query/query-options";
 import { queryClient } from "@/router";
 import type { Event } from "@/types/schema";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 
 export const Route = createFileRoute("/_adminLayout/admin/events")({
   component: RouteComponent,

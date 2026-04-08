@@ -10,6 +10,17 @@ import {
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import {
+  Facebook,
+  LinkedIn,
+  Mail,
+  Reddit,
+  Telegram,
+  Whatsapp,
+  X,
+} from "@/components/icons/brands";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useSendMessage } from "@/hooks/mutations/use-messages";
 import { useGetContacts } from "@/hooks/queries/use-messages";
 import { useClipboard } from "@/hooks/use-copy";
@@ -17,17 +28,6 @@ import { getInitials } from "@/lib/utils";
 import { useAuthStore } from "@/store/use-auth-store";
 import type { ContactUser } from "@/types/api";
 
-import {
-  Facebook,
-  LinkedIn,
-  Mail,
-  Reddit,
-  Telegram,
-  X,
-  Whatsapp,
-} from "@/components/icons/brands";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,

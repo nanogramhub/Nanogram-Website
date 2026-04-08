@@ -4,6 +4,7 @@ import { useInView } from "react-intersection-observer";
 import Masonry from "react-masonry-css";
 
 import MouseImageTrail from "@/components/motion/mouse-image-trail";
+import { Spinner } from "@/components/ui/spinner";
 import { images as galleryImages } from "@/constants";
 import { useIsMouseAvailable } from "@/hooks/use-is-mouse-available";
 
@@ -61,15 +62,13 @@ const GalleryPage = () => {
           </Masonry>
         ) : (
           <div className="flex w-full justify-center my-20">
-            {!loading && (
-              <span className="loading loading-infinity loading-xl"></span>
-            )}
+            {!loading && <Spinner />}
           </div>
         )}
         <div ref={ref}>
           {loading && (
             <div className="flex w-full justify-center my-10">
-              <span className="loading loading-infinity loading-lg"></span>
+              <Spinner />
             </div>
           )}
         </div>

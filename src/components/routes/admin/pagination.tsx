@@ -1,3 +1,5 @@
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import {
@@ -14,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 const AdminPagination = ({
   currentPage,

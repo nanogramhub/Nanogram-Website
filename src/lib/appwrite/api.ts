@@ -89,18 +89,18 @@ export const api = {
       return response;
     },
 
-    async loginWithGithub(redirect: string) {
+    async loginWithGithub() {
       account.createOAuth2Session({
         provider: OAuthProvider.Github,
-        success: `${webappUrl}${redirect}`,
+        success: `${webappUrl}/oauth/callback`,
         failure: `${webappUrl}/login`,
       });
     },
 
-    async loginWithGoogle(redirect: string) {
+    async loginWithGoogle() {
       account.createOAuth2Session({
         provider: OAuthProvider.Google,
-        success: `${webappUrl}${redirect}`,
+        success: `${webappUrl}/oauth/callback`,
         failure: `${webappUrl}/login`,
       });
     },
@@ -380,10 +380,11 @@ export const api = {
 
   users: {
     async createuser(
-      data: SignupFormValues & {
+      data: Omit<SignupFormValues, "password"> & {
         accountId: string;
         imageUrl: string;
         imageId: string | null;
+        password?: string;
       },
     ) {
       const user = await database.createRow<User>({
@@ -391,7 +392,12 @@ export const api = {
         tableId: appwriteConfig.usersTableId,
         rowId: ID.unique(),
         data: {
-          ...data,
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          accountId: data.accountId,
+          imageUrl: data.imageUrl,
+          imageId: data.imageId,
           karma: 0,
           admin: false,
         },

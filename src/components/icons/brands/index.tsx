@@ -1,10 +1,10 @@
+export { default as Facebook } from "./facebook";
 export { default as GitHub } from "./github";
 export { default as Google } from "./google";
 export { default as Instagram } from "./instagram";
 export { default as LinkedIn } from "./linkedin";
-export { default as Facebook } from "./facebook";
-export { default as X } from "./twitter";
+export { default as Mail } from "./mail";
 export { default as Reddit } from "./reddit";
 export { default as Telegram } from "./telegram";
+export { default as X } from "./twitter";
 export { default as Whatsapp } from "./whatsapp";
-export { default as Mail } from "./mail";

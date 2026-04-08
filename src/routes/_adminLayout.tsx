@@ -1,3 +1,6 @@
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { AppwriteException } from "appwrite";
+
 import Unauthorized from "@/components/error-boundaries/unauthorized";
 import PageBreadcrumb from "@/components/routes/page-breadcrumb";
 import { PerformanceToggle } from "@/components/shared/performance/performance-toggle";
@@ -8,8 +11,6 @@ import { UnauthorizedException } from "@/exceptions";
 import { useProfile } from "@/hooks/use-profile";
 import { ensureAuth } from "@/lib/auth";
 import { useAuthStore } from "@/store/use-auth-store";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { AppwriteException } from "appwrite";
 
 export const Route = createFileRoute("/_adminLayout")({
   component: RouteComponent,
