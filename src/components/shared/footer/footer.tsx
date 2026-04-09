@@ -50,16 +50,16 @@ const Footer = () => {
             </ul>
             <ul className="flex items-center gap-8">
               <SocialMediaLink href="https://www.linkedin.com/company/nanogramhub/">
-                <LinkedIn />
-              </SocialMediaLink>
+                <LinkedIn className="size-6" />
+              </SocialMediaLink >
               <SocialMediaLink href="https://www.instagram.com/nanogram_drait">
-                <Instagram />
+                <Instagram className="size-6" />
               </SocialMediaLink>
               <SocialMediaLink href="mailto:nanogramhub@gmail.com">
-                <Mail />
+                <Mail className="size-6" />
               </SocialMediaLink>
               <SocialMediaLink href="https://github.com/nanogramhub">
-                <GitHub />
+                <GitHub className="size-6 dark:fill-white" />
               </SocialMediaLink>
             </ul>
           </div>
