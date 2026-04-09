@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useUpdateCommentLikes } from "@/hooks/mutations/use-comments";
@@ -24,7 +24,11 @@ function hasLiked(
 
 const CommentLike = ({ comment }: CommentLikeProps) => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const [liked, setLiked] = useState<boolean>(false);
+  const baseLiked = useMemo(
+    () => (currentUser ? hasLiked(comment.likes, currentUser) : false),
+    [comment.likes, currentUser],
+  );
+  const [liked, setLiked] = useState<boolean>(baseLiked);
   const [likedCount, setLikedCount] = useState(comment.likes.length);
   const updateCommentLikes = useUpdateCommentLikes();
 
@@ -50,13 +54,6 @@ const CommentLike = ({ comment }: CommentLikeProps) => {
       },
     );
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      setLiked(hasLiked(comment.likes, currentUser));
-      setLikedCount(comment.likes.length);
-    }
-  }, [currentUser, comment.likes]);
 
   return (
     <div className="flex gap-1">

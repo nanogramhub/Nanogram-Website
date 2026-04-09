@@ -44,7 +44,7 @@ const EditableField = ({
     try {
       await onSave(tempValue);
       setIsEditing(false);
-    } catch (error) {
+    } catch {
       // Error handling is usually done in the mutation's onError or here
     }
   };

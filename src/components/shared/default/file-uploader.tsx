@@ -1,5 +1,5 @@
 import { File as FileIcon, RefreshCw, Upload, X } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { type Accept, useDropzone } from "react-dropzone";
 
 import { Button } from "@/components/ui/button";
@@ -36,15 +36,6 @@ const FileUploader = ({
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>(initialFileName);
   const [fileUrl, setFileUrl] = useState<string>(initialFileUrl);
-
-  useEffect(() => {
-    if (initialFileUrl) {
-      setFileUrl(initialFileUrl);
-    }
-    if (initialFileName) {
-      setFileName(initialFileName);
-    }
-  }, [initialFileUrl, initialFileName]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

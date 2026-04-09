@@ -11,19 +11,17 @@ function shufflePermutation(length: number): number[] {
 }
 
 const ShuffleGallery = ({ images }: { images: string[] }) => {
-  const imageKey = images.join("|");
-  const items = useMemo(
-    () => images.map((src, index) => ({ id: index, src })),
-    [imageKey],
-  );
+  const items = useMemo(() => images.map((src, index) => ({ id: index, src })), [images]);
 
   const [order, setOrder] = useState<number[]>(() =>
     items.map((_, i) => i),
   );
 
   useEffect(() => {
-    setOrder(items.map((_, i) => i));
-  }, [imageKey]);
+    queueMicrotask(() => {
+      setOrder(items.map((_, i) => i));
+    });
+  }, [items]);
 
   useEffect(() => {
     if (items.length === 0) return;

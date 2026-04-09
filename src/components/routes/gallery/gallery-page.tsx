@@ -10,7 +10,7 @@ import { useIsMouseAvailable } from "@/hooks/use-is-mouse-available";
 
 const GalleryPage = () => {
   const isMouseAvailable = useIsMouseAvailable();
-  const images = [] as any[];
+  const images: Array<{ url: string; width: number; height: number }> = [];
   const loading = false;
 
   const breakpointColumnsObj = {

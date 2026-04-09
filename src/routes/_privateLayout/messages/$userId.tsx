@@ -71,7 +71,7 @@ function ChatView() {
       messagesQuery.data?.pages?.[0]?.rows.length
     ) {
       messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
-      setIsInitialLoad(false);
+      queueMicrotask(() => setIsInitialLoad(false));
     }
   }, [messagesQuery.isSuccess, messagesQuery.data, isInitialLoad]);
 
@@ -89,9 +89,11 @@ function ChatView() {
 
   // Reset initial load flag when switching conversations
   useEffect(() => {
-    setIsInitialLoad(true);
-    setEditingMessageId(null);
-    setEditingContent("");
+    setTimeout(() => {
+      setIsInitialLoad(true);
+      setEditingMessageId(null);
+      setEditingContent("");
+    }, 0);
   }, [otherUserId]);
 
   /**
@@ -245,7 +247,7 @@ function ChatView() {
         });
       });
     }
-  }, [messagesQuery.hasNextPage, messagesQuery.isFetchingNextPage]);
+  }, [messagesQuery]);
 
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] overflow-hidden">

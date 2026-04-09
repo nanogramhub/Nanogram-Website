@@ -66,9 +66,9 @@ export const TagsInput = React.forwardRef<HTMLInputElement, TagsInputProps>(
           {...props}
           ref={(node) => {
             if (node) {
-              (inputRef as any).current = node;
+              inputRef.current = node;
               if (typeof ref === "function") ref(node);
-              else if (ref) (ref as any).current = node;
+              else if (ref) ref.current = node;
             }
           }}
           type="text"

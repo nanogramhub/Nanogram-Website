@@ -34,8 +34,8 @@ const EditableEmailField = ({ email }: { email: string }) => {
       toast.success("Email update link sent to your new email");
       setIsEditing(false);
       setPassword("");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update email");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Failed to update email");
     }
   };
 

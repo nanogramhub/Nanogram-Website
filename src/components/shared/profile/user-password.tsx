@@ -43,8 +43,8 @@ const UserPassword = () => {
       toast.success("Password updated successfully");
       setIsEditing(false);
       resetForm();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update password");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Failed to update password");
     }
   };
 

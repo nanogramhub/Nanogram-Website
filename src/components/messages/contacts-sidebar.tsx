@@ -153,11 +153,6 @@ export const ContactsSidebar = () => {
     };
   }, [currentUser?.$id]);
 
-  // Close dialog on navigation
-  useEffect(() => {
-    setIsDialogOpen(false);
-  }, [activeUserId]);
-
   return (
     <div className="flex flex-col h-full border-r border-border/50">
       {/* Header */}
@@ -219,6 +214,7 @@ export const ContactsSidebar = () => {
                               to: "/messages/$userId",
                               params: { userId: user.$id },
                             });
+                            setIsDialogOpen(false);
                             setSearchValue(undefined);
                           }}
                           className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-secondary/60 transition-colors text-left"
@@ -303,6 +299,7 @@ export const ContactsSidebar = () => {
                 key={contact.$id}
                 to="/messages/$userId"
                 params={{ userId: contact.$id }}
+                onClick={() => setIsDialogOpen(false)}
                 className={cn(
                   "flex items-center gap-3 p-2.5 rounded-xl transition-all duration-150",
                   "hover:bg-secondary/60",

@@ -9,7 +9,7 @@ export function useStickyState<T>(
     // try json parsing if error return unparsed value
     try {
       return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
-    } catch (error) {
+    } catch {
       return stickyValue !== null ? stickyValue : defaultValue;
     }
   });

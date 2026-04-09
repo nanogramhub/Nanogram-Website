@@ -8,9 +8,9 @@ import type { CurrentUser } from "@/types/api";
 interface AuthStore {
   currentUser: CurrentUser | null;
   isAdmin: boolean;
-  prefs: Record<string, any>;
+  prefs: Record<string, unknown>;
   setCurrentUser: (user: CurrentUser | null) => void;
-  setPrefs: (prefs: Record<string, any>) => void;
+  setPrefs: (prefs: Record<string, unknown>) => void;
   getCurrentUser: () => Promise<CurrentUser>;
   login: (data: SigninFormValues) => Promise<CurrentUser>;
   logout: () => Promise<void>;

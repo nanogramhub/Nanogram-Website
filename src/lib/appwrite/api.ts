@@ -1,4 +1,4 @@
-import { ID, OAuthProvider, type Models } from "appwrite";
+import { ID, type Models,OAuthProvider } from "appwrite";
 
 import { webappUrl } from "@/constants";
 import { UserNotFoundException } from "@/exceptions";

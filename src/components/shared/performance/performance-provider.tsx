@@ -25,7 +25,7 @@ export function PerformanceProvider({
     if (cloudPerf !== undefined && cloudPerf !== performance) {
       setPerformance(cloudPerf);
     }
-  }, [cloudPerf]);
+  }, [cloudPerf, performance, setPerformance]);
 
   const value = {
     performance,

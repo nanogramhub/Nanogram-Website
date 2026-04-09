@@ -85,48 +85,46 @@ const useTimer = (unit: string, countdownFrom: Date) => {
 
   const [time, setTime] = useState(0);
 
-  const handleCountdown = async () => {
-    const end = new Date(countdownFrom); // Use the passed countdownFrom
-    const now = new Date();
-    const distance = +end - +now;
-
-    let newTime = 0;
-
-    if (unit === "Day") {
-      newTime = Math.floor(distance / DAY);
-    } else if (unit === "Hour") {
-      newTime = Math.floor((distance % DAY) / HOUR);
-    } else if (unit === "Minute") {
-      newTime = Math.floor((distance % HOUR) / MINUTE);
-    } else {
-      newTime = Math.floor((distance % MINUTE) / SECOND);
-    }
-
-    if (newTime !== timeRef.current) {
-      // Exit animation
-      await animate(
-        ref.current,
-        { y: ["0%", "-50%"], opacity: [1, 0] },
-        { duration: 0.35 },
-      );
-
-      timeRef.current = newTime;
-      setTime(newTime);
-
-      // Enter animation
-      await animate(
-        ref.current,
-        { y: ["50%", "0%"], opacity: [0, 1] },
-        { duration: 0.35 },
-      );
-    }
-  };
-
   useEffect(() => {
-    intervalRef.current = setInterval(handleCountdown, 1000);
+    const tick = async () => {
+      const end = new Date(countdownFrom);
+      const now = new Date();
+      const distance = +end - +now;
+
+      let newTime = 0;
+
+      if (unit === "Day") {
+        newTime = Math.floor(distance / DAY);
+      } else if (unit === "Hour") {
+        newTime = Math.floor((distance % DAY) / HOUR);
+      } else if (unit === "Minute") {
+        newTime = Math.floor((distance % HOUR) / MINUTE);
+      } else {
+        newTime = Math.floor((distance % MINUTE) / SECOND);
+      }
+
+      if (newTime !== timeRef.current) {
+        await animate(
+          ref.current,
+          { y: ["0%", "-50%"], opacity: [1, 0] },
+          { duration: 0.35 },
+        );
+
+        timeRef.current = newTime;
+        setTime(newTime);
+
+        await animate(
+          ref.current,
+          { y: ["50%", "0%"], opacity: [0, 1] },
+          { duration: 0.35 },
+        );
+      }
+    };
+
+    intervalRef.current = setInterval(tick, 1000);
 
     return () => clearInterval(intervalRef.current || undefined);
-  }, [handleCountdown]);
+  }, [animate, countdownFrom, unit, ref]);
 
   return { ref, time };
 };

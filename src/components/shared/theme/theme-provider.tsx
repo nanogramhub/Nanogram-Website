@@ -23,7 +23,7 @@ export function ThemeProvider({
     if (cloudTheme && cloudTheme !== theme) {
       setTheme(cloudTheme as Theme);
     }
-  }, [cloudTheme]);
+  }, [cloudTheme, setTheme, theme]);
 
   useEffect(() => {
     const root = window.document.documentElement;

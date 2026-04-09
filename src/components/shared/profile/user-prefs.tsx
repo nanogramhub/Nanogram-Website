@@ -1,3 +1,4 @@
+import type { LucideIcon } from "lucide-react";
 import { Monitor, Moon, Sun, Zap, ZapOff } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -8,6 +9,7 @@ import { usePerformance } from "@/hooks/use-performance";
 import { useTheme } from "@/hooks/use-theme";
 import { api } from "@/lib/appwrite/api";
 import { useAuthStore } from "@/store/use-auth-store";
+import type { Theme } from "@/types";
 
 const PrefItem = ({
   icon: Icon,
@@ -15,7 +17,7 @@ const PrefItem = ({
   description,
   children,
 }: {
-  icon: any;
+  icon: LucideIcon;
   title: string;
   description: string;
   children: React.ReactNode;
@@ -40,12 +42,12 @@ const UserPrefs = () => {
   const { prefs, setPrefs } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateCloudPrefs = async (newPrefs: Record<string, any>) => {
+  const updateCloudPrefs = async (newPrefs: Record<string, unknown>) => {
     setIsLoading(true);
     try {
       await api.auth.updatePrefs(newPrefs);
       setPrefs(newPrefs);
-    } catch (error) {
+    } catch {
       toast.error("Failed to sync preferences to cloud");
     } finally {
       setIsLoading(false);
@@ -53,7 +55,7 @@ const UserPrefs = () => {
   };
 
   const handleThemeChange = async (newTheme: string) => {
-    setTheme(newTheme as any);
+    setTheme(newTheme as Theme);
     await updateCloudPrefs({ ...prefs, theme: newTheme });
   };
 

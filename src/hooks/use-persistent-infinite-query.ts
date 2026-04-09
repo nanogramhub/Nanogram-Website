@@ -2,7 +2,7 @@ import type {
   InfiniteData,
   UseInfiniteQueryResult,
 } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 
 import type { AppwriteResponse } from "@/types/schema";
@@ -15,8 +15,6 @@ export function usePersistentInfiniteQuery<T>(
 ) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     infiniteQueryResult;
-  const [items, setItems] = useState<T[]>([]);
-  const [total, setTotal] = useState<number | undefined>(undefined);
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -25,13 +23,11 @@ export function usePersistentInfiniteQuery<T>(
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  useEffect(() => {
-    if (data?.pages) {
-      const allItems = data.pages.flatMap((page) => page.rows);
-      setItems(allItems);
-      setTotal(data.pages[0].total);
-    }
-  }, [data]);
+  const items = useMemo(
+    () => (data?.pages ? data.pages.flatMap((page) => page.rows) : []),
+    [data],
+  );
+  const total = data?.pages?.[0]?.total;
 
   return { items, ref, isFetchingNextPage, hasNextPage, fetchNextPage, total };
 }

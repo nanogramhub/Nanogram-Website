@@ -1,8 +1,8 @@
 import "react-image-crop/dist/ReactCrop.css";
 
-import { Crop as CropIcon, RefreshCw,Upload, X } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { type Accept,useDropzone } from "react-dropzone";
+import { Crop as CropIcon, RefreshCw, Upload, X } from "lucide-react";
+import React, { useCallback, useRef, useState } from "react";
+import { type Accept, useDropzone } from "react-dropzone";
 import ReactCrop, {
   centerCrop,
   convertToPixelCrop,
@@ -99,12 +99,6 @@ const ImageUploader = ({
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const imgRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    if (initialFileUrl) {
-      setFileUrl(initialFileUrl);
-    }
-  }, [initialFileUrl]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

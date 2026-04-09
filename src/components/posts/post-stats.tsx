@@ -1,5 +1,5 @@
 import { Bookmark, Heart, MessageCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useUpdateLikes } from "@/hooks/mutations/use-posts";
 import { useSavePost, useUnSavePost } from "@/hooks/mutations/use-saves";
@@ -46,9 +46,17 @@ const PostStats = ({
   },
 }: PostStatsProps) => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const [liked, setLiked] = useState<boolean>(false);
+  const baseLiked = useMemo(
+    () => (currentUser ? hasLiked(post.likes, currentUser) : false),
+    [post.likes, currentUser],
+  );
+  const baseSaved = useMemo(
+    () => (currentUser ? hasSaved(post.save, currentUser) : false),
+    [post.save, currentUser],
+  );
+  const [liked, setLiked] = useState<boolean>(baseLiked);
   const [likedCount, setLikedCount] = useState(post.likes.length);
-  const [saved, setSaved] = useState<boolean>(false);
+  const [saved, setSaved] = useState<boolean>(baseSaved);
   const updateLikes = useUpdateLikes();
   const savePost = useSavePost();
   const unSavePost = useUnSavePost();
@@ -96,13 +104,6 @@ const PostStats = ({
       );
     }
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      setLiked(hasLiked(post.likes, currentUser));
-      setSaved(hasSaved(post.save, currentUser));
-    }
-  }, [currentUser, post.likes, post.save]);
 
   // If no post is provided and all stats are set to true, return null
   if (!post && showLikes && showComments && showShare && showSave) {

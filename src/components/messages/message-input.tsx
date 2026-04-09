@@ -1,6 +1,6 @@
 import type { EmojiClickData } from "emoji-picker-react";
 import { SendHorizonal, X } from "lucide-react";
-import { type KeyboardEvent,useEffect, useRef, useState } from "react";
+import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 
 import { EmojiPickerPopover } from "@/components/shared/default/emoji-picker";
 import { Button } from "@/components/ui/button";
@@ -46,8 +46,10 @@ export const MessageInput = ({
 
   // When entering edit mode, populate the textarea with existing content
   useEffect(() => {
-    if (isEditing && editingContent) {
-      setContent(editingContent);
+    if (isEditing) {
+      queueMicrotask(() => {
+        setContent(editingContent);
+      });
       // Focus and move cursor to end
       setTimeout(() => {
         textareaRef.current?.focus();

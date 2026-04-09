@@ -18,7 +18,8 @@ import { cn, formatDateTime } from "@/lib/utils";
 import { useAuthStore } from "@/store/use-auth-store";
 import type { MessageData } from "@/types/api";
 
-import { EmbeddedPostCard, extractPostId } from "./embedded-post-card";
+import { EmbeddedPostCard } from "./embedded-post-card";
+import { extractPostId } from "./embedded-post-utils";
 
 interface MessageBubbleProps {
   message: MessageData;
@@ -74,9 +75,10 @@ export const MessageBubble = ({ message, onEditStart }: MessageBubbleProps) => {
         reactions: updatedReactions,
       },
       {
-        onError: (err: any) => {
+        onError: (err: unknown) => {
+          const message = err instanceof Error ? err.message : "Unknown error";
           toast.error(
-            "Failed to update reaction: " + (err?.message || "Unknown error"),
+            "Failed to update reaction: " + message,
           );
         },
       },
