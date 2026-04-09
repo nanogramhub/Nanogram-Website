@@ -1,4 +1,4 @@
-import { ID, OAuthProvider } from "appwrite";
+import { ID, OAuthProvider, type Models } from "appwrite";
 
 import { webappUrl } from "@/constants";
 import { UserNotFoundException } from "@/exceptions";
@@ -28,6 +28,28 @@ import type {
 import type { SigninFormValues, SignupFormValues } from "../validation";
 import { account, appwriteConfig, avatars, database, storage } from "./config";
 import { querySelector } from "./queries";
+
+/** Scopes so Google returns profile picture via userinfo; GitHub `read:user` includes `avatar_url`. */
+const GOOGLE_OAUTH_SCOPES = [
+  "openid",
+  "https://www.googleapis.com/auth/userinfo.email",
+  "https://www.googleapis.com/auth/userinfo.profile",
+];
+const GITHUB_OAUTH_SCOPES = ["read:user", "user:email"];
+
+async function getFreshOAuthIdentity(identity: Models.Identity) {
+  const expiry = new Date(identity.providerAccessTokenExpiry);
+  const minutesUntilExpiry = (expiry.getTime() - Date.now()) / 1000 / 60;
+  if (minutesUntilExpiry < 5) {
+    await account.updateSession({ sessionId: "current" });
+  }
+  const { identities } = await account.listIdentities();
+  return (
+    identities.find((i) => i.$id === identity.$id) ??
+    identities.find((i) => i.provider === identity.provider) ??
+    null
+  );
+}
 
 async function getEmailFromIdentifier(identifier: string) {
   if (identifier.includes("@")) {
@@ -64,6 +86,26 @@ export const api = {
       return response;
     },
 
+    async uploadFileFromUrl(url: string, filenamePrefix = "avatar") {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("Failed to download image");
+      }
+      const blob = await res.blob();
+      const type = blob.type || "image/jpeg";
+      const ext = type.includes("png")
+        ? "png"
+        : type.includes("webp")
+          ? "webp"
+          : "jpg";
+      const file = new File([blob], `${filenamePrefix}.${ext}`, { type });
+      return await storage.createFile({
+        bucketId: appwriteConfig.storageBucketId,
+        fileId: ID.unique(),
+        file,
+      });
+    },
+
     getFileUrl(fileId: string) {
       return storage.getFileDownload({
         bucketId: appwriteConfig.storageBucketId,
@@ -90,19 +132,62 @@ export const api = {
     },
 
     async loginWithGithub() {
-      account.createOAuth2Session({
+      account.createOAuth2Token({
         provider: OAuthProvider.Github,
         success: `${webappUrl}/oauth/callback`,
         failure: `${webappUrl}/login`,
+        scopes: GITHUB_OAUTH_SCOPES,
       });
     },
 
     async loginWithGoogle() {
-      account.createOAuth2Session({
+      account.createOAuth2Token({
         provider: OAuthProvider.Google,
         success: `${webappUrl}/oauth/callback`,
         failure: `${webappUrl}/login`,
+        scopes: GOOGLE_OAUTH_SCOPES,
       });
+    },
+
+    /**
+     * Completes the OAuth token flow: Appwrite redirects here with `userId` and `secret` query params.
+     * @see https://appwrite.io/blog/post/appwrite-oauth
+     */
+    async createSessionFromOAuthToken(userId: string, secret: string) {
+      return await account.createSession({ userId, secret });
+    },
+
+    async fetchOAuthProviderAvatarUrl(
+      identity: Models.Identity,
+    ): Promise<string | null> {
+      const fresh = await getFreshOAuthIdentity(identity);
+      if (!fresh?.providerAccessToken) return null;
+
+      const token = fresh.providerAccessToken;
+
+      if (identity.provider === "google") {
+        const res = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        if (!res.ok) return null;
+        const data = (await res.json()) as { picture?: string };
+        return typeof data.picture === "string" ? data.picture : null;
+      }
+
+      if (identity.provider === "github") {
+        const res = await fetch("https://api.github.com/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/vnd.github+json",
+          },
+        });
+        if (!res.ok) return null;
+        const data = (await res.json()) as { avatar_url?: string };
+        return typeof data.avatar_url === "string" ? data.avatar_url : null;
+      }
+
+      return null;
     },
 
     async signOut() {

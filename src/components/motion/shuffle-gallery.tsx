@@ -1,65 +1,69 @@
-"use client";
+import { LayoutGroup, motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 
-import { motion } from "framer-motion";
-import { type JSX, useEffect, useRef, useState } from "react";
-
-const shuffle = (array: { id: number; src: string }[]) => {
-  let currentIndex = array.length,
-    randomIndex;
-
-  while (currentIndex != 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
+function shufflePermutation(length: number): number[] {
+  const order = Array.from({ length }, (_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
   }
-
-  return array;
-};
-
-const generateSquares = (squareData: { id: number; src: string }[]) => {
-  return shuffle([...squareData]).map((sq: { id: number; src: string }) => (
-    <motion.div
-      key={sq.id}
-      layout
-      transition={{ duration: 1.5, type: "spring" }}
-      className="w-full aspect-square"
-      style={{
-        backgroundImage: `url(${sq.src})`,
-        backgroundSize: "cover",
-      }}
-    />
-  ));
-};
+  return order;
+}
 
 const ShuffleGallery = ({ images }: { images: string[] }) => {
-  const squareData = images.map((url, index) => ({
-    id: index + 1,
-    src: url,
-  }));
+  const imageKey = images.join("|");
+  const items = useMemo(
+    () => images.map((src, index) => ({ id: index, src })),
+    [imageKey],
+  );
 
-  const [squares, setSquares] = useState<JSX.Element[] | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [order, setOrder] = useState<number[]>(() =>
+    items.map((_, i) => i),
+  );
 
   useEffect(() => {
-    const shuffleSquares = () => {
-      setSquares(generateSquares(squareData));
-      timeoutRef.current = setTimeout(shuffleSquares, 3000);
-    };
+    setOrder(items.map((_, i) => i));
+  }, [imageKey]);
 
-    shuffleSquares();
+  useEffect(() => {
+    if (items.length === 0) return;
 
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, [squareData]);
+    const id = window.setInterval(() => {
+      setOrder(shufflePermutation(items.length));
+    }, 3000);
 
-  if (!squares) return null; // Prevent mismatch during initial SSR render
+    return () => window.clearInterval(id);
+  }, [items.length]);
 
-  return <div className="grid grid-cols-4 gap-1 w-3/4 mx-auto">{squares}</div>;
+  if (items.length === 0) return null;
+
+  return (
+    <LayoutGroup id="shuffle-gallery">
+      <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-1 sm:grid-cols-4 [contain:layout]">
+        {order.map((itemIndex) => {
+          const item = items[itemIndex];
+          return (
+            <motion.div
+              key={item.id}
+              layout="position"
+              transition={{
+                layout: {
+                  duration: 0.55,
+                  ease: [0.25, 0.1, 0.25, 1],
+                },
+              }}
+              className="aspect-square w-full min-h-0 min-w-0 overflow-hidden rounded-sm"
+              style={{
+                backgroundImage: `url(${item.src})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+          );
+        })}
+      </div>
+    </LayoutGroup>
+  );
 };
 
 export default ShuffleGallery;

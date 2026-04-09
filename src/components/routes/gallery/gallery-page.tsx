@@ -3,8 +3,9 @@ import "@/styles/waterfall.css";
 import Masonry from "react-masonry-css";
 
 import MouseImageTrail from "@/components/motion/mouse-image-trail";
+import ShuffleGallery from "@/components/motion/shuffle-gallery";
 import { Spinner } from "@/components/ui/spinner";
-import { images as galleryImages } from "@/constants";
+import { allimages, images as galleryImages } from "@/constants";
 import { useIsMouseAvailable } from "@/hooks/use-is-mouse-available";
 
 const GalleryPage = () => {
@@ -58,17 +59,15 @@ const GalleryPage = () => {
             ))}
           </Masonry>
         ) : (
-          <div className="flex w-full justify-center my-20">
-            {!loading && <Spinner />}
+          <div className="mx-auto w-full max-w-2xl px-2 py-10">
+            {!loading && <ShuffleGallery images={allimages} />}
+            {loading && (
+              <div className="flex w-full justify-center my-20">
+                <Spinner />
+              </div>
+            )}
           </div>
         )}
-        <div>
-          {loading && (
-            <div className="flex w-full justify-center my-10">
-              <Spinner />
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
