@@ -43,6 +43,9 @@ function RouteComponent() {
 ├── /forgot-password
 ├── /reset-password
 │
+├── /oauth
+│   └── /callback
+│
 ├── /admin
 │   ├── /admin
 │   ├── /admin/about-us
