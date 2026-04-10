@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://nanogram.studio/sitemap.xml
+Sitemap: https://nanogram-techhub.vercel.app/sitemap.xml
