@@ -14,7 +14,7 @@ A modern, sleek, and responsive React web application designed with cutting-edge
 
 ## Demo
 
-Check out the live demo of the app here: [Nanogram](https://nanogram.studio)
+Check out the live demo of the app here: [Nanogram](https://nanogram-techhub.vercel.app)
 
 ## Technologies
 
